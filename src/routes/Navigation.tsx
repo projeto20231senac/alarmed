@@ -4,8 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Home } from '../Home';
-import { Cep } from '../Cep';
+import { Home } from '../components/Home';
+import { Cep } from '../components/Cep';
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
