@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Button,
 } from 'react-native';
 import { Logo } from './Logo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,27 +20,18 @@ export const Cep = () => {
 
   const saveCep = async () => {
     if (cep === undefined || cep.length === 0) {
-      console.log('Ops');
-
-      isDesable;
+      setDesable(false);
     } else {
       try {
         await AsyncStorage.setItem(cepData, cep);
-        !isDesable;
+        setDesable(true);
         console.log('CEP salvo com sucesso!');
       } catch (error) {
         console.error('Erro ao salvar o CEP:', error);
       }
     }
   };
-  // const getCep = async () => {
-  //   try {
-  //     const cep = await AsyncStorage.getItem(cepData);
-  //     console.log(cep);
-  //   } catch (error) {
-  //     console.error('Ocorreu um erro ao pegar o cep');
-  //   }
-  // };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -47,6 +39,7 @@ export const Cep = () => {
     >
       <View style={styles.container}>
         <Logo showBackButton={true} />
+
         <Text style={styles.title}>Qual é o seu CEP?</Text>
         <View style={styles.form}>
           <TextInput
@@ -57,10 +50,26 @@ export const Cep = () => {
             placeholder="00000-000"
             placeholderTextColor={'#666'}
             keyboardType="numeric"
+            onFocus={() => setDesable(true)}
+            onBlur={() => setDesable(false)}
           />
+          <Text>{cep === undefined ? 'Preenha o cep' : ''}</Text>
         </View>
+
         <View style={styles.areaButton}>
-          <TouchableOpacity style={styles.button} onPress={saveCep}>
+          <TouchableOpacity
+            style={
+              (styles.button,
+              {
+                backgroundColor: !isDesable ? 'grey' : 'blue',
+                padding: 15,
+                paddingLeft: 80,
+                paddingRight: 80,
+                borderRadius: 10,
+              })
+            }
+            onPress={saveCep}
+          >
             <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
         </View>
