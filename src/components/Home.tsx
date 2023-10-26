@@ -10,6 +10,7 @@ import {
 import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { styles } from './styles/sharedStyles';
 
 export const Home = () => {
   const { navigate } = useNavigation();
@@ -20,14 +21,18 @@ export const Home = () => {
     if (!termsAccepted) {
       Alert.alert(
         'Termos de uso',
-        'Você deve aceitar os termos antes de avançar.',
+        'Você deve aceitar os termos de uso antes de avançar.',
         [
           {
-            text: 'Cancelar',
+            text: 'Rejeitar',
             onPress: () => console.log('Cancelar'),
             style: 'cancel',
           },
-          { text: 'OK', onPress: () => console.log('OK') },
+          { text: 'Aceitar', onPress: () => {
+              setTermsAccepted(true);
+              console.log('OK')
+            } 
+          },
         ],
       );
     } else {
@@ -82,97 +87,3 @@ export const Home = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // width: '100%',
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  logo: {
-    width: 200,
-    height: 50,
-  },
-  containerLogo: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  containerTitleSubTitle: {
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 18,
-    textAlign: 'center',
-    color: '#0085FF',
-
-    paddingTop: 15,
-  },
-  containerMainContent: {
-    flex: 2,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  containerMainContentChild: {
-    flexDirection: 'row',
-    marginVertical: 10,
-    alignItems: 'center',
-    paddingHorizontal: 45,
-  },
-  imgWelcomePage: {
-    width: 30,
-    height: 30,
-  },
-  description: {
-    fontSize: 18,
-    paddingLeft: 10,
-  },
-  subtitleMainContent: {
-    paddingTop: 30,
-    fontSize: 18,
-    width: '100%',
-    textAlign: 'center',
-    color: '#0085FF',
-  },
-
-  terms: {
-    // width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-  },
-  termsText: {
-    fontSize: 16,
-  },
-
-  termsTextHilighted: {
-    fontSize: 16,
-    color: '#0085FF',
-    fontWeight: 'bold',
-  },
-  areaButton: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    paddingHorizontal: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    padding: 15,
-    paddingLeft: 80,
-    paddingRight: 80,
-    backgroundColor: '#0085FF',
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
