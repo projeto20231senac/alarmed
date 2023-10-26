@@ -19,7 +19,6 @@ export const Home = () => {
 
   const handleAcceptTerms = () => {
     setTermsAccepted(true);
-    console.log('bora', termsAccepted);
     if (!termsAccepted) {
       Alert.alert(
         'Termos de uso',
