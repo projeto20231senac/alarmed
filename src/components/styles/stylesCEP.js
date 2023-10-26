@@ -36,13 +36,14 @@ export const styles = StyleSheet.create({
   form: {
     width: '100%',
     padding: 20,
-    marginVertical: 30,
+    marginTop: 15,
     flex: 1,
+    borderColor: '#ccc',
   },
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    paddingVertical: 10,
+    paddingTop: 10,
     textAlign: 'center',
   },
   areaButton: {
