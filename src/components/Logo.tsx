@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, Alert, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { styles } from './styles/sharedLogoStyles';
 
 export const Logo = ({ showBackButton }) => {
   const { goBack } = useNavigation();
@@ -25,29 +26,4 @@ export const Logo = ({ showBackButton }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 200,
-    height: 50,
-  },
-  containerLogo: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  back: {
-    padding: 15,
-    right: 60,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 50,
-    width: '100%',
-  },
-});
+
