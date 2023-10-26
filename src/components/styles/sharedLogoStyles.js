@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
+
     },
     logo: {
       width: 200,
@@ -13,6 +14,7 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       flexDirection: 'row',
       alignItems: 'center',
+
     },
     back: {
       padding: 15,
