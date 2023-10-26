@@ -38,6 +38,7 @@ export const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 30,
     flex: 1,
+    borderColor: '#ccc',
   },
   title: {
     fontSize: 40,
