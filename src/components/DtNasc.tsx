@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Button,
   Platform,
 } from 'react-native';
 import { Logo } from './Logo';
@@ -23,7 +22,7 @@ export const Nascimento = () => {
   const [inputValue, setInputValue] = useState('')
 
   const handleNextPage = () => {
-    // navigate('')
+    navigate('Alarmes')
   }
 
   const onChange = (event, selectedDate) => {
@@ -59,6 +58,7 @@ export const Nascimento = () => {
                     onChange={onChange}
                     display='spinner'
                     textColor='#000'
+                    locale='pt-BR'
                 />
             ): (
                 <>
@@ -75,7 +75,7 @@ export const Nascimento = () => {
                     value={date}
                     mode={'date'}
                     onChange={onChange}
-                    display='calendar'
+                    display='spinner'
                     />
                 )}
             </>    
