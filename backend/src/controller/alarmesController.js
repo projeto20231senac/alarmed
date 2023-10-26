@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/alarmes/:user_id', async (req, res) => {
   try {
     const user_id = req.params.user_id;
-    const [rows] = await db.query('SELECT * FROM Alarmes WHERE user_id = ?', [user_id]);
+    const [rows] = await con.query('SELECT * FROM alarmes WHERE user_id = ?', [user_id]);
     res.json(rows);
   } catch (error) {
     console.error(error);

@@ -24,5 +24,12 @@ export const stylesAlarmes = StyleSheet.create({
     buttonText:{
         color: '#0085FF',
         fontSize: 16,
+    },
+    noAlarmsMessage:{
+        fontSize: 18,
+        flex: 2,
+        marginVertical: 100,
+        color: '#000',
+        // fontWeight: 'bold',
     }
 })
