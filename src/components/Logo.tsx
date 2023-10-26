@@ -18,7 +18,7 @@ export const Logo = ({ showBackButton }) => {
         <View style={styles.containerLogo}>
           <Image
             style={styles.logo}
-            source={require('./assets/images/alarmed.png')}
+            source={require('../assets/images/alarmed.png')}
           />
         </View>
       </View>

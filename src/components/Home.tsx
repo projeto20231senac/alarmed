@@ -18,6 +18,7 @@ export const Home = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleAcceptTerms = () => {
+    setTermsAccepted(true);
     if (!termsAccepted) {
       Alert.alert(
         'Termos de uso',
@@ -52,14 +53,14 @@ export const Home = () => {
       <View style={styles.containerMainContent}>
         <View style={styles.containerMainContentChild}>
           <Image
-            source={require('./assets/images/welcomePage/calendar.png')}
+            source={require('../assets/images/welcomePage/calendar.png')}
             style={styles.imgWelcomePage}
           />
           <Text style={styles.description}>Defina seus horários</Text>
         </View>
         <View style={styles.containerMainContentChild}>
           <Image
-            source={require('./assets/images/welcomePage/camera.png')}
+            source={require('../assets/images/welcomePage/camera.png')}
             style={styles.imgWelcomePage}
           />
           <Text style={styles.description}>tire uma foto do medicamento</Text>
