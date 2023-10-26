@@ -6,6 +6,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
