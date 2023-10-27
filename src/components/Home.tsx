@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Home = () => {
   const { navigate } = useNavigation();
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleAcceptTerms = () => {
+  useEffect(() => {
+    const checkAsyncStorage = async () => {
+      try {
+        const dataNascimento = await AsyncStorage.getItem('dataNascimento');
+        const cepData = await AsyncStorage.getItem('cepData');
+
+        console.log('CEP definido: ', cepData)
+        console.log('Data de Nascimento: ', dataNascimento)
+
+        if (dataNascimento && cepData) {
+          navigate('Alarmes');
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o AsyncStorage:', error);
+      }
+    };
+
+    checkAsyncStorage();
+  }, [navigate]);
+
+  const handleAcceptTerms = async () => {
     setTermsAccepted(true);
+
     if (!termsAccepted) {
       Alert.alert(
         'Termos de uso',
@@ -31,7 +46,7 @@ export const Home = () => {
           },
           { text: 'Aceitar', onPress: () => {
               setTermsAccepted(true);
-              console.log('OK')
+              checkAsyncStorage(); // Verifique novamente o AsyncStorage ao aceitar os termos.
             } 
           },
         ],
@@ -40,6 +55,7 @@ export const Home = () => {
       navigate('Cep');
     }
   };
+
   return (
     <View style={styles.container}>
       <Logo showBackButton={false} />

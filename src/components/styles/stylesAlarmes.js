@@ -17,12 +17,18 @@ export const stylesAlarmes = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#0085FF',
         borderRadius: 10,
-        padding: 10,
-        paddingLeft: 80,
-        paddingRight: 80,
+        paddingVertical: 10,
+        paddingHorizontal: 70,
     },
     buttonText:{
         color: '#0085FF',
         fontSize: 16,
+    },
+    noAlarmsMessage:{
+        fontSize: 18,
+        flex: 1,
+        marginVertical: 100,
+        color: '#000',
+        // fontWeight: 'bold',
     }
 })
