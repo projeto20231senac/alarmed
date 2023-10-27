@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './styles/stylesCEP';
-
+import { api } from '../service/AlarmesService';
 
 export const Cep = () => {
   const { navigate } = useNavigation();
@@ -56,7 +56,14 @@ export const Cep = () => {
       }
     }
   };
-
+  // testando api
+  useEffect(() => {
+    const loadDados = async () => {
+      const respose = await api.get('alarmes');
+      console.log(respose.data);
+    };
+    loadDados();
+  }, []);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
