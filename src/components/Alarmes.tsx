@@ -24,10 +24,11 @@ export const Alarmes = () => {
 
   useEffect(() => {
     const options = {
-      weekday: 'long', // Exibe o nome do dia da semana
+      weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone: 'America/Sao_Paulo'
     };
 
     const currentDate = new Date().toLocaleString('pt-BR', options);
