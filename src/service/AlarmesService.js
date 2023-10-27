@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-let baseURL;
+// let baseURL;
 
-if (Platform.OS === 'android') {
-  baseURL = 'http://10.0.2.2:5000';
-} else {
-  baseURL = 'http://localhost:5000';
-}
+// if (Platform.OS === 'android') {
+//   baseURL = 'http://10.0.2.2:5000';
+// } else {
+//   baseURL = 'http://localhost:5000';
+// }
 
 const API_URL = axios.create({
-  baseURL,
+  baseURL: 'http://192.168.0.11:5000',
 });
 
 export const AlarmesService = {

@@ -7,5 +7,5 @@ const con = mysql.createConnection({
     database: process.env.MYSQL_DB,
   });
 
-console.log('BD conectado!');
+console.log('BD conectado com sucesso!');
 export { con }

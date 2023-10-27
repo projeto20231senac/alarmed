@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
-  TextInput,
-  Platform,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -47,7 +44,7 @@ export const Alarmes = () => {
         await AsyncStorage.setItem('user_uuid', newUuid);
       }
     };
-
+    // console.log(userUuid) linha para logar o uuid no console para testes no BD
     fetchUserUuid();
 
     // Buscar os alarmes do usuário com base no userUuid
@@ -66,24 +63,30 @@ export const Alarmes = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />
+
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       <Text style={stylesAlarmes.title}>Meus alarmes</Text>
-      <Text>Usuário Único (UUID): {userUuid}</Text>
+      <Text>UUID: {userUuid}</Text>
+      
       <View style={styles.areaButton}>
         <TouchableOpacity style={stylesAlarmes.button} onPress={handleNextPage}>
           <Text style={stylesAlarmes.buttonText}>Adicionar Alarmes</Text>
         </TouchableOpacity>
       </View>
       
-      {/* Renderize a lista de alarmes aqui */}
-      {alarmes.map((alarme) => (
-        <View key={alarme.alarm_id}>
-          <Text>Nome: {alarme.nome_alarme}</Text>
-          <Text>Recorrência: {alarme.recorrencia}</Text>
-          <Text>Hora: {alarme.hora_alarme}</Text>
-          <Text>Foto: {alarme.foto_alarme}</Text>
-        </View>
-      ))}
+      {alarmes.length > 0 ? (
+        alarmes.map((alarme) => (
+          <View key={alarme.alarm_id}>
+            <Text>Nome: {alarme.nome_alarme}</Text>
+            <Text>Recorrência: {alarme.recorrencia}</Text>
+            <Text>Hora: {alarme.hora_alarme}</Text>
+            <Text>Foto: {alarme.foto_alarme}</Text>
+          </View>
+        ))
+      ) : (
+        <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+      )}
+
     </View>
   );
 };

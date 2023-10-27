@@ -1,22 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-// export const styles = StyleSheet.create({
-//   input: {
-//     width: '100%',
-//     height: 60,
-//     borderWidth: 2,
-//     borderRadius: 8,
-//     fontSize: 20,
-//     paddingHorizontal: 20,
-//     borderColor: '#ccc',
-//   },
-//   form: {
-//     width: '100%',
-//     padding: 20,
-//     marginVertical: 30,
-//     flex: 1,
-//   },
-// });
 
 export const styles = StyleSheet.create({
   container: {
@@ -32,13 +15,13 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     fontSize: 20,
     paddingHorizontal: 20,
+    borderColor: '#ccc',
   },
   form: {
     width: '100%',
     padding: 20,
-    marginTop: 15,
+    marginVertical: 30,
     flex: 1,
-    borderColor: '#ccc',
   },
   title: {
     fontSize: 40,

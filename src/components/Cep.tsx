@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   Platform,
   Alert,
-  Button,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -47,12 +45,12 @@ export const Cep = () => {
       setCep('');
     } else {
       try {
-        await AsyncStorage.setItem(cepData, cep);
+        await AsyncStorage.setItem('cepData', cep);
         setDesable(true);
         navigate('DtNasc');
         setCep('');
         setCepIvalidate('  ');
-        console.log('CEP salvo com sucesso!');
+        console.log(`CEP (${cep}) salvo com sucesso!`);
       } catch (error) {
         console.error('Erro ao salvar o CEP:', error);
       }
