@@ -44,7 +44,7 @@ export const Alarmes = () => {
         await AsyncStorage.setItem('user_uuid', newUuid);
       }
     };
-
+    // console.log(userUuid) linha para logar o uuid no console para testes no BD
     fetchUserUuid();
 
     // Buscar os alarmes do usuário com base no userUuid

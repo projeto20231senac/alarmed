@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesDTNasc } from './styles/stylesDTNasc';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Nascimento = () => {
 
@@ -20,8 +21,17 @@ export const Nascimento = () => {
   const [show, setShow] = useState(false);
   const [inputValue, setInputValue] = useState('')
 
-  const handleNextPage = () => {
-    navigate('Alarmes')
+  const handleNextPage = async () => {
+    const formattedDate = date.toLocaleDateString('pt-BR');
+
+    try {
+      await AsyncStorage.setItem('dataNascimento', formattedDate);
+      console.log(`Data de nascimento (${formattedDate}) salva com sucesso!`);
+    } catch (error) {
+      console.error('Erro ao salvar a data de nascimento:', error);
+    }
+
+    navigate('Alarmes');
   }
 
   const onChange = (event, selectedDate) => {

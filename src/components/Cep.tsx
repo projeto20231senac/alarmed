@@ -45,12 +45,12 @@ export const Cep = () => {
       setCep('');
     } else {
       try {
-        await AsyncStorage.setItem(cepData, cep);
+        await AsyncStorage.setItem('cepData', cep);
         setDesable(true);
         navigate('DtNasc');
         setCep('');
         setCepIvalidate('  ');
-        console.log('CEP salvo com sucesso!');
+        console.log(`CEP (${cep}) salvo com sucesso!`);
       } catch (error) {
         console.error('Erro ao salvar o CEP:', error);
       }
