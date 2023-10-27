@@ -1,15 +1,17 @@
 import express from 'express';
-import { con } from '../repository/connection.js';
+import { con } from '../repository/connection';
 
 const router = express.Router();
 
 router.get('/alarmes/:user_id', async (req, res) => {
-  try {
-    const user_id = req.params.user_id;
-    const sql = 'SELECT * FROM alarmes WHERE user_id = ?';
+  const user_id = req.params.user_id;
 
-    const [rows] = await con.execute(sql, [user_id]);
-    res.json(rows);
+  try {
+    const promiseConnection = con.promise();
+
+    const [rows] = await promiseConnection.query('SELECT * FROM alarmes WHERE user_id = ?', [user_id]);
+
+    res.status(200).json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erro ao buscar alarmes do usuário.' });

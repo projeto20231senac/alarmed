@@ -1,15 +1,7 @@
 import axios from 'axios';
 
-// let baseURL;
-
-// if (Platform.OS === 'android') {
-//   baseURL = 'http://10.0.2.2:5000';
-// } else {
-//   baseURL = 'http://localhost:5000';
-// }
-
 const API_URL = axios.create({
-  baseURL: 'http://10.0.2.2:5000',
+  baseURL: 'http://10.0.2.2:8080',
 });
 
 export const AlarmesService = {
@@ -19,8 +11,10 @@ export const AlarmesService = {
       console.log(response.data)
       return response.data;
     } catch (error) {
+      
       console.error('Erro ao buscar alarmes:', error);
       return [];
     }
+  
   },
 };
