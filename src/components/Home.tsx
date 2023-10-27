@@ -17,6 +17,9 @@ export const Home = () => {
         const dataNascimento = await AsyncStorage.getItem('dataNascimento');
         const cepData = await AsyncStorage.getItem('cepData');
 
+        console.log('CEP definido: ', cepData)
+        console.log('Data de Nascimento: ', dataNascimento)
+
         if (dataNascimento && cepData) {
           navigate('Alarmes');
         }
