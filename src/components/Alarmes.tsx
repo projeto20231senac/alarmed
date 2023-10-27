@@ -19,7 +19,7 @@ export const Alarmes = () => {
   const [alarmes, setAlarmes] = useState([]);
 
   const handleNextPage = () => {
-    // Navegar para a próxima página
+    navigate('AlarmesNome')
   }
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export const Alarmes = () => {
 
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       <Text style={stylesAlarmes.title}>Meus alarmes</Text>
-      <Text>UUID: {userUuid}</Text>
+      <Text style={{color:'#777'}}>UUID:{userUuid}</Text>
       
       <View style={styles.areaButton}>
         <TouchableOpacity style={stylesAlarmes.button} onPress={handleNextPage}>
