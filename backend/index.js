@@ -2,7 +2,7 @@ import 'dotenv/config';
 import './src/repository/connection.js';
 import express from 'express';
 import cors from 'cors';
-import alarmesController from './src/controller/alarmesController.js';
+import alarmesController from './src/controller/alarmeController.js';
 
 const servidor = express();
 servidor.use(cors());

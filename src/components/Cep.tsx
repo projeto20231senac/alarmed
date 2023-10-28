@@ -83,7 +83,6 @@ export const Cep = () => {
             placeholderTextColor={'#666'}
             keyboardType="numeric"
             onFocus={() => setDesable(true)}
-            autoFocus
             onBlur={() => setDesable(false)}
           />
 

@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
+  Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
+import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v4 as uuidv4 } from 'uuid';
-import { AlarmesService } from '../service/AlarmesService';
+import { api } from '../service/AlarmesService';
 
 export const Alarmes = () => {
   const { navigate } = useNavigation();
@@ -45,21 +48,19 @@ export const Alarmes = () => {
         await AsyncStorage.setItem('user_uuid', newUuid);
       }
     };
-    // console.log(userUuid) linha para logar o uuid no console para testes no BD
     fetchUserUuid();
 
     // Buscar os alarmes do usuário com base no userUuid
-    const fetchAlarmes = async () => {
-      try {
-        const alarmesData = await AlarmesService.getAlarmes(userUuid);
-        setAlarmes(alarmesData);
-      } catch (error) {
-        console.error('Erro ao buscar alarmes:', error);
-      }
+    const loadDados = async () => {
+      const uuid = await AsyncStorage.getItem('user_uuid');
+      console.log(`Seu UUID é: ${uuid}`)
+      const response = await api.get(`/alarmes/${uuid}`);
+      console.log(response.data);
+      setAlarmes(response.data)
     };
+    loadDados();
 
-    fetchAlarmes();
-  }, [userUuid]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -67,27 +68,64 @@ export const Alarmes = () => {
 
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       <Text style={stylesAlarmes.title}>Meus alarmes</Text>
-      <Text style={{color:'#777'}}>UUID:{userUuid}</Text>
+      {/* <Text style={{color:'#777'}}>UUID:{userUuid}</Text> */}
       
       <View style={styles.areaButton}>
         <TouchableOpacity style={stylesAlarmes.button} onPress={handleNextPage}>
           <Text style={stylesAlarmes.buttonText}>Adicionar Alarmes</Text>
         </TouchableOpacity>
       </View>
-      
-      {alarmes.length > 0 ? (
-        alarmes.map((alarme) => (
-          <View key={alarme.alarm_id}>
-            <Text>Nome: {alarme.nome_alarme}</Text>
-            <Text>Recorrência: {alarme.recorrencia}</Text>
-            <Text>Hora: {alarme.hora_alarme}</Text>
-            <Text>Foto: {alarme.foto_alarme}</Text>
-          </View>
-        ))
-      ) : (
-        <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
-      )}
-
+      <View style={stylesAlarmes.alarmes}>
+        <ScrollView>
+        {alarmes.length > 0 ? (
+          alarmes.map((alarme) => (
+            <View style={stylesAlarmes.alarmesChild}key={alarme.alarme_id}>
+              <View style={stylesAlarmes.alarmesChildColumn}>
+                {/* imagem aleatória para testes */}
+                <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
+              </View>
+              <View style={stylesAlarmes.alarmesChildColumn}>
+                <View style={stylesAlarmes.alarmesChildLine}>
+                  <Text 
+                  style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
+                    <Text style={{color: '#000', fontWeight: 'normal'}}>, deverá ser administrado às </Text>
+                    <Text style={stylesAlarmes.alarmesChildHora}>
+                      {alarme.alarme_hora.split('[').join('').split('"').join('').split(']').join('')}
+                    </Text>
+                  </Text>
+                </View>
+                <View style={stylesAlarmes.alarmesChildLine}>
+                  <View style={stylesAlarmes.frequencia}>
+                    <Image
+                      source={require('../assets/images/alarmesPage/calendar.png')}
+                      style={stylesAlarmes.imgAlarmesPage}
+                    />
+                    <Text style={stylesAlarmes.frequenciaText}>
+                    {alarme.alarme_recorrencia === 1
+                      ? 'Repete todos os dias'
+                      : 
+                      <>
+                        Repete a cada <Text style={{ color: '#f00' }}>
+                          {alarme.alarme_recorrencia}
+                        </Text> dias
+                      </>
+                      }
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={stylesAlarmes.alarmesChildColumn}>
+                <TouchableOpacity style={stylesAlarmes.moreDetails} onPress={() => goBack()}>
+                    <AntDesign name="right" size={20} color="#555" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        ) : (
+          <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+        )}
+        </ScrollView>
+      </View>
     </View>
   );
 };
