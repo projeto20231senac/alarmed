@@ -27,16 +27,10 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorId(id) {
-    const comando = `SELECT  user_id                id,
-    alarme_nome             nome,
-    alarme_recorrencia      recorrencia,
-    alarme_hora             hora,
-    alarme_foto             foto
-FROM alarmes`
+    const comando = `SELECT  * FROM alarmes WHERE user_id = ?`
     const [linhas] = await con.query(comando, [id])
-    return linhas[0]
+    return linhas
 }
-
 
 export async function alterarAlarme(id, alarme) {
     const comando = `UPDATE alarmes SET  alarme_nome =? , alarme_hora =? ,alarme_foto=? WHERE alarme_id=?  `

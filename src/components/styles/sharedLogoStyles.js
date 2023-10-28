@@ -4,7 +4,6 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-
     },
     logo: {
       width: 200,
@@ -14,17 +13,15 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       flexDirection: 'row',
       alignItems: 'center',
-
     },
     back: {
-      padding: 15,
       right: 50,
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'center',
+      alignItems: "center",
       position: 'absolute',
       top: 50,
-      width: '100%',
     },
   });

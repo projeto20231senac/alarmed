@@ -29,7 +29,7 @@ endpoint.get('/alarmes', async (req, resp) => {
 
 endpoint.get('/alarmes/:user_id', async (req, resp) => {
     try {
-        const id = Number(req.params.user_id);
+        const id = req.params.user_id;
         const buscaUserId = await alarmePorId(id);
         resp.send(buscaUserId);
     } catch (err) {
