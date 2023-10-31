@@ -5,22 +5,25 @@ import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
 import { styles } from './styles/sharedStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
+import { api } from '../service/AlarmesService';
 
 export const Home = () => {
   const { navigate } = useNavigation();
-
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     const checkAsyncStorage = async () => {
       try {
+        const CPF = await AsyncStorage.getItem('CPF')
         const dataNascimento = await AsyncStorage.getItem('dataNascimento');
-        const cepData = await AsyncStorage.getItem('cepData');
+        const cepData = await AsyncStorage.getItem('CEP');
 
+        console.log('CPF definido: ', CPF)
         console.log('CEP definido: ', cepData)
         console.log('Data de Nascimento: ', dataNascimento)
 
-        if (dataNascimento && cepData) {
+        if (CPF && dataNascimento && cepData) {
           navigate('Alarmes');
         }
       } catch (error) {
@@ -31,6 +34,7 @@ export const Home = () => {
     checkAsyncStorage();
   }, [navigate]);
 
+  
   const handleAcceptTerms = async () => {
     setTermsAccepted(true);
 
@@ -52,7 +56,7 @@ export const Home = () => {
         ],
       );
     } else {
-      navigate('Cep');
+      navigate('Cpf');
     }
   };
 

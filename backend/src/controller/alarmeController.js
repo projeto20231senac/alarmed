@@ -1,6 +1,6 @@
 import multer from "multer";
 import { Router } from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, inserirUsuario } from '../repository/alarmeRepository.js'
 const endpoint = Router();
 const updload = multer({ dest: 'storage/fotoMedicamentos' })
 
@@ -8,13 +8,23 @@ endpoint.post('/alarmes', async (req, resp) => {
     try {
         const novoAlarme = req.body;
         const novo = await inserirAlarme(novoAlarme);
-        resp.send(novo);
+        resp.status(200).send(novo);
     } catch (err) {
         resp.status(400).send({
             erro: err.message
         })
     }
 })
+
+endpoint.post('/usuarios', async (req, resp) => {
+    try {
+      const { cpf, cep, dataNascimento } = req.body;
+      const novoUsuario = await inserirUsuario(cpf, cep, dataNascimento);
+      resp.status(200).send(novoUsuario);
+    } catch (err) {
+      resp.status(400).send({ erro: err.message });
+    }
+  });
 
 endpoint.get('/alarmes', async (req, resp) => {
     try {
@@ -24,6 +34,16 @@ endpoint.get('/alarmes', async (req, resp) => {
         resp.status(400).send({
             erro: err.message
         })
+    }
+})
+
+endpoint.get('/usuarios/:user_id', async (req, resp) => {
+    try {
+            const user_id = req.params.user_id
+            const buscarUsuariosPorId = await buscarUserPorId(id)
+            resp.send(buscarUsuariosPorId)
+    } catch(err){
+        resp.status(400).send({erro : err.message})
     }
 })
 
