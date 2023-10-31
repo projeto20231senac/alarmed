@@ -4,6 +4,8 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -45,23 +47,27 @@ export const Cep = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />
-      <Text style={styles.title}>Qual é o seu CEP?</Text>
-      <View style={stylesCPF.form}>
-        <TextInput
-          style={stylesCPF.input}
-          value={cep}
-          onChangeText={(text) => setCep(formatCep(text))}
-          placeholder="00000-000"
-          placeholderTextColor="#000"
-          textAlign="center"
-          keyboardType="numeric"
-        />
-      </View>
-      <View style={styles.areaButton}>
-        <TouchableOpacity style={styles.button} onPress={handleNextPage}>
-          <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView 
+        style={{ flex: 2 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <Text style={styles.title}>Qual é o seu CEP?</Text>
+        <View style={stylesCPF.form}>
+          <TextInput
+            style={stylesCPF.input}
+            value={cep}
+            onChangeText={(text) => setCep(formatCep(text))}
+            placeholder="00000-000"
+            placeholderTextColor="#000"
+            textAlign="center"
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.areaButton}>
+          <TouchableOpacity style={styles.button} onPress={handleNextPage}>
+            <Text style={styles.buttonText}>Continuar</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

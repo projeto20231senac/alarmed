@@ -19,12 +19,16 @@ export const Home = () => {
         const dataNascimento = await AsyncStorage.getItem('dataNascimento');
         const cepData = await AsyncStorage.getItem('CEP');
 
+        const dtNascimento = new Date(dataNascimento);
+        const dataNascimentoFormatada = dtNascimento.toISOString().split('T')[0]
         console.log('CPF definido: ', CPF)
         console.log('CEP definido: ', cepData)
-        console.log('Data de Nascimento: ', dataNascimento)
+        console.log('Data de Nascimento: ', dataNascimentoFormatada)
 
         if (CPF && dataNascimento && cepData) {
           navigate('Alarmes');
+        } else{
+          navigate('Cpf')
         }
       } catch (error) {
         console.error('Erro ao verificar o AsyncStorage:', error);

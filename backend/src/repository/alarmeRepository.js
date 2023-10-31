@@ -39,15 +39,16 @@ export async function listarTodosAlarmes() {
 }
 export async function alarmePorId(id) {
     const comando = `
-    SELECT a.*, h.*
+    SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, h.horarios_id, h.medicamentos_id, h.hora
     FROM alarmes AS a
-    LEFT JOIN horarios AS h ON a.user_id = h.user_id
+    LEFT JOIN horarios AS h ON a.alarme_id = h.alarme_id
     WHERE a.user_id = ?`;
     
     const [result] = await con.query(comando, [id]);
 
     return result;
 }
+
 export async function alterarAlarme(id, alarme) {
     const comando = `UPDATE alarmes SET  alarme_nome =? , alarme_hora =? ,alarme_foto=? WHERE alarme_id=?  `
     const [resposta] = await con.query(comando, [alarme.nome, alarme.hora, alarme.foto, id])

@@ -17,7 +17,7 @@ import { api } from '../service/AlarmesService';
 export const Alarmes = () => {
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
-  const [dados, setDados] = useState({ alarmes: [], horarios: [] });
+  const [dados, setDados] = useState([]);
   const [dadosCarregados, setDadosCarregados] = useState(false);
 
   const handleNextPage = () => {
@@ -41,14 +41,10 @@ export const Alarmes = () => {
       console.log("User ID: ", userID);
 
       const response = await api.get(`/alarmes/${userID}`);
-      console.log("Dados recebidos da API: ", response.data);
 
       const dadosAPI = response.data;
 
-      if (dadosAPI && dadosAPI.alarmes && dadosAPI.horarios) {
-        console.log("Alarmes definidos: ", dadosAPI.alarmes);
-        console.log("Horários definidos: ", dadosAPI.horarios);
-
+      if (dadosAPI) {
         setDadosCarregados(true);
         setDados(dadosAPI);
       } else {
@@ -87,67 +83,54 @@ export const Alarmes = () => {
         </TouchableOpacity>
       </View>
       <View style={stylesAlarmes.alarmes}>
-        <ScrollView>
-          {dadosCarregados ? (
-            dados.alarmes.length > 0 ? (
-              dados.alarmes.map((alarme) => {
-                const horariosDoAlarme = dados.horarios.filter(horario => horario.alarmes_id === alarme.alarme_id);
-                return (
-                  <View style={stylesAlarmes.alarmesChild} key={alarme.alarme_id}>
-                    <View style={stylesAlarmes.alarmesChildColumn}>
-                      {/* imagem aleatória para testes */}
-                      <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image>
-                    </View>
-                    <View style={stylesAlarmes.alarmesChildColumn}>
-                      <View style={stylesAlarmes.alarmesChildLine}>
-                        <Text style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
-                          <Text style={{ color: '#000', fontWeight: 'normal' }}>, deverá ser administrado às </Text>
-                          {horariosDoAlarme.length > 0 ? (
-                            horariosDoAlarme.map((horario, index) => (
-                              <Text style={stylesAlarmes.alarmesChildHora} key={horario.horarios_id}>
-                                {horariosDoAlarme.length > 1 && index === horariosDoAlarme.length - 1 ? (
-                                  ' e ' + formattedHour(horario.hora)
-                                ) : index === horariosDoAlarme.length - 2 ? (
-                                  ' ' + formattedHour(horario.hora)
-                                ) : horariosDoAlarme.length > 1 ? (
-                                  formattedHour(horario.hora) + ', '
-                                ) : (
-                                  formattedHour(horario.hora)
-                                )}
-                              </Text>
-                            ))
-                          ) : null}
-                        </Text>
-                      </View>
-                      <View style={stylesAlarmes.alarmesChildLine}>
-                        <View style={stylesAlarmes.frequencia}>
-                          <Image source={require('../assets/images/alarmesPage/calendar.png')} style={stylesAlarmes.imgAlarmesPage} />
-                          <Text style={stylesAlarmes.frequenciaText}>
-                            {alarme.alarme_recorrencia === 1 ? 'Repete todos os dias' :
-                              <>
-                                Repete a cada <Text style={{ color: '#f00' }}>
-                                  {alarme.alarme_recorrencia}
-                                </Text> dias
-                              </>
-                            }
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={stylesAlarmes.alarmesChildColumn}>
-                      <TouchableOpacity style={stylesAlarmes.moreDetails} /* onPress={() => moreDetails()}*/>
-                        <AntDesign name="right" size={20} color="#555" />
-                      </TouchableOpacity>
-                    </View>
+      <ScrollView>
+        {dados.length > 0 ? (
+          dados.map((alarme) => (
+            <View style={stylesAlarmes.alarmesChild}key={alarme.alarme_id}>
+              <View style={stylesAlarmes.alarmesChildColumn}>
+                {/* imagem aleatória para testes */}
+                <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
+              </View>
+              <View style={stylesAlarmes.alarmesChildColumn}>
+                <View style={stylesAlarmes.alarmesChildLine}>
+                  <Text 
+                  style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
+                    <Text style={{color: '#000', fontWeight: 'normal'}}>, deverá ser administrado às </Text>
+                    <Text style={stylesAlarmes.alarmesChildHora}>
+                      {alarme.hora}
+                    </Text>
+                  </Text>
+                </View>
+                <View style={stylesAlarmes.alarmesChildLine}>
+                  <View style={stylesAlarmes.frequencia}>
+                    <Image
+                      source={require('../assets/images/alarmesPage/calendar.png')}
+                      style={stylesAlarmes.imgAlarmesPage}
+                    />
+                    <Text style={stylesAlarmes.frequenciaText}>
+                    {alarme.alarme_recorrencia === 1
+                      ? 'Repete todos os dias'
+                      : 
+                      <>
+                        Repete a cada <Text style={{ color: '#f00' }}>
+                          {alarme.alarme_recorrencia}
+                        </Text> dias
+                      </>
+                      }
+                    </Text>
                   </View>
-                );
-              })
-            ) : (
-              <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
-            )
-          ) : (
-            <Text style={stylesAlarmes.noAlarmsMessage}>Carregando alarmes...</Text>
-          )}
+                </View>
+              </View>
+              <View style={stylesAlarmes.alarmesChildColumn}>
+                <TouchableOpacity style={stylesAlarmes.moreDetails} onPress={() => goBack()}>
+                    <AntDesign name="right" size={20} color="#555" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        ) : (
+          <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+        )}
         </ScrollView>
       </View>
     </View>

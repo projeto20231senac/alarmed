@@ -1,7 +1,9 @@
 import multer from "multer";
-import { Router } from "express";
+import express from "express";
 import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, inserirUsuario } from '../repository/alarmeRepository.js'
-const endpoint = Router();
+
+const endpoint = express.Router();
+
 const updload = multer({ dest: 'storage/fotoMedicamentos' })
 
 endpoint.post('/alarmes', async (req, resp) => {
@@ -18,11 +20,11 @@ endpoint.post('/alarmes', async (req, resp) => {
 
 endpoint.post('/usuarios', async (req, resp) => {
     try {
-      const { cpf, cep, dataNascimento } = req.body;
-      const novoUsuario = await inserirUsuario(cpf, cep, dataNascimento);
-      resp.status(200).send(novoUsuario);
+        console.log(req.body);
+        const novoUsuario = await inserirUsuario(req.body.cpf, req.body.cep, req.body.dataNascimento);
+        resp.status(200).send(novoUsuario);
     } catch (err) {
-      resp.status(400).send({ erro: err.message });
+        resp.status(400).send({ erro: err.message });
     }
   });
 
@@ -40,8 +42,8 @@ endpoint.get('/alarmes', async (req, resp) => {
 endpoint.get('/usuarios/:user_id', async (req, resp) => {
     try {
             const user_id = req.params.user_id
-            const buscarUsuariosPorId = await buscarUserPorId(id)
-            resp.send(buscarUsuariosPorId)
+            const buscarUsuariosPorId = await buscarUserPorId(user_id)
+            resp.status(200).send(buscarUsuariosPorId)
     } catch(err){
         resp.status(400).send({erro : err.message})
     }
@@ -51,7 +53,8 @@ endpoint.get('/alarmes/:user_id', async (req, resp) => {
     try {
         const id = req.params.user_id;
         const buscaUserId = await alarmePorId(id);
-        resp.send(buscaUserId);
+        console.log(buscaUserId)
+        resp.status(200).send(buscaUserId);
     } catch (err) {
         resp.status(400).send({
             erro: err.message
