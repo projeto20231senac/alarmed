@@ -72,7 +72,7 @@ export const Alarmes = () => {
 
   return (
     <View style={styles.container}>
-      <Logo showBackButton={true} />
+      <Logo showBackButton={false} />
 
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       
@@ -102,13 +102,13 @@ export const Alarmes = () => {
                   style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
                     <Text style={{color: '#000', fontWeight: 'normal'}}>, deverá ser administrado às </Text>
                     <Text style={stylesAlarmes.alarmesChildHora}>
-                      {alarme.hora}
+                      {formattedHour(alarme.hora)}
                     </Text>
                   </Text>
                 </View>
                 <View style={stylesAlarmes.alarmesChildLine}>
                   <View style={stylesAlarmes.frequencia}>
-                    <AntDesign name="calendar" size={24} color="black" style={{marginRight: 10}}/>
+                    <AntDesign name="calendar" size={24} color="#000" style={{marginRight: 10}}/>
                     <Text style={stylesAlarmes.frequenciaText}>
                     {alarme.alarme_recorrencia === 1
                       ? 'Repete todos os dias'

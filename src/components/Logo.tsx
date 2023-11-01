@@ -12,7 +12,7 @@ export const Logo = ({ showBackButton }) => {
       <View style={styles.header}>
         {showBackButton && (
           <TouchableOpacity style={styles.back} onPress={() => goBack()}>
-            <AntDesign name="arrowleft" size={28} color="black" />
+            <AntDesign name="arrowleft" size={28} color="#000" />
           </TouchableOpacity>
         )}
         <View style={styles.containerLogo}>

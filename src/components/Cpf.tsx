@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform,
   KeyboardAvoidingView,
+  Alert, // Importe o componente Alert
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -21,33 +22,47 @@ export const Cpf = () => {
 
   const handleNextPage = async () => {
     if (validate(cpf)) {
-      try {
-        // Fazer uma solicitação à API para verificar se o CPF já existe no BD
-        const response = await api.get(`/usuarios/${cpf}`);
-        await AsyncStorage.setItem('CPF', cpf);
-  
-        if (response.status === 200) {
-          if (response.data && response.data.length > 0) {
-            // Há este CPF
-            await AsyncStorage.setItem('CPF', cpf);
-            console.log(`CPF (${format(cpf)}) já existe no BD!`);
-            navigate('Alarmes');
-          } else {
-            await AsyncStorage.setItem('CPF', cpf);
-            console.log(`CPF (${format(cpf)}) não existe no BD.`);
-            navigate('Cep');
-          }
-        } else {
-          // CPF não existe no BD, continue para a próxima tela
-          await AsyncStorage.setItem('CPF', cpf);
-          console.log(`CPF (${format(cpf)}) salvo no BD com sucesso!`);
-          navigate('Cep');
-        }
-      } catch (error) {
-        console.error('Erro ao verificar o CPF no BD:', error);
-      }
+      Alert.alert(
+        'Atenção',
+        `O CPF ${format(cpf)} está correto?`,
+        [
+          {
+            text: 'Corrigir',
+            style: 'cancel',
+          },
+          {
+            text: 'Confirmar',
+            onPress: async () => {
+              try {
+                const response = await api.get(`/usuarios/${cpf}`);
+                await AsyncStorage.setItem('CPF', cpf);
+    
+                if (response.status === 200) {
+                  if (response.data && response.data.length > 0) {
+                    // Há este CPF
+                    await AsyncStorage.setItem('CPF', cpf);
+                    console.log(`CPF (${format(cpf)}) já existe no BD!`);
+                    navigate('Alarmes');
+                  } else {
+                    await AsyncStorage.setItem('CPF', cpf);
+                    console.log(`CPF (${format(cpf)}) não existe no BD.`);
+                    navigate('Cep');
+                  }
+                } else {
+                  await AsyncStorage.setItem('CPF', cpf);
+                  console.log(`CPF (${format(cpf)}) salvo no BD com sucesso!`);
+                  navigate('Cep');
+                }
+              } catch (error) {
+                console.error('Erro ao verificar o CPF no BD:', error);
+              }
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
-      console.error('CPF inválido');
+      Alert.alert('CPF Inválido', 'Por favor, insira um CPF válido.');
     }
   };
 
@@ -59,7 +74,7 @@ export const Cpf = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Text style={styles.title}>Qual é o seu CPF?</Text>
         <View style={stylesCPF.form}>
-        <TextInput
+          <TextInput
             style={stylesCPF.input}
             value={cpf}
             onChangeText={(text) => setCpf(text)}
@@ -67,12 +82,12 @@ export const Cpf = () => {
             placeholderTextColor="#000"
             textAlign="center"
             keyboardType="numeric"
-        />
+          />
         </View>
         <View style={styles.areaButton}>
-        <TouchableOpacity style={styles.button} onPress={handleNextPage}>
+          <TouchableOpacity style={styles.button} onPress={handleNextPage}>
             <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </View>
