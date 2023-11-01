@@ -38,7 +38,10 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorId(id) {
-    const comando = `SELECT * FROM alarmes WHERE user_id = ?`;
+    const comando = `SELECT a.alarme_nome, h.hora
+    FROM alarmes AS a
+    INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
+    WHERE a.user_id = ?;`;
     
     const [result] = await con.query(comando, [id]);
 

@@ -26,7 +26,7 @@ export const Home = () => {
         console.log('Data de Nascimento: ', dataNascimentoFormatada)
 
         if (CPF && dataNascimento && cepData) {
-          navigate('Alarmes');
+          handleAcceptTerms();
         } else{
           navigate('Cpf')
         }
@@ -54,7 +54,7 @@ export const Home = () => {
           },
           { text: 'Aceitar', onPress: () => {
               setTermsAccepted(true);
-              checkAsyncStorage(); // Verifique novamente o AsyncStorage ao aceitar os termos.
+              navigate('Alarmes'); // Verifique novamente o AsyncStorage ao aceitar os termos.
             } 
           },
         ],
