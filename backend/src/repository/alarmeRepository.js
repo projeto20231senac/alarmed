@@ -38,11 +38,11 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorId(id) {
-    const comando = `
-    SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, h.horarios_id, h.medicamentos_id, h.hora
+    const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, h.horarios_id, h.medicamentos_id, h.hora
     FROM alarmes AS a
-    LEFT JOIN horarios AS h ON a.alarme_id = h.alarme_id
+    LEFT JOIN horarios AS h ON a.user_id = h.user_id
     WHERE a.user_id = ?`;
+    
     
     const [result] = await con.query(comando, [id]);
 
