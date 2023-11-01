@@ -27,10 +27,16 @@ export const Cpf = () => {
         await AsyncStorage.setItem('CPF', cpf);
   
         if (response.status === 200) {
-            // CPF existe no BD
+          if (response.data && response.data.length > 0) {
+            // Há este CPF
+            await AsyncStorage.setItem('CPF', cpf);
             console.log(`CPF (${format(cpf)}) já existe no BD!`);
             navigate('Alarmes');
-
+          } else {
+            await AsyncStorage.setItem('CPF', cpf);
+            console.log(`CPF (${format(cpf)}) não existe no BD.`);
+            navigate('Cep');
+          }
         } else {
           // CPF não existe no BD, continue para a próxima tela
           await AsyncStorage.setItem('CPF', cpf);
