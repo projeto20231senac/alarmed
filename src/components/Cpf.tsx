@@ -49,7 +49,7 @@ export const Cpf = () => {
     <View style={styles.container}>
       <Logo showBackButton={true} />
       <KeyboardAvoidingView 
-        style={{ flex: 2 }}
+        style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Text style={styles.title}>Qual é o seu CPF?</Text>
         <View style={stylesCPF.form}>

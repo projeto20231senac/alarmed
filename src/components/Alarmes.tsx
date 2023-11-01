@@ -10,7 +10,7 @@ import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
@@ -75,13 +75,18 @@ export const Alarmes = () => {
       <Logo showBackButton={true} />
 
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
-      <Text style={stylesAlarmes.title}>Meus alarmes</Text>
       
-      <View style={styles.areaButton}>
-        <TouchableOpacity style={stylesAlarmes.button} onPress={handleNextPage}>
-          <Text style={stylesAlarmes.buttonText}>Adicionar Alarmes</Text>
+      <View style={stylesAlarmes.areaButton}>
+        <TouchableOpacity style={stylesAlarmes.editButton} onPress={handleNextPage}>
+          <Text style={stylesAlarmes.editButtonText}>Editar meus dados</Text>
+          <MaterialCommunityIcons name="account-edit-outline" size={24} color="#555" />
+        </TouchableOpacity>
+        <TouchableOpacity style={stylesAlarmes.addButton} onPress={handleNextPage}>
+          <Text style={stylesAlarmes.addButtonText}>Adicionar Alarmes</Text>
+          <MaterialCommunityIcons name="alarm-plus" size={24} color="#0085FF" />
         </TouchableOpacity>
       </View>
+      <Text style={stylesAlarmes.title}>Meus alarmes <MaterialCommunityIcons name="bell-ring" size={32} color="#0085FF" /></Text>
       <View style={stylesAlarmes.alarmes}>
       <ScrollView>
         {dados.length > 0 ? (
@@ -103,10 +108,7 @@ export const Alarmes = () => {
                 </View>
                 <View style={stylesAlarmes.alarmesChildLine}>
                   <View style={stylesAlarmes.frequencia}>
-                    <Image
-                      source={require('../assets/images/alarmesPage/calendar.png')}
-                      style={stylesAlarmes.imgAlarmesPage}
-                    />
+                    <AntDesign name="calendar" size={24} color="black" style={{marginRight: 10}}/>
                     <Text style={stylesAlarmes.frequenciaText}>
                     {alarme.alarme_recorrencia === 1
                       ? 'Repete todos os dias'
@@ -129,7 +131,10 @@ export const Alarmes = () => {
             </View>
           ))
         ) : (
-          <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+          <View style={stylesAlarmes.noAlarms}>
+            <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+            <FontAwesome5 name="bell-slash" size={60} color="#ff000055" />
+          </View>
         )}
         </ScrollView>
       </View>
