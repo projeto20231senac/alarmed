@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, inserirUsuario } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, inserirUsuario, alterarUsuario } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -67,10 +67,23 @@ endpoint.put('/alarmes/:alarme_id', async (req, resp) => {
         const { alarme_id } = req.params
         const alarme = req.body
         const resposta = await alterarAlarme(alarme_id, alarme)
-        resp.status(204).send()
+        resp.status(204).send(resposta)
     } catch (error) {
         resp.status(400).send({
             erro: err.message
+        })
+    }
+})
+
+endpoint.put('/usuarios/:user_id', async (req, resp) => {
+    try {
+        const id = req.params.user_id;
+        const updatedData = req.body;
+        const resposta = await alterarUsuario(id, updatedData)
+        resp.sendStatus(204)
+    } catch (error) {
+        resp.status(400).send({
+            erro: error.message
         })
     }
 })

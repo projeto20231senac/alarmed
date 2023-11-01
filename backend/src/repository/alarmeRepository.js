@@ -53,6 +53,14 @@ export async function alterarAlarme(id, alarme) {
     const [resposta] = await con.query(comando, [alarme.nome, alarme.hora, alarme.foto, id])
     return resposta.affectedRows
 }
+
+export async function alterarUsuario(id, updatedData) {
+    const { user_cep, user_dtnascimento } = updatedData;
+    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE user_id = ?`;
+    const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
+    return resposta.affectedRows;
+}
+
 export async function removerAlarme(id) {
     const comando = `DELETE FROM alarmes WHERE alarme_id=?`
     const [resposta] = await con.query(comando, [id])

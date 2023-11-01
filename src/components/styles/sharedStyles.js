@@ -77,9 +77,8 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
     },
     button: {
-      padding: 15,
-      paddingLeft: 80,
-      paddingRight: 80,
+      paddingVertical: 20,
+      paddingHorizontal: 80,
       backgroundColor: '#0085FF',
       borderRadius: 10,
     },

@@ -18,10 +18,13 @@ export const Alarmes = () => {
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
   const [dados, setDados] = useState([]);
-  const [dadosCarregados, setDadosCarregados] = useState(false);
 
-  const handleNextPage = () => {
-    navigate('AlarmesNome')
+  const handleNextPage = (value) => {
+    if(value === 'edit'){
+      navigate('Edit')
+    }else{
+      navigate('AlarmesNome')
+    }
   }
 
   useEffect(() => {
@@ -45,7 +48,6 @@ export const Alarmes = () => {
       const dadosAPI = response.data;
 
       if (dadosAPI) {
-        setDadosCarregados(true);
         setDados(dadosAPI);
       } else {
         console.log("Nenhum dado de alarme ou horário recebido da API.");
@@ -77,11 +79,11 @@ export const Alarmes = () => {
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       
       <View style={stylesAlarmes.areaButton}>
-        <TouchableOpacity style={stylesAlarmes.editButton} onPress={handleNextPage}>
+        <TouchableOpacity style={stylesAlarmes.editButton} onPress={() => handleNextPage('edit')}>
           <Text style={stylesAlarmes.editButtonText}>Editar meus dados</Text>
           <MaterialCommunityIcons name="account-edit-outline" size={24} color="#555" />
         </TouchableOpacity>
-        <TouchableOpacity style={stylesAlarmes.addButton} onPress={handleNextPage}>
+        <TouchableOpacity style={stylesAlarmes.addButton} onPress={() => handleNextPage('next')}>
           <Text style={stylesAlarmes.addButtonText}>Adicionar Alarmes</Text>
           <MaterialCommunityIcons name="alarm-plus" size={24} color="#0085FF" />
         </TouchableOpacity>
@@ -114,7 +116,7 @@ export const Alarmes = () => {
                       ? 'Repete todos os dias'
                       : 
                       <>
-                        Repete a cada <Text style={{ color: '#f00' }}>
+                        Repete a cada <Text style={{ color: '#f00', fontWeight: 'bold' }}>
                           {alarme.alarme_recorrencia}
                         </Text> dias
                       </>

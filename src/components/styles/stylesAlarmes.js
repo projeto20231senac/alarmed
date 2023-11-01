@@ -55,11 +55,11 @@ export const stylesAlarmes = StyleSheet.create({
         marginTop: 10,        
         marginVertical: 5,
         borderTopWidth: 1,
-        borderStyle: 'dashed',
         borderTopColor: '#aaa',       
+        paddingTop: 10,
     },
     frequenciaText:{
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: 16,
     },
     imgAlarmesPage:{
