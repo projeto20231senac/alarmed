@@ -1,5 +1,16 @@
 import { con } from './connection.js'
 
+export async function inserirUsuario(cpf, cep, dataNascimento) {
+    const sql = `INSERT INTO usuarios (user_id, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
+    const [resposta] = await con.query(sql, [cpf, cep, dataNascimento]);
+    return resposta;
+  }
+
+export async function buscarUserPorId(id){
+    const comando = `SELECT * FROM usuarios WHERE user_id = ?`
+    const [resposta] = await con.query(comando, [id])
+    return resposta
+}
 
 export async function inserirAlarme(alarm) {
     const comando = `INSERT INTO alarmes (user_id,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
@@ -27,9 +38,14 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorId(id) {
-    const comando = `SELECT  * FROM alarmes WHERE user_id = ?`
-    const [linhas] = await con.query(comando, [id])
-    return linhas
+    const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, h.hora
+    FROM alarmes AS a
+    INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
+    WHERE a.user_id = ?;`;
+    
+    const [result] = await con.query(comando, [id]);
+
+    return result;
 }
 
 export async function alterarAlarme(id, alarme) {
@@ -37,6 +53,14 @@ export async function alterarAlarme(id, alarme) {
     const [resposta] = await con.query(comando, [alarme.nome, alarme.hora, alarme.foto, id])
     return resposta.affectedRows
 }
+
+export async function alterarUsuario(id, updatedData) {
+    const { user_cep, user_dtnascimento } = updatedData;
+    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE user_id = ?`;
+    const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
+    return resposta.affectedRows;
+}
+
 export async function removerAlarme(id) {
     const comando = `DELETE FROM alarmes WHERE alarme_id=?`
     const [resposta] = await con.query(comando, [id])
