@@ -68,12 +68,12 @@ endpoint.get('/alarmes/:user_id', async (req, resp) => {
 })
 
 //obter detalhes dos alarmes filtrando pelo alarme_id
-endpoint.get('/alarmes/:alarme_id', async (req, resp) => {
+endpoint.get('/detalhes/:alarme_id', async (req, resp) => {
     try {
         const id = req.params.alarme_id;
-        const buscarDetalhesAlarmePorId = await buscarDetalhesAlarmePorId(id);
-        console.log(buscarDetalhesAlarmePorId)
-        resp.status(200).send(buscarDetalhesAlarmePorId);
+        const buscaDetalhesAlarmePorId = await buscarDetalhesAlarmePorId(id);
+        console.log(buscaDetalhesAlarmePorId)
+        resp.status(200).send(buscaDetalhesAlarmePorId);
     } catch (err) {
         resp.status(400).send({
             erro: err.message

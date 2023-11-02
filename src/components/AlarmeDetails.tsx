@@ -32,18 +32,24 @@ export const AlarmeDetails = () => {
     setCurrentDate(currentDate);
 
     const loadDados = async () => {
-      const alarmeId = await AsyncStorage.getItem('alarmeId');
-      console.log("AlarmeID para detalhes: ", alarmeId);
+      try {
+        const alarmeId = await AsyncStorage.getItem('alarmeId');
+        console.log("Alarme ID recebido: ", alarmeId);
 
-      const response = await api.get(`/alarmes/${alarmeId}`);
+        const response = await api.get(`/detalhes/${alarmeId}`);
 
-      const dadosAPI = response.data;
-      console.log(dadosAPI)
+        if (response.status === 200) {
+          const dadosAPI = response.data;
+          console.log(dadosAPI)
 
-      if (dadosAPI) {
-        setDados(dadosAPI);
-      } else {
-        console.log("Nenhum dado de alarme ou horário recebido da API.");
+          if (dadosAPI) {
+            setDados(dadosAPI);
+          } else {
+            console.log("Nenhum dado de alarme recebido da API.");
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao obter os dados:', error);
       }
     };
 
@@ -107,17 +113,13 @@ export const AlarmeDetails = () => {
                   </View>
                 </View>
               </View>
-              <View style={stylesAlarmes.alarmesChildColumn}>
-                <TouchableOpacity style={stylesAlarmes.moreDetails} onPress={() => goBack()}>
-                    <AntDesign name="right" size={20} color="#555" />
-                </TouchableOpacity>
-              </View>
             </View>
           ))
         ) : (
           <View style={stylesAlarmes.noAlarms}>
-            <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+            <Text style={stylesAlarmes.noAlarmsMessage}>Detalhes não encontrados para esse alarme.</Text>
             <FontAwesome5 name="bell-slash" size={60} color="#ff000055" />
+            <Text style={stylesAlarmes.noAlarmsMessage}>Tente novamente.</Text>
           </View>
         )}
         </ScrollView>

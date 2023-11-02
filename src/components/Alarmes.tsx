@@ -25,7 +25,7 @@ export const Alarmes = () => {
     }else if(value === 'next'){
       navigate('AlarmesNome')
     } else if ( value === 'details'){
-      console.log(alarme_id)
+      console.log("Alarme ID escolhido: ", alarme_id)
       AsyncStorage.setItem('alarmeId', String(alarme_id))
       .then(() => {
         navigate('AlarmeDetails');
