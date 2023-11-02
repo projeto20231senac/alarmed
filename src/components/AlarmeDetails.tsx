@@ -14,27 +14,10 @@ import { AntDesign, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
-export const Alarmes = () => {
+export const AlarmeDetails = () => {
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
-  const [dados, setDados] = useState([]);
-
-  const handleNextPage = (value, alarme_id) => {
-    if(value === 'edit'){
-      navigate('Edit')
-    }else if(value === 'next'){
-      navigate('AlarmesNome')
-    } else if ( value === 'details'){
-      console.log(alarme_id)
-      AsyncStorage.setItem('alarmeId', String(alarme_id))
-      .then(() => {
-        navigate('AlarmeDetails');
-      })
-      .catch(error => {
-        console.error('Erro ao salvar alarme_id no AsyncStorage:', error);
-      });
-    }
-  }
+  const [dados, setDados] = useState([])
 
   useEffect(() => {
     const options = {
@@ -49,12 +32,13 @@ export const Alarmes = () => {
     setCurrentDate(currentDate);
 
     const loadDados = async () => {
-      const userID = await AsyncStorage.getItem('CPF');
-      console.log("User ID: ", userID);
+      const alarmeId = await AsyncStorage.getItem('alarmeId');
+      console.log("AlarmeID para detalhes: ", alarmeId);
 
-      const response = await api.get(`/alarmes/${userID}`);
+      const response = await api.get(`/alarmes/${alarmeId}`);
 
       const dadosAPI = response.data;
+      console.log(dadosAPI)
 
       if (dadosAPI) {
         setDados(dadosAPI);
@@ -65,6 +49,7 @@ export const Alarmes = () => {
 
     loadDados();
   }, []);
+
 
   const formattedHour = (horaString) => {
     if (!horaString) return '';
@@ -83,21 +68,9 @@ export const Alarmes = () => {
 
   return (
     <View style={styles.container}>
-      <Logo showBackButton={false} />
-
+      <Logo showBackButton={true} />      
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
-      
-      <View style={stylesAlarmes.areaButton}>
-        <TouchableOpacity style={stylesAlarmes.editButton} onPress={() => handleNextPage('edit')}>
-          <Text style={stylesAlarmes.editButtonText}>Editar meus dados</Text>
-          <MaterialCommunityIcons name="account-edit-outline" size={24} color="#555" />
-        </TouchableOpacity>
-        <TouchableOpacity style={stylesAlarmes.addButton} onPress={() => handleNextPage('next')}>
-          <Text style={stylesAlarmes.addButtonText}>Adicionar Alarmes</Text>
-          <MaterialCommunityIcons name="alarm-plus" size={24} color="#0085FF" />
-        </TouchableOpacity>
-      </View>
-      <Text style={stylesAlarmes.title}>Meus alarmes <MaterialCommunityIcons name="bell-ring" size={32} color="#0085FF" /></Text>
+
       <View style={stylesAlarmes.alarmes}>
       <ScrollView>
         {dados.length > 0 ? (
@@ -135,12 +108,9 @@ export const Alarmes = () => {
                 </View>
               </View>
               <View style={stylesAlarmes.alarmesChildColumn}>
-              <TouchableOpacity
-                style={stylesAlarmes.moreDetails}
-                onPress={() => {handleNextPage('details', alarme.alarme_id);}}
-              >
-                <AntDesign name="right" size={20} color="#555" />
-              </TouchableOpacity>
+                <TouchableOpacity style={stylesAlarmes.moreDetails} onPress={() => goBack()}>
+                    <AntDesign name="right" size={20} color="#555" />
+                </TouchableOpacity>
               </View>
             </View>
           ))
