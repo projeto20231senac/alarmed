@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, inserirUsuario, alterarUsuario, buscarDetalhesAlarmePorId } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, alterarUsuario } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -19,16 +19,15 @@ endpoint.post('/alarmes', async (req, resp) => {
     }
 })
 
-//criar um novo usuario
-endpoint.post('/usuarios', async (req, resp) => {
-    try {
-        console.log(req.body);
-        const novoUsuario = await inserirUsuario(req.body.cpf, req.body.cep, req.body.dataNascimento);
-        resp.status(200).send(novoUsuario);
-    } catch (err) {
-        resp.status(400).send({ erro: err.message });
-    }
-  });
+// endpoint.post('/usuarios', async (req, resp) => {
+//     try {
+//         console.log(req.body);
+//         const novoUsuario = await inserirUsuario(req.body.cpf, req.body.cep, req.body.dataNascimento);
+//         resp.status(200).send(novoUsuario);
+//     } catch (err) {
+//         resp.status(400).send({ erro: err.message });
+//     }
+//   });
 
 //obter todos os alarmes
 endpoint.get('/alarmes', async (req, resp) => {
