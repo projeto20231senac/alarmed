@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,39 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesCPF } from './styles/stylesCPF';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as Location from 'expo-location';
 export const Cep = () => {
   const { navigate } = useNavigation();
   const [cep, setCep] = useState('');
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [address, setAddress] = useState(null);
+  useEffect(() =>{
+    (async () =>{
+      let {status} = await Location.requestForegroundPermissionsAsync();
+      
+      
+      if(status !== 'granted') {
+        setErrorMsg('A permissão para acessar o local foi negada');
+        return;
+      } 
+        let local = await Location.getCurrentPositionAsync({})
+        console.log("qual sera a saida?",address);
+        setLocation(local)
+        const keys = {
+          latitude: local.coords.latitude,
+          longitude: local.coords.longitude
+        };
+        try {
+          const resultado = await Location.reverseGeocodeAsync(keys);
+          setAddress(resultado);
+        } catch (error) {
+          console.error('Erro ao fazer reverse geocode:', error);
+        }
+    })()
+  },[])
+  
+console.log("qual sera a saida?",address[0].postalCode);
 
   // Função para formatar o CEP para "00000-000"
   const formatCep = (inputCep) => {
@@ -38,7 +67,7 @@ export const Cep = () => {
     try {
       await AsyncStorage.setItem('CEP', formattedCep);
       console.log(`CEP (${formattedCep}) salvo com sucesso!`);
-      navigate('DtNasc');
+      // navigate('DtNasc');
     } catch (error) {
       console.error('Erro ao salvar o CEP:', error);
     }

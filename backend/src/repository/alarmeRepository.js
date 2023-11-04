@@ -11,6 +11,16 @@ export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     return resposta
 }
 
+export async function buscarDetalhesAlarmePorId(id){
+    const comando = `
+        SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo
+        FROM alarmes AS a
+        INNER JOIN medicamentos AS m ON a.alarme_id = m.alarme_id
+        WHERE a.alarme_id = ?`
+    const [resposta] = await con.query(comando, [id])
+    return resposta
+}
+
 export async function inserirAlarme(alarm) {
     const comando = `INSERT INTO alarmes (user_id,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
 
