@@ -87,4 +87,12 @@ export const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
     },
+    error:{
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 10,
+      backgroundColor: '#f99',
+      marginBottom: 10,
+    }
   });  

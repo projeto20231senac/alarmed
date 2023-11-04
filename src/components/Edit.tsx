@@ -14,17 +14,20 @@ import { stylesCPF } from './styles/stylesCPF';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export const Edit = () => {
   const { navigate } = useNavigation();
   const [cep, setCep] = useState('');
   const [birthDate, setBirthDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const cpf = await AsyncStorage.getItem('CPF');
+        console.log('Consultando o CPF para edição: ', cpf);
         const response = await api.get(`/usuarios/${cpf}`);
 
         if (response.status === 200) {
@@ -36,9 +39,11 @@ export const Edit = () => {
 
         } else {
           console.log('Usuário não encontrado ou erro na solicitação à API.');
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
         }
       } catch (error) {
-        console.error('Erro ao recuperar os dados:', error);
+        console.error('Erro ao conectar com a base de dados:', error);
+        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
       }
     };
 
@@ -77,7 +82,12 @@ export const Edit = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />
-
+      {errorMessage && (
+          <View style={styles.error}>
+            <MaterialIcons name="error" size={24} color="black" />
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        )}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

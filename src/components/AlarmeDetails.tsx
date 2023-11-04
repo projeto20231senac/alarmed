@@ -10,7 +10,7 @@ import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
@@ -18,6 +18,7 @@ export const AlarmeDetails = () => {
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
   const [dados, setDados] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const options = {
@@ -32,18 +33,30 @@ export const AlarmeDetails = () => {
     setCurrentDate(currentDate);
 
     const loadDados = async () => {
-      const alarmeId = await AsyncStorage.getItem('alarmeId');
-      console.log("AlarmeID para detalhes: ", alarmeId);
+      try {
+        const alarmeId = await AsyncStorage.getItem('alarmeId');
+        const horariosId = await AsyncStorage.getItem('horariosId');
+        console.log("Alarme ID recebido: ", alarmeId);
+        console.log('Horarios ID recebido: ', horariosId)
 
-      const response = await api.get(`/alarmes/${alarmeId}`);
+        const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
 
-      const dadosAPI = response.data;
-      console.log(dadosAPI)
+        if (response.status === 200) {
+          const dadosAPI = response.data;
+          console.log(dadosAPI)
 
-      if (dadosAPI) {
-        setDados(dadosAPI);
-      } else {
-        console.log("Nenhum dado de alarme ou horário recebido da API.");
+          if (dadosAPI) {
+            setDados(dadosAPI);
+          } else {
+            console.log("Nenhum dado de alarme recebido da API.");
+            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+          }
+        }else{
+          setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
+        }
+      } catch (error) {
+        console.error('Erro ao obter os dados:', error);
+        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
       }
     };
 
@@ -69,6 +82,12 @@ export const AlarmeDetails = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />      
+      {errorMessage && (
+          <View style={styles.error}>
+            <MaterialIcons name="error" size={24} color="black" />
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        )}
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
 
       <View style={stylesAlarmes.alarmes}>
@@ -107,17 +126,13 @@ export const AlarmeDetails = () => {
                   </View>
                 </View>
               </View>
-              <View style={stylesAlarmes.alarmesChildColumn}>
-                <TouchableOpacity style={stylesAlarmes.moreDetails} onPress={() => goBack()}>
-                    <AntDesign name="right" size={20} color="#555" />
-                </TouchableOpacity>
-              </View>
             </View>
           ))
         ) : (
           <View style={stylesAlarmes.noAlarms}>
-            <Text style={stylesAlarmes.noAlarmsMessage}>Não há alarmes definidos no momento</Text>
+            <Text style={stylesAlarmes.noAlarmsMessage}>Detalhes não encontrados para esse alarme.</Text>
             <FontAwesome5 name="bell-slash" size={60} color="#ff000055" />
+            <Text style={stylesAlarmes.noAlarmsMessage}>Tente novamente.</Text>
           </View>
         )}
         </ScrollView>
