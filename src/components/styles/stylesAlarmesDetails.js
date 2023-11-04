@@ -1,0 +1,121 @@
+import { StyleSheet } from 'react-native';
+
+export const stylesAlarmesDetails = StyleSheet.create({
+    title:{
+        fontSize: 40,
+        fontWeight: 'bold',
+        color: '#0085FF',
+        margin: 10,
+    },
+    subtitle:{
+        fontSize: 14,
+        marginHorizontal: 10,
+    },
+    areaButton:{
+        flexDirection:'column',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+    },
+    addButton:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0085ff33',
+        borderWidth: 1,
+        borderColor: '#0085FF',
+        borderRadius: 10,
+        paddingVertical: 15,
+        margin: 5,
+    },
+    editButton:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#aaaaaa33',
+        borderWidth: 1,
+        borderColor: '#555',
+        borderRadius: 10,
+        paddingVertical: 15,
+        margin: 5,
+    },
+    addButtonText:{
+        color: '#0085FF',
+        fontSize: 20,
+        paddingHorizontal: 3,
+    },
+    editButtonText:{
+        color: '#555',
+        fontSize: 20,
+        paddingHorizontal: 3,
+    },
+    frequencia:{
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 10,        
+        marginVertical: 5,
+        borderTopWidth: 1,
+        borderTopColor: '#aaa',       
+        paddingTop: 10,
+    },
+    alarmesChildText:{
+        fontSize: 16,
+    },
+    imgAlarmesPage:{
+        width: 20,
+        height: 20, 
+        marginVertical: 10,
+        marginRight: 10,
+    },
+    imgAlarmes:{
+        width: 85,
+        height: 85,
+        margin: 5,
+    },
+    alarmes:{
+        flex:1,
+    },
+    alarmesChild:{
+        // flexDirection: 'column',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
+        backgroundColor: '#55555533',
+        padding: 10,
+        borderRadius: 10,
+        margin: 10,
+        borderWidth: 1,
+        borderColor: '#aaa',
+        flexBasis: 200,
+        flexWrap: 'wrap',
+    },
+    alarmesChildColumn:{
+        flexDirection:'column',
+        flexGrow: 2,
+    },
+    alarmesChildLine:{
+        flexDirection: 'row',
+    },
+    alarmesChildTitle:{
+        flex: 1,
+        color: '#0085FF',
+        fontWeight: '900',
+        fontSize: 24,
+    },
+    noAlarms:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 100,
+    },
+    noAlarmsMessage:{
+        fontSize: 18,
+        marginVertical: 10,
+        color: '#000',
+        fontWeight: 'bold',
+    },
+    moreDetails:{
+        fontWeight: 'bold',
+        marginHorizontal: 10,
+    },
+})

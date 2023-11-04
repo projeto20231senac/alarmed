@@ -9,8 +9,8 @@ import {
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
-import { stylesAlarmes } from './styles/stylesAlarmes';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { stylesAlarmesDetails } from './styles/stylesAlarmesDetails';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
@@ -88,31 +88,33 @@ export const AlarmeDetails = () => {
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}
-      <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
+      <Text style={stylesAlarmesDetails.subtitle}>Hoje é {currentDate}</Text>
 
-      <View style={stylesAlarmes.alarmes}>
+      <View style={stylesAlarmesDetails.alarmes}>
       <ScrollView>
         {dados.length > 0 ? (
           dados.map((alarme) => (
-            <View style={stylesAlarmes.alarmesChild}key={alarme.alarme_id}>
-              <View style={stylesAlarmes.alarmesChildColumn}>
-                {/* imagem aleatória para testes */}
-                <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
-              </View>
-              <View style={stylesAlarmes.alarmesChildColumn}>
-                <View style={stylesAlarmes.alarmesChildLine}>
-                  <Text 
-                  style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
-                    <Text style={{color: '#000', fontWeight: 'normal'}}>, deverá ser administrado às </Text>
-                    <Text style={stylesAlarmes.alarmesChildHora}>
-                      {formattedHour(alarme.hora)}
-                    </Text>
-                  </Text>
+            <View style={stylesAlarmesDetails.alarmesChild}key={alarme.alarme_id}>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <View style={stylesAlarmesDetails.alarmesChildColumn}>
+                    <Text>Detalhes</Text>
+                  </View>
                 </View>
-                <View style={stylesAlarmes.alarmesChildLine}>
-                  <View style={stylesAlarmes.frequencia}>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <Text style={stylesAlarmesDetails.alarmesChildTitle}>{alarme.alarme_nome}</Text>
+                </View>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                    {/* imagem aleatória para testes */}
+                  <Image style={stylesAlarmesDetails.imgAlarmes} source={require('../assets/favicon.png')}></Image>
+                </View>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <View style={stylesAlarmesDetails.frequencia}>
                     <AntDesign name="calendar" size={24} color="#000" style={{marginRight: 10}}/>
-                    <Text style={stylesAlarmes.frequenciaText}>
+                    <Text style={stylesAlarmesDetails.alarmesChildText}>
                     {alarme.alarme_recorrencia === 1
                       ? 'Repete todos os dias'
                       : 
@@ -125,14 +127,44 @@ export const AlarmeDetails = () => {
                     </Text>
                   </View>
                 </View>
-              </View>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <Entypo name="clock" size={24} color="black" style={{marginRight: 10}}/>
+                  <Text style={stylesAlarmesDetails.alarmesChildText}>
+                    {formattedHour(alarme.hora)}
+                  </Text>
+                </View>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <Text style={stylesAlarmesDetails.alarmesChildText}>
+                    {alarme.medicamentos_tipo}
+                  </Text>
+                </View>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <Text style={stylesAlarmesDetails.alarmesChildText}>
+                    {alarme.medicamentos_dose}
+                  </Text>
+                </View>
+
+                <View style={stylesAlarmesDetails.alarmesChildLine}>
+                  <Text style={stylesAlarmesDetails.alarmesChildText}>
+                    {alarme.count_disparos === 0
+                        ? 'Este alarme ainda não foi disparado'
+                        : 
+                        <>
+                          Esse alarme já disparou {alarme.count_disparos} vezes desde que foi definido.
+                        </>
+                    }
+                  </Text>
+                </View>
             </View>
           ))
         ) : (
-          <View style={stylesAlarmes.noAlarms}>
-            <Text style={stylesAlarmes.noAlarmsMessage}>Detalhes não encontrados para esse alarme.</Text>
+          <View style={stylesAlarmesDetails.noAlarms}>
+            <Text style={stylesAlarmesDetails.noAlarmsMessage}>Detalhes não encontrados para esse alarme.</Text>
             <FontAwesome5 name="bell-slash" size={60} color="#ff000055" />
-            <Text style={stylesAlarmes.noAlarmsMessage}>Tente novamente.</Text>
+            <Text style={stylesAlarmesDetails.noAlarmsMessage}>Tente novamente.</Text>
           </View>
         )}
         </ScrollView>
