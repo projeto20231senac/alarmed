@@ -10,7 +10,7 @@ import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
@@ -18,15 +18,27 @@ export const Alarmes = () => {
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
   const [dados, setDados] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
+<<<<<<< HEAD
+  const handleNextPage = (value, alarme_id, horarios_id) => {
+=======
   const handleNextPage = (value, alarme_id) => {
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
     if(value === 'edit'){
       navigate('Edit')
     }else if(value === 'next'){
       navigate('AlarmesNome')
     } else if ( value === 'details'){
+<<<<<<< HEAD
+      console.log("Alarme ID escolhido: ", alarme_id)
+      console.log("Horarios ID escolhido: ", horarios_id)
+      AsyncStorage.setItem('alarmeId', String(alarme_id))
+      AsyncStorage.setItem('horariosId', String(horarios_id))
+=======
       console.log(alarme_id)
       AsyncStorage.setItem('alarmeId', String(alarme_id))
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
       .then(() => {
         navigate('AlarmeDetails');
       })
@@ -60,6 +72,7 @@ export const Alarmes = () => {
         setDados(dadosAPI);
       } else {
         console.log("Nenhum dado de alarme ou horário recebido da API.");
+        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
       }
     };
 
@@ -84,7 +97,12 @@ export const Alarmes = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={false} />
-
+      {errorMessage && (
+          <View style={styles.error}>
+            <MaterialIcons name="error" size={24} color="black" />
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        )}
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       
       <View style={stylesAlarmes.areaButton}>
@@ -137,7 +155,11 @@ export const Alarmes = () => {
               <View style={stylesAlarmes.alarmesChildColumn}>
               <TouchableOpacity
                 style={stylesAlarmes.moreDetails}
+<<<<<<< HEAD
+                onPress={() => {handleNextPage('details', alarme.alarme_id, alarme.horarios_id);}}
+=======
                 onPress={() => {handleNextPage('details', alarme.alarme_id);}}
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
               >
                 <AntDesign name="right" size={20} color="#555" />
               </TouchableOpacity>
