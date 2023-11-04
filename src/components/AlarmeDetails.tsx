@@ -10,7 +10,7 @@ import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
@@ -18,6 +18,7 @@ export const AlarmeDetails = () => {
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
   const [dados, setDados] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const options = {
@@ -34,9 +35,11 @@ export const AlarmeDetails = () => {
     const loadDados = async () => {
       try {
         const alarmeId = await AsyncStorage.getItem('alarmeId');
+        const horariosId = await AsyncStorage.getItem('horariosId');
         console.log("Alarme ID recebido: ", alarmeId);
+        console.log('Horarios ID recebido: ', horariosId)
 
-        const response = await api.get(`/detalhes/${alarmeId}`);
+        const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
 
         if (response.status === 200) {
           const dadosAPI = response.data;
@@ -46,10 +49,14 @@ export const AlarmeDetails = () => {
             setDados(dadosAPI);
           } else {
             console.log("Nenhum dado de alarme recebido da API.");
+            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
           }
+        }else{
+          setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
         }
       } catch (error) {
         console.error('Erro ao obter os dados:', error);
+        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
       }
     };
 
@@ -75,6 +82,12 @@ export const AlarmeDetails = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />      
+      {errorMessage && (
+          <View style={styles.error}>
+            <MaterialIcons name="error" size={24} color="black" />
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        )}
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
 
       <View style={stylesAlarmes.alarmes}>

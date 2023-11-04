@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarUserPorId, inserirUsuario, alterarUsuario, buscarDetalhesAlarmePorId } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarDetalhesAlarmePorId } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -19,16 +19,6 @@ endpoint.post('/alarmes', async (req, resp) => {
     }
 })
 
-//criar um novo usuario
-endpoint.post('/usuarios', async (req, resp) => {
-    try {
-        console.log(req.body);
-        const novoUsuario = await inserirUsuario(req.body.cpf, req.body.cep, req.body.dataNascimento);
-        resp.status(200).send(novoUsuario);
-    } catch (err) {
-        resp.status(400).send({ erro: err.message });
-    }
-  });
 
 //obter todos os alarmes
 endpoint.get('/alarmes', async (req, resp) => {
@@ -39,17 +29,6 @@ endpoint.get('/alarmes', async (req, resp) => {
         resp.status(400).send({
             erro: err.message
         })
-    }
-})
-
-//obter dados usuario
-endpoint.get('/usuarios/:user_id', async (req, resp) => {
-    try {
-            const user_id = req.params.user_id
-            const buscarUsuariosPorId = await buscarUserPorId(user_id)
-            resp.status(200).send(buscarUsuariosPorId)
-    } catch(err){
-        resp.status(400).send({erro : err.message})
     }
 })
 
@@ -67,11 +46,12 @@ endpoint.get('/alarmes/:user_id', async (req, resp) => {
     }
 })
 
-//obter detalhes dos alarmes filtrando pelo alarme_id
-endpoint.get('/detalhes/:alarme_id', async (req, resp) => {
+//obter detalhes dos alarmes filtrando pelo alarme_id e horarios_id
+endpoint.get('/detalhes/:alarme_id/:horarios_id', async (req, resp) => {
     try {
-        const id = req.params.alarme_id;
-        const buscaDetalhesAlarmePorId = await buscarDetalhesAlarmePorId(id);
+        const alarme_id = req.params.alarme_id;
+        const horarios_id = req.params.horarios_id
+        const buscaDetalhesAlarmePorId = await buscarDetalhesAlarmePorId(alarme_id, horarios_id);
         console.log(buscaDetalhesAlarmePorId)
         resp.status(200).send(buscaDetalhesAlarmePorId);
     } catch (err) {
@@ -94,19 +74,6 @@ endpoint.put('/alarmes/:alarme_id', async (req, resp) => {
     }
 })
 
-//atualizar dados do usuario
-endpoint.put('/usuarios/:user_id', async (req, resp) => {
-    try {
-        const id = req.params.user_id;
-        const updatedData = req.body;
-        const resposta = await alterarUsuario(id, updatedData)
-        resp.sendStatus(204)
-    } catch (error) {
-        resp.status(400).send({
-            erro: error.message
-        })
-    }
-})
 
 endpoint.delete('/alarmes/:alarme_id', async (req, resp) => {
     try {
