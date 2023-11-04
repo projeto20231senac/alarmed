@@ -55,6 +55,7 @@ export const Nascimento = () => {
         try {
           const cpf = await AsyncStorage.getItem('CPF');
           const cep = await AsyncStorage.getItem('CEP');
+          
           const dataNascimento = await AsyncStorage.getItem('dataNascimento');
 
           const dtNascimento = new Date(dataNascimento);
