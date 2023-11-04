@@ -1,10 +1,10 @@
 import { con } from './connection.js'
 
-export async function inserirUsuario(cpf, cep, dataNascimento) {
-    const sql = `INSERT INTO usuarios (user_id, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
-    const [resposta] = await con.query(sql, [cpf, cep, dataNascimento]);
-    return resposta;
-  }
+// export async function inserirUsuario(cpf, cep, dataNascimento) {
+//     const sql = `INSERT INTO usuarios (user_id, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
+//     const [resposta] = await con.query(sql, [cpf, cep, dataNascimento]);
+//     return resposta;
+//   }
 
 export async function buscarUserPorId(id){
     const comando = `SELECT * FROM usuarios WHERE user_id = ?`
