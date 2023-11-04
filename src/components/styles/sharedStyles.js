@@ -94,5 +94,8 @@ export const styles = StyleSheet.create({
       padding: 10,
       backgroundColor: '#f99',
       marginBottom: 10,
+    },
+    errorText:{
+      color: '#f00',
     }
   });  
