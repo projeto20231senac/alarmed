@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TextInput,
   Platform,
   KeyboardAvoidingView,
-  Alert, // Importe o componente Alert
+  Alert, 
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -15,10 +15,48 @@ import { stylesCPF } from './styles/stylesCPF';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validate, format } from 'cpf-check';
 import { api } from '../service/AlarmesService';
+import * as Location from 'expo-location';
 
 export const Cpf = () => {
   const { navigate } = useNavigation();
-  const [cpf, setCpf] = useState('');
+  const [cpf, setCpf] = useState(null);
+  const [cep, setCep] = useState(null);
+ 
+  useEffect(() =>{
+    (async () =>{
+      let {status} = await Location.requestForegroundPermissionsAsync();
+
+      if(status !== 'granted' ) {
+       
+        Alert.alert(
+          'Alarmed necessita acessar sua localização',
+          'Clique em permitir para prosseguir.',
+          [
+            { text: 'Prosseguir', onPress: async() => {
+             await Location.requestForegroundPermissionsAsync();
+              } 
+            },
+          ],
+        );
+        return;
+      } 
+        let local = await Location.getCurrentPositionAsync({})
+        
+        const keys = {
+          latitude: local.coords.latitude,
+          longitude: local.coords.longitude
+        };
+        try {
+          const resultado = await Location.reverseGeocodeAsync(keys);
+        
+          
+          setCep(resultado[0].postalCode);
+          
+        } catch (error) {
+          console.error('Erro ao fazer reverse geocode:', error);
+        }
+    })()
+  },[])
 
   const handleNextPage = async () => {
     if (validate(cpf)) {
@@ -33,25 +71,30 @@ export const Cpf = () => {
           {
             text: 'Confirmar',
             onPress: async () => {
+             
               try {
-                const response = await api.get(`/usuarios/${cpf}`);
+                const response = await api.get(`usuario/${cpf}`);
                 await AsyncStorage.setItem('CPF', cpf);
-    
+   
+                await AsyncStorage.setItem('CEP', cep);
+
                 if (response.status === 200) {
                   if (response.data && response.data.length > 0) {
                     // Há este CPF
                     await AsyncStorage.setItem('CPF', cpf);
+
                     console.log(`CPF (${format(cpf)}) já existe no BD!`);
                     navigate('Alarmes');
                   } else {
                     await AsyncStorage.setItem('CPF', cpf);
                     console.log(`CPF (${format(cpf)}) não existe no BD.`);
-                    navigate('Cep');
+                    navigate('DtNasc');
                   }
                 } else {
                   await AsyncStorage.setItem('CPF', cpf);
+                  
                   console.log(`CPF (${format(cpf)}) salvo no BD com sucesso!`);
-                  navigate('Cep');
+                  navigate('DtNasc');
                 }
               } catch (error) {
                 console.error('Erro ao verificar o CPF no BD:', error);

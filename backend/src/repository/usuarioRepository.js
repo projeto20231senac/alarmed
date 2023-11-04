@@ -7,12 +7,22 @@ export async function inserirUsuario(cpf, cep, dataNascimento) {
     return resposta;
   }
 
+<<<<<<< HEAD
   
 export async function buscarUserPorId(id){
     const comando = `SELECT * FROM usuarios WHERE user_id = ?`
     const [resposta] = await con.query(comando, [id])
     return resposta
 }
+=======
+//   export async function inserirAlarme(alarm) {
+//     const comando = `INSERT INTO alarmes (user_id,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
+
+//     const [resposta] = await con.query(comando, [alarm.id, alarm.nome, alarm.recorrencia, alarm.hora, alarm.foto]);
+//     alarm.id = resposta.inserirAlarme
+//     return filme
+// }
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
 
   export async function listarTodosUsuario() {
     const comando = `SELECT    *
@@ -27,9 +37,18 @@ export async function buscarUserPorCep(cep){
     return resposta[0]
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
 export async function alterarUsuario(id, updatedData) {
     const { user_cep, user_dtnascimento } = updatedData;
     const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE user_id = ?`;
     const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
     return resposta.affectedRows;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628

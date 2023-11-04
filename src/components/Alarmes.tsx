@@ -20,16 +20,25 @@ export const Alarmes = () => {
   const [dados, setDados] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
 
+<<<<<<< HEAD
   const handleNextPage = (value, alarme_id, horarios_id) => {
+=======
+  const handleNextPage = (value, alarme_id) => {
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
     if(value === 'edit'){
       navigate('Edit')
     }else if(value === 'next'){
       navigate('AlarmesNome')
     } else if ( value === 'details'){
+<<<<<<< HEAD
       console.log("Alarme ID escolhido: ", alarme_id)
       console.log("Horarios ID escolhido: ", horarios_id)
       AsyncStorage.setItem('alarmeId', String(alarme_id))
       AsyncStorage.setItem('horariosId', String(horarios_id))
+=======
+      console.log(alarme_id)
+      AsyncStorage.setItem('alarmeId', String(alarme_id))
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
       .then(() => {
         navigate('AlarmeDetails');
       })
@@ -146,7 +155,11 @@ export const Alarmes = () => {
               <View style={stylesAlarmes.alarmesChildColumn}>
               <TouchableOpacity
                 style={stylesAlarmes.moreDetails}
+<<<<<<< HEAD
                 onPress={() => {handleNextPage('details', alarme.alarme_id, alarme.horarios_id);}}
+=======
+                onPress={() => {handleNextPage('details', alarme.alarme_id);}}
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
               >
                 <AntDesign name="right" size={20} color="#555" />
               </TouchableOpacity>

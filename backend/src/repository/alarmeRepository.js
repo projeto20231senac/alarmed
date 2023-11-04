@@ -1,5 +1,6 @@
 import { con } from './connection.js'
 
+<<<<<<< HEAD
 export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     const comando = `
         SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo, h.hora
@@ -8,6 +9,27 @@ export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
         INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
         WHERE a.alarme_id = ? AND h.horarios_id = ?`
     const [resposta] = await con.query(comando, [alarme_id, horarios_id])
+=======
+// export async function inserirUsuario(cpf, cep, dataNascimento) {
+//     const sql = `INSERT INTO usuarios (user_id, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
+//     const [resposta] = await con.query(sql, [cpf, cep, dataNascimento]);
+//     return resposta;
+//   }
+
+export async function buscarUserPorId(id){
+    const comando = `SELECT * FROM usuarios WHERE user_id = ?`
+    const [resposta] = await con.query(comando, [id])
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
+    return resposta
+}
+
+export async function buscarDetalhesAlarmePorId(id){
+    const comando = `
+        SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo
+        FROM alarmes AS a
+        INNER JOIN medicamentos AS m ON a.alarme_id = m.alarme_id
+        WHERE a.alarme_id = ?`
+    const [resposta] = await con.query(comando, [id])
     return resposta
 }
 
@@ -37,7 +59,11 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorId(id) {
+<<<<<<< HEAD
     const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
+=======
+    const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.hora
+>>>>>>> 8bd45c5e6ec132fe3f6af0d20ba3d827dfd05628
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
     WHERE a.user_id = ?;`;
