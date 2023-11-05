@@ -100,6 +100,10 @@ export const AlarmeDetails = () => {
                   <View style={stylesAlarmesDetails.alarmesChildColumn}>
                     <Text>Detalhes</Text>
                   </View>
+                  <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} /*onPress={handleEditPage}*/>
+                    <MaterialIcons name="edit" size={20} color="#000" />
+                    <Text>Editar</Text>
+                  </TouchableOpacity>
                 </View>
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
@@ -143,7 +147,7 @@ export const AlarmeDetails = () => {
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <Text style={stylesAlarmesDetails.alarmesChildText}>
-                    {alarme.medicamentos_dose}
+                    {alarme.medicamentos_dose} {alarme.medicamentos_posologia}
                   </Text>
                 </View>
 

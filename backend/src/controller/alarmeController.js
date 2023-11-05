@@ -33,12 +33,12 @@ endpoint.get('/alarmes', async (req, resp) => {
 })
 
 //obter alarmes do usuario
-endpoint.get('/alarmes/:user_id', async (req, resp) => {
+endpoint.get('/alarmes/:cpf', async (req, resp) => {
     try {
-        const id = req.params.user_id;
-        const buscaUserId = await alarmePorId(id);
-        console.log(buscaUserId)
-        resp.status(200).send(buscaUserId);
+        const cpf = req.params.cpf;
+        const buscaAlarmePorId = await alarmePorId(cpf);
+        console.log(buscaAlarmePorId)
+        resp.status(200).send(buscaAlarmePorId);
     } catch (err) {
         resp.status(400).send({
             erro: err.message
@@ -50,7 +50,7 @@ endpoint.get('/alarmes/:user_id', async (req, resp) => {
 endpoint.get('/detalhes/:alarme_id/:horarios_id', async (req, resp) => {
     try {
         const alarme_id = req.params.alarme_id;
-        const horarios_id = req.params.horarios_id
+        const horarios_id = req.params.horarios_id;
         const buscaDetalhesAlarmePorId = await buscarDetalhesAlarmePorId(alarme_id, horarios_id);
         console.log(buscaDetalhesAlarmePorId)
         resp.status(200).send(buscaDetalhesAlarmePorId);

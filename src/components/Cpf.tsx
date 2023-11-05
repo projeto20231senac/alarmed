@@ -21,12 +21,14 @@ export const Cpf = () => {
   const { navigate } = useNavigation();
   const [cpf, setCpf] = useState(null);
   const [cep, setCep] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
  
   useEffect(() =>{
     (async () =>{
       let {status} = await Location.requestForegroundPermissionsAsync();
 
-      if(status !== 'granted' ) {
+      const cepGeolocalizacao = await AsyncStorage.getItem('CEP')
+      if(status !== 'granted' ||  !cepGeolocalizacao || cepGeolocalizacao === '' || cepGeolocalizacao === null) {
        
         Alert.alert(
           'Alarmed necessita acessar sua localização',
@@ -54,6 +56,7 @@ export const Cpf = () => {
           
         } catch (error) {
           console.error('Erro ao fazer reverse geocode:', error);
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
         }
     })()
   },[])
@@ -73,7 +76,12 @@ export const Cpf = () => {
             onPress: async () => {
              
               try {
-                const response = await api.get(`usuario/${cpf}`);
+                const response = await api.get(`usuarios/${cpf}`);
+   
+                const cpfData = response.data.cpf
+                const cepData = response.data.user_cep
+
+                console.log(cpfData, cepData)
                 await AsyncStorage.setItem('CPF', cpf);
    
                 await AsyncStorage.setItem('CEP', cep);
@@ -98,6 +106,7 @@ export const Cpf = () => {
                 }
               } catch (error) {
                 console.error('Erro ao verificar o CPF no BD:', error);
+                setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
               }
             },
           },
