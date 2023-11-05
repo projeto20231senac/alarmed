@@ -84,7 +84,7 @@ export const AlarmeDetails = () => {
       <Logo showBackButton={true} />      
       {errorMessage && (
           <View style={styles.error}>
-            <MaterialIcons name="error" size={24} color="black" />
+            <MaterialIcons name="error" size={24} color="#000" />
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}
@@ -98,11 +98,11 @@ export const AlarmeDetails = () => {
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <View style={stylesAlarmesDetails.alarmesChildColumn}>
-                    <Text>Detalhes</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 10}}>Detalhes</Text>
                   </View>
                   <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} /*onPress={handleEditPage}*/>
-                    <MaterialIcons name="edit" size={20} color="#000" />
-                    <Text>Editar</Text>
+                    <MaterialIcons name="edit" size={20} color="#000" style={{marginBottom: 10}} />
+                    <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 10}}>Editar</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -133,7 +133,7 @@ export const AlarmeDetails = () => {
                 </View>
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
-                  <Entypo name="clock" size={24} color="black" style={{marginRight: 10}}/>
+                  <Entypo name="clock" size={24} color="#000" style={{marginRight: 10}}/>
                   <Text style={stylesAlarmesDetails.alarmesChildText}>
                     {formattedHour(alarme.hora)}
                   </Text>
@@ -141,7 +141,16 @@ export const AlarmeDetails = () => {
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <Text style={stylesAlarmesDetails.alarmesChildText}>
-                    {alarme.medicamentos_tipo}
+                  {alarme.medicamentos_tipo === 'Liquido' ? (
+                    <Ionicons name="water" size={24} color="#000" />
+                  ) : alarme.medicamentos_tipo === 'Gotas' ? (
+                    <FontAwesome5 name="syringe" size={24} color="#000" />
+                  ) : alarme.medicamentos_tipo === 'Comprimido' ? (
+                    <MaterialCommunityIcons name="pill" size={24} color="#000" />
+                  ) : (
+                    <>
+                    </>
+                  )}{alarme.medicamentos_tipo}
                   </Text>
                 </View>
 

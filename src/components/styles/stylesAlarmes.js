@@ -31,7 +31,7 @@ export const stylesAlarmes = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#aaaaaa33',
+        backgroundColor: '#77777722',
         borderWidth: 1,
         borderColor: '#555',
         borderRadius: 10,
@@ -79,7 +79,7 @@ export const stylesAlarmes = StyleSheet.create({
     alarmesChild:{
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#55555533',
+        backgroundColor: '#77777722',
         padding: 10,
         borderRadius: 10,
         margin: 10,

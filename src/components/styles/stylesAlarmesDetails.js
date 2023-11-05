@@ -75,20 +75,16 @@ export const stylesAlarmesDetails = StyleSheet.create({
         alignItems: 'center',
         width: 200,
         height: 200,
-        margin: 5,
-    },
-    alarmes:{
-        flex:1,
+        marginVertical: 5,
     },
     alarmesChild:{
-        backgroundColor: '#55555533',
+        backgroundColor: '#77777722',
         padding: 10,
         borderRadius: 10,
         margin: 10,
         borderWidth: 1,
         borderColor: '#aaa',
         flexBasis: 200,
-        flexWrap: 'wrap',
     },
     alarmesChildColumn:{
         flexDirection:'column',
@@ -96,12 +92,14 @@ export const stylesAlarmesDetails = StyleSheet.create({
     },
     alarmesChildLine:{
         flexDirection: 'row',
+        marginVertical: 5,
     },
     alarmesChildTitle:{
         flex: 1,
         color: '#0085FF',
         fontWeight: '900',
         fontSize: 32,
+        marginVertical: 5,
     },
     noAlarms:{
         flex: 1,
