@@ -49,6 +49,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
         paddingHorizontal: 3,
     },
     frequencia:{
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -68,17 +69,18 @@ export const stylesAlarmesDetails = StyleSheet.create({
         marginRight: 10,
     },
     imgAlarmes:{
-        width: 85,
-        height: 85,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 200,
+        height: 200,
         margin: 5,
     },
     alarmes:{
         flex:1,
     },
     alarmesChild:{
-        // flexDirection: 'column',
-        // justifyContent: 'space-between',
-        // alignItems: 'center',
         backgroundColor: '#55555533',
         padding: 10,
         borderRadius: 10,
@@ -99,7 +101,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
         flex: 1,
         color: '#0085FF',
         fontWeight: '900',
-        fontSize: 24,
+        fontSize: 32,
     },
     noAlarms:{
         flex: 1,

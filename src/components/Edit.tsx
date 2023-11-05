@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  Alert,
   KeyboardAvoidingView,
 } from 'react-native';
 import { Logo } from './Logo';
@@ -66,6 +67,7 @@ export const Edit = () => {
         await AsyncStorage.setItem('user_dtnascimento', birthDate.toISOString());
 
         console.log('Dados alterados com sucesso.');
+        Alert.alert('Dados alterados com sucesso.', 'Seus novos dados foram gravados.')
         navigate('Alarmes');
       } else {
         console.log('Erro ao salvar os dados na API.');
@@ -84,7 +86,7 @@ export const Edit = () => {
       <Logo showBackButton={true} />
       {errorMessage && (
           <View style={styles.error}>
-            <MaterialIcons name="error" size={24} color="black" />
+            <MaterialIcons name="error" size={24} color="#f00" />
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}

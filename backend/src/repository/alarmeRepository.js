@@ -11,18 +11,8 @@ export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     return resposta
 }
 
-export async function buscarDetalhesAlarmePorId(id){
-    const comando = `
-        SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo
-        FROM alarmes AS a
-        INNER JOIN medicamentos AS m ON a.alarme_id = m.alarme_id
-        WHERE a.alarme_id = ?`
-    const [resposta] = await con.query(comando, [id])
-    return resposta
-}
-
 export async function inserirAlarme(alarm) {
-    const comando = `INSERT INTO alarmes (user_id,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
+    const comando = `INSERT INTO alarmes (cpf,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
 
     const [resposta] = await con.query(comando, [alarm.id, alarm.nome, alarm.recorrencia, alarm.hora, alarm.foto]);
     alarm.id = resposta.inserirAlarme
@@ -36,7 +26,7 @@ export async function alterarImagem(foto, id) {
 }
 
 export async function listarTodosAlarmes() {
-    const comando = `SELECT  user_id                id,
+    const comando = `SELECT  cpf                id,
                             alarme_nome             nome,
                             alarme_recorrencia      recorrencia,
                             alarme_hora             hora,
@@ -47,10 +37,11 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorId(id) {
+    console.log(id)
     const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
-    WHERE a.user_id = ?;`;
+    WHERE a.cpf = ?`;
     
     const [result] = await con.query(comando, [id]);
 
@@ -65,7 +56,7 @@ export async function alterarAlarme(id, alarme) {
 
 export async function alterarUsuario(id, updatedData) {
     const { user_cep, user_dtnascimento } = updatedData;
-    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE user_id = ?`;
+    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE cpf = ?`;
     const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
     return resposta.affectedRows;
 }

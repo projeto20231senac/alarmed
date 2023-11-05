@@ -52,10 +52,10 @@ export const Alarmes = () => {
     setCurrentDate(currentDate);
 
     const loadDados = async () => {
-      const userID = await AsyncStorage.getItem('CPF');
-      console.log("User ID: ", userID);
+      const cpf = await AsyncStorage.getItem('CPF');
+      console.log("CPF: ", cpf);
 
-      const response = await api.get(`/alarmes/${userID}`);
+      const response = await api.get(`/alarmes/${cpf}`);
 
       const dadosAPI = response.data;
 
@@ -90,7 +90,7 @@ export const Alarmes = () => {
       <Logo showBackButton={false} />
       {errorMessage && (
           <View style={styles.error}>
-            <MaterialIcons name="error" size={24} color="black" />
+            <MaterialIcons name="error" size={24} color="#f00" />
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}

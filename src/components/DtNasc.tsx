@@ -84,6 +84,7 @@ export const Nascimento = () => {
     
     // Converta a data em uma string antes de salvar no AsyncStorage
     const formattedDateString = currentDate.toString();
+    console.log('Salvando no BD', formattedDateString)
 
     AsyncStorage.setItem('dataNascimento', formattedDateString)
       .then(() => {
@@ -120,7 +121,7 @@ export const Nascimento = () => {
                 testID="dateTimePicker"
                 value={date}
                 mode={'date'}
-                onChange={onChange}
+                onChange={onChange()}
                 display="spinner"
                 textColor="#000"
                 locale="pt-BR"

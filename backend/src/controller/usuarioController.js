@@ -10,7 +10,7 @@ const updload = multer({ dest: 'storage/fotoMedicamentos' })
 endpoint.post('/usuarios', async (req, resp) => {
     try {
         console.log(req.body);
-        const novoUsuario = await inserirUsuario(req.body.user_id, req.body.cep, req.body.dataNascimento);
+        const novoUsuario = await inserirUsuario(req.body.cpf, req.body.cep, req.body.dataNascimento);
         resp.status(200).send(novoUsuario);
        
     } catch (error) {
@@ -28,11 +28,11 @@ endpoint.post('/usuarios', async (req, resp) => {
     }
 })
 
-//listar usuarios por user_id
-endpoint.get('/usuarios/:user_id', async (req, resp) => {
+//listar usuarios por cpf
+endpoint.get('/usuarios/:cpf', async (req, resp) => {
     try {
-            const user_id = req.params.user_id
-            const buscarUsuario = await buscarUserPorId(user_id)
+            const cpf = req.params.cpf
+            const buscarUsuario = await buscarUserPorId(cpf)
             resp.status(200).send(buscarUsuario)
     } catch(error){
         resp.status(400).send({erro : error.message})
@@ -41,10 +41,10 @@ endpoint.get('/usuarios/:user_id', async (req, resp) => {
 
 
 
-//atualizar usuários por user_id
-endpoint.put('/usuarios/:user_id', async (req, resp) => {
+//atualizar usuários por cpf
+endpoint.put('/usuarios/:cpf', async (req, resp) => {
     try {
-        const id = req.params.user_id;
+        const id = req.params.cpf;
         const updatedData = req.body;
         const resposta = await alterarUsuario(id, updatedData)
         resp.sendStatus(204)
