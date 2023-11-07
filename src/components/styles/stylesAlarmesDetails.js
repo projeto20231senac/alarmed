@@ -49,9 +49,25 @@ export const stylesAlarmesDetails = StyleSheet.create({
         paddingHorizontal: 3,
     },
     saveButton:{
-        backgroundColor: '#ff000022',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0085FF22',
         borderWidth: 1,
-        borderColor: '#f00',
+        borderColor: '#0085FF',
+        borderRadius: 10,
+        paddingVertical: 5,
+        marginVertical: 10,
+    },
+    saveButtonText:{
+        textAlign: 'center',
+        fontSize: 16,
+        color: '#0085FF',
+    },
+    cancelButtonText:{
+        textAlign: 'center',
+        fontSize: 16,
+        color: '#F00',
     },
     frequencia:{
         flex: 1,
@@ -65,7 +81,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
         paddingTop: 10,
     },
     alarmesChildText:{
-        fontSize: 16,
+        fontSize: 18,
     },
     imgAlarmesPage:{
         width: 20,
@@ -106,7 +122,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
         flex: 1,
         color: '#0085FF',
         fontWeight: '900',
-        fontSize: 32,
+        fontSize: 40,
         marginVertical: 5,
     },
     noAlarms:{

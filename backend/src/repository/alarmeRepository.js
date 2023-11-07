@@ -41,7 +41,8 @@ export async function alarmePorId(id) {
     const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
-    WHERE a.cpf = ?`;
+    WHERE a.cpf = ?
+    ORDER BY h.hora`;
     
     const [result] = await con.query(comando, [id]);
 

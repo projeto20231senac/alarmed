@@ -106,19 +106,8 @@ export const AlarmeDetails = () => {
     }
   };
 
-  const formattedHour = (horaString) => {
-    if (!horaString) return '';
-
-    const parts = horaString.split(':');
-    if (parts.length === 3) {
-      const horas = parseInt(parts[0]);
-      const minutos = parseInt(parts[1]);
-      if (!isNaN(horas) && !isNaN(minutos)) {
-        const horaFormatada = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-        return horaFormatada;
-      }
-    }
-    return '';
+  const handleCancel = async () => {
+    setEditando(false)
   }
 
   return (
@@ -148,13 +137,18 @@ export const AlarmeDetails = () => {
                     <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 10}}>Detalhes</Text>
                   </View>
                   {editando ? (
-                    <TouchableOpacity onPress={handleSave}>
+                    <>
+                      <MaterialIcons name="mode-edit" size={20} color="#000" />
                       <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>Editando</Text>
-                    </TouchableOpacity>
+                    </>
+                      
                   ) : (
-                    <TouchableOpacity onPress={handleEdit}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>Editar</Text>
-                    </TouchableOpacity>
+                    <>
+                      <MaterialIcons name="mode-edit" size={20} color="#000" />
+                      <TouchableOpacity onPress={handleEdit}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>Editar</Text>
+                      </TouchableOpacity>
+                    </>
                   )}
                 </View>
 
@@ -183,16 +177,15 @@ export const AlarmeDetails = () => {
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <View style={stylesAlarmesDetails.frequencia}>
                     <AntDesign name="calendar" size={24} color="#000" style={{marginRight: 10}}/>
-                    <Text style={stylesAlarmesDetails.alarmesChildText}> Repete a cada  
+                    <Text style={stylesAlarmesDetails.alarmesChildText}> Repete a cada 
                       <TextInput keyboardType='numeric' style={{ color: '#f00', fontWeight: 'bold', margin: 10, padding: 10, backgroundColor: '#fff', borderWidth: 1}}
-                        value={editedData.alarme_recorrencia}
+                        value={editando ? editedData.alarme_recorrencia : dados[0].alarme_recorrencia}
                         onChangeText={(text) => {
                           setEditedData({ ...editedData, alarme_recorrencia: text });
                         }
                         }
                       />
-                      {alarme.alarme_recorrencia}
-                      dia(s)
+                       dia(s)
                     </Text>
                   </View>
                 </View>
@@ -219,31 +212,24 @@ export const AlarmeDetails = () => {
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <Entypo name="clock" size={24} color="#000" style={{marginRight: 10}}/>
                   <TextInput keyboardType='numeric' style={stylesAlarmesDetails.alarmesChildText} 
-                    value={editedData.hora}
+                    value={editando ? editedData.hora : dados[0].hora}
                     onChangeText={(text) => {
                       setEditedData({ ...editedData, hora: text });
                     }}
                   />
-                    {formattedHour(alarme.hora)}
                 </View>
                 ) : (
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <Entypo name="clock" size={24} color="#000" style={{marginRight: 10}}/>
                   <Text style={stylesAlarmesDetails.alarmesChildText}>
-                    {formattedHour(alarme.hora)}
+                    {alarme.hora}
                   </Text>
                 </View>
                 )}
 
                 {editando ? (
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
-                     <TextInput style={stylesAlarmesDetails.alarmesChildText}
-                      value={editedData.medicamentos_tipo}
-                      onChangeText={(text) => {
-                        setEditedData({ ...editedData, medicamentos_tipo: text });
-                      }}
-                     />
-                      {alarme.medicamentos_tipo === 'Liquido' ? (
+                     {alarme.medicamentos_tipo === 'Liquido' ? (
                         <FontAwesome5 name="syringe" size={24} color="#000" style={{marginRight: 10}}/>                    
                       ) : alarme.medicamentos_tipo === 'Gotas' ? (
                         <Ionicons name="water" size={24} color="#000" style={{marginRight: 10}}/>
@@ -252,7 +238,13 @@ export const AlarmeDetails = () => {
                       ) : (
                         <>
                         </>
-                      )}{alarme.medicamentos_tipo}
+                      )}
+                     <TextInput style={stylesAlarmesDetails.alarmesChildText}
+                      value={editando ? editedData.medicamentos_tipo : dados[0].medicamentos_tipo}
+                      onChangeText={(text) => {
+                        setEditedData({ ...editedData, medicamentos_tipo: text });
+                      }}
+                     />
                 </View>
                 ) : (
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
@@ -276,12 +268,11 @@ export const AlarmeDetails = () => {
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
                       <TextInput
                         style={stylesAlarmesDetails.alarmesChildText}
-                        value={editedData.medicamentos_dose}
+                        value={editando ? editedData.medicamentos_dose : dados[0].medicamentos_dose}
                         onChangeText={(text) => {
                           setEditedData({ ...editedData, medicamentos_dose: text });
                         }}
                       />
-                        {alarme.medicamentos_dose} 
                     </View>
                   ) : (
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
@@ -295,12 +286,11 @@ export const AlarmeDetails = () => {
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
                       <TextInput
                         style={stylesAlarmesDetails.alarmesChildText}
-                        value={editedData.medicamentos_posologia}
+                        value={editando ? editedData.medicamentos_posologia : dados[0].medicamentos_posologia}
                         onChangeText={(text) => {
                           setEditedData({ ...editedData, medicamentos_posologia: text });
                         }}
                       />
-                        {alarme.medicamentos_posologia}
                     </View>
                   ) : (
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
@@ -316,20 +306,31 @@ export const AlarmeDetails = () => {
                     {alarme.count_disparos === 0
                         ? 'Este alarme ainda não foi disparado'
                         : 
-                        <>
-                          Esse alarme já disparou {alarme.count_disparos} vezes desde que foi definido.
-                        </>
+                        <Text>
+                          Esse alarme já disparou {alarme.count_disparos}x desde que foi definido.
+                        </Text>
                     }
                   </Text>
-                </View>
+                </View>       
 
                 {editando ? (
-                  <TouchableOpacity style={stylesAlarmesDetails.saveButton} onPress={handleSave}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>Salvar alarme</Text>
-                  </TouchableOpacity>
-                ) : null}
-                
-                </View>
+                  <>
+                    <View style={stylesAlarmesDetails.saveButton}>
+                      <AntDesign name="save" size={24} color="#0085FF" />
+                      <TouchableOpacity onPress={handleSave}>
+                        <Text style={stylesAlarmesDetails.saveButtonText}>Salvar Alarme</Text>
+                      </TouchableOpacity>
+                      
+                    </View>
+                    <>                  
+                      <TouchableOpacity onPress={handleCancel}>
+                        <Text style={stylesAlarmesDetails.cancelButtonText}>Cancelar</Text>
+                      </TouchableOpacity>
+                    </>
+                  </>
+
+                  ) : null }         
+              </View>
           ))
         ) : (
           <View style={stylesAlarmesDetails.noAlarms}>
