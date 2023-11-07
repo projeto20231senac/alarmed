@@ -48,9 +48,21 @@ export async function alarmePorId(id) {
     return result;
 }
 
-export async function alterarAlarme(id, alarme) {
-    const comando = `UPDATE alarmes SET  alarme_nome =? , alarme_hora =? ,alarme_foto=? WHERE alarme_id=?  `
-    const [resposta] = await con.query(comando, [alarme.nome, alarme.hora, alarme.foto, id])
+export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia) {
+    const comando = `
+    UPDATE alarmes
+    JOIN horarios ON alarme.alarme_id = horarios.alarme_id
+    JOIN medicamentos ON alarme.alarme_id = medicamentos.alarme_id
+    SET
+      alarmes.alarme_nome = ?,
+      alarmes.alarme_recorrencia = ?,
+      horarios.hora = ?,
+      medicamentos.medicamentos_tipo = ?,
+      medicamentos.medicamentos_dose = ?,
+      medicamentos.medicamentos_posologia = ?
+    WHERE
+      alarmes.alarme_id = ? AND horarios.horarios_id = ?`
+    const [resposta] = await con.query(comando, [alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id])
     return resposta.affectedRows
 }
 

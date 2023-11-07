@@ -48,6 +48,11 @@ export const stylesAlarmesDetails = StyleSheet.create({
         fontSize: 20,
         paddingHorizontal: 3,
     },
+    saveButton:{
+        backgroundColor: '#ff000022',
+        borderWidth: 1,
+        borderColor: '#f00',
+    },
     frequencia:{
         flex: 1,
         flexDirection: 'row',
@@ -76,6 +81,9 @@ export const stylesAlarmesDetails = StyleSheet.create({
         width: 200,
         height: 200,
         marginVertical: 5,
+    },
+    alarmes:{
+        flex:3,
     },
     alarmesChild:{
         backgroundColor: '#77777722',

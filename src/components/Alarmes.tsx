@@ -92,7 +92,7 @@ export const Alarmes = () => {
 
   return (
     <View style={styles.container}>
-      <Logo showBackButton={false} />
+      <Logo showBackButton={true} />
       {errorMessage && (
           <View style={styles.error}>
             <MaterialIcons name="error" size={24} color="#f00" />

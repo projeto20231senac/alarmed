@@ -28,7 +28,7 @@ export const Cpf = () => {
       let {status} = await Location.requestForegroundPermissionsAsync();
 
       const cepGeolocalizacao = await AsyncStorage.getItem('CEP')
-      if(status !== 'granted' ||  !cepGeolocalizacao || cepGeolocalizacao === '' || cepGeolocalizacao === null) {
+      if(status !== 'granted' &&  (!cepGeolocalizacao || cepGeolocalizacao === '' || cepGeolocalizacao === null)) {
        
         Alert.alert(
           'Alarmed necessita acessar sua localização',
@@ -82,7 +82,6 @@ export const Cpf = () => {
                 const cepData = response.data.user_cep
 
                 console.log(cpfData, cepData)
-                await AsyncStorage.setItem('CPF', cpf);
    
                 await AsyncStorage.setItem('CEP', cep);
 
@@ -105,8 +104,13 @@ export const Cpf = () => {
                   navigate('DtNasc');
                 }
               } catch (error) {
-                console.error('Erro ao verificar o CPF no BD:', error);
-                setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+                if (error.message && error.message.includes("[AsyncStorage] Passing null/undefined as value is not supported.")) {
+                  console.error('Erro ao obter o CEP:', error);
+                  setErrorMessage("Erro ao obter o CEP. Tente novamente.");
+                }else{
+                  console.error('Erro ao verificar o CPF no BD:', error);
+                  setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+                }
               }
             },
           },
