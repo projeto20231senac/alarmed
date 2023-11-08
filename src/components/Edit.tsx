@@ -116,6 +116,7 @@ export const Edit = () => {
                         value={birthDate}
                         mode="date"
                         display="spinner"
+                        textColor={'#000'}
                         onChange={(event, selectedDate) => {
                         if (selectedDate) {
                             setBirthDate(selectedDate);

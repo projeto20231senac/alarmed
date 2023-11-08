@@ -36,7 +36,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
         borderColor: '#555',
         borderRadius: 10,
         paddingVertical: 15,
-        margin: 5,
+        marginHorizontal: 5,
     },
     addButtonText:{
         color: '#0085FF',
@@ -59,6 +59,17 @@ export const stylesAlarmesDetails = StyleSheet.create({
         paddingVertical: 5,
         marginVertical: 10,
     },
+    deleteButton:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FF000022',
+        borderWidth: 1,
+        borderColor: '#F00',
+        borderRadius: 10,
+        paddingVertical: 5,
+        marginVertical: 10,
+    },
     saveButtonText:{
         textAlign: 'center',
         fontSize: 16,
@@ -68,6 +79,13 @@ export const stylesAlarmesDetails = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: '#F00',
+        marginVertical: 10,
+    },
+    deleteButtonText:{
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#f00',
     },
     frequencia:{
         flex: 1,
@@ -82,6 +100,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
     },
     alarmesChildText:{
         fontSize: 18,
+        marginRight: 5,
     },
     imgAlarmesPage:{
         width: 20,
@@ -116,6 +135,8 @@ export const stylesAlarmesDetails = StyleSheet.create({
     },
     alarmesChildLine:{
         flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         marginVertical: 5,
     },
     alarmesChildTitle:{

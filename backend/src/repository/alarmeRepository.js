@@ -2,10 +2,10 @@ import { con } from './connection.js'
 
 export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     const comando = `
-        SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo, h.hora
+        SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo, h.hora
         FROM alarmes AS a
         INNER JOIN medicamentos AS m ON a.alarme_id = m.alarme_id
-        INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
+        INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
         WHERE a.alarme_id = ? AND h.horarios_id = ?`
     const [resposta] = await con.query(comando, [alarme_id, horarios_id])
     return resposta
@@ -38,9 +38,9 @@ export async function listarTodosAlarmes() {
 }
 export async function alarmePorId(id) {
     console.log(id)
-    const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
+    const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
-    INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
+    INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
     WHERE a.cpf = ?
     ORDER BY h.hora`;
     
@@ -75,7 +75,7 @@ export async function alterarUsuario(id, updatedData) {
 }
 
 export async function removerAlarme(id) {
-    const comando = `DELETE FROM alarmes WHERE alarme_id=?`
+    const comando = `DELETE FROM alarmes WHERE alarme_id = ?`
     const [resposta] = await con.query(comando, [id])
     return resposta.affectedRows
 }

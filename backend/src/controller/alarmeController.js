@@ -66,7 +66,7 @@ endpoint.put('/alarmes/editar/:alarme_id}/:horarios_id}', async (req, resp) => {
         const alarme_id = req.params.alarme_id
         const horarios_id = req.params.horarios_id
         const resposta = await alterarAlarme(alarme_id, horarios_id, req.bodyalarme_nome, req.bodyalarme_recorrencia, req.bodyhora, req.bodymedicamentos_tipo, req.bodymedicamentos_dose, req.bodymedicamentos_posologia)
-        resp.status(204)
+        resp.sendStatus(204)
     } catch (error) {
         resp.status(400).send({
             erro: err.message
@@ -79,8 +79,8 @@ endpoint.delete('/alarmes/:alarme_id', async (req, resp) => {
     try {
         const { alarme_id } = req.params
         const resposta = await removerAlarme(alarme_id)
-        resp.status(204).send();
-    } catch (error) {
+        resp.sendStatus(204);
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
         })

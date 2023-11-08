@@ -63,7 +63,6 @@ export const styles = StyleSheet.create({
     termsText: {
       fontSize: 16,
     },
-  
     termsTextHilighted: {
       fontSize: 16,
       color: '#0085FF',
