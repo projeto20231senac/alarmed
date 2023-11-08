@@ -285,14 +285,17 @@ export const AlarmeDetails = () => {
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                     <DropDownPicker
                       open={open}
-                      value={editedData.medicamentos_tipo}
+                      value={value}
                       items={items}
                       setOpen={setOpen}
-                      setValue={(selectedValue) => {
-                        setValue(selectedValue)
-                        setEditedData({ ...editedData, medicamentos_tipo: selectedValue });
-                      }}
+                      setValue={setValue}
                       setItems={setItems}
+                      onSelectItem={(item) => {
+                        console.log(item.value);
+                      }}
+                      onChangeValue={(item) => {
+                        setEditedData({...editedData, medicamentos_tipo: item.value})
+                      }}
 
                       style={{ backgroundColor: '#77777722', borderColor: '#77777722' }}
                       itemStyle={{
