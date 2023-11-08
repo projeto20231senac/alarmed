@@ -8,7 +8,8 @@ import { Alarmes } from '../components/Alarmes';
 import { AlarmesNome } from '../components/AlarmesNome';
 import { Edit } from '../components/Edit';
 import { AlarmeDetails } from '../components/AlarmeDetails';
-// import { AlarmesFoto } from '../components/AlarmesFoto';
+import AlarmesFoto from '../components/AlarmesFoto';
+
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -27,7 +28,7 @@ export default function Navigation() {
       <Stack.Screen name="Alarmes" component={Alarmes} />
       <Stack.Screen name="AlarmeDetails" component={AlarmeDetails} />
       <Stack.Screen name="AlarmesNome" component={AlarmesNome} />
-      {/* <Stack.Screen name="AlarmesFoto" component={AlarmesFoto} /> */}
+      <Stack.Screen name="AlarmesFoto" component={AlarmesFoto} />
     </Stack.Navigator>
   );
 }

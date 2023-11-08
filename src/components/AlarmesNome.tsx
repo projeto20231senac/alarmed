@@ -25,7 +25,7 @@ export const AlarmesNome = () => {
         console.error('Erro ao salvar o medicamento:', error);
     }
 
-    // navigate('AlarmesFoto');
+    navigate('AlarmesFoto');
   }
 
   return (
