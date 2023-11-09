@@ -20,12 +20,15 @@ export const AlarmesNome = () => {
     try {
         // Salvando o valor do medicamento no AsyncStorage
         await AsyncStorage.setItem('AlarmesNome', medicamento);
+        const f = await AsyncStorage.getItem('foto');
+        console.log("entao salvou",f);
+        
         console.log(`Medicamento (${medicamento}) salvo com sucesso!`);
     } catch (error) {
         console.error('Erro ao salvar o medicamento:', error);
     }
 
-    // navigate('AlarmesFoto');
+    navigate('AlarmesFoto');
   }
 
   return (

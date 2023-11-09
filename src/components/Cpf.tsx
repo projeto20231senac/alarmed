@@ -81,7 +81,7 @@ export const Cpf = () => {
                 const cpfData = response.data.cpf
                 const cepData = response.data.user_cep
 
-                console.log(cpfData, cepData)
+                console.log("t",cpfData, cepData)
    
                 await AsyncStorage.setItem('CEP', cep);
 
