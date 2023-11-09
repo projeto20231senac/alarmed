@@ -111,9 +111,9 @@ export const Alarmes = () => {
           <MaterialCommunityIcons name="alarm-plus" size={24} color="#0085FF" />
         </TouchableOpacity>
       </View>
+      <ScrollView>
       <Text style={stylesAlarmes.title}>Meus alarmes <MaterialCommunityIcons name="bell-ring" size={32} color="#0085FF" /></Text>
       <View style={stylesAlarmes.alarmes}>
-      <ScrollView>
         {dados.length > 0 ? (
           dados.map((alarme) => (
             <View style={stylesAlarmes.alarmesChild}key={alarme.alarme_id}>
@@ -164,8 +164,8 @@ export const Alarmes = () => {
             <FontAwesome5 name="bell-slash" size={60} color="#ff000055" />
           </View>
         )}
-        </ScrollView>
       </View>
+      </ScrollView>
     </View>
   );
 };
