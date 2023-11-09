@@ -11,13 +11,26 @@ export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     return resposta
 }
 
-export async function inserirAlarme(alarm) {
-    const comando = `INSERT INTO alarmes (cpf,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
-
-    const [resposta] = await con.query(comando, [alarm.id, alarm.nome, alarm.recorrencia, alarm.hora, alarm.foto]);
-    alarm.id = resposta.inserirAlarme
-    return filme
+export async function inserirAlarme(alarme) {
+    const comando = `INSERT INTO alarmes (cpf,alarme_nome,alarme_recorrencia,alarme_foto,count_disparos) VALUES (?,?,?,?)`;
+    const [resposta] = await con.query(comando, [alarme.cpf, alarme.nome, alarme.recorrencia,alarme.foto,alarme.disparos]);
+  
+    return alarme
 }
+export async function inserirMedicamento(nome) {
+    const comando = `INSERT INTO medicamentos (alarme_id ,cpf,medicamentos_dose,medicamentos_posologia,medicamentos_tipo) VALUES (?,?,?,?,?)`;
+    const [resposta] = await con.query(comando, [nome.idAlarme,nome.cpf,nome.dose,nome.posologia,nome.tipo]);
+  console.log(nome);
+    return nome
+}
+
+export async function inserirHorario(horario) {
+    const comando = `INSERT INTO alarmes (cpf,hora) VALUES (?,?)`;
+    const [resposta] = await con.query(comando, [horario.cpf,horario.hora]);
+  
+    return horario
+}
+
 
 export async function alterarImagem(foto, id) {
     const comando = `UPDATE alarmes SET alarme_foto =? WHERE alarme_id = ? `;
@@ -26,25 +39,23 @@ export async function alterarImagem(foto, id) {
 }
 
 export async function listarTodosAlarmes() {
-    const comando = `SELECT  cpf                id,
+    const comando = `SELECT  cpf                cpf,
                             alarme_nome             nome,
                             alarme_recorrencia      recorrencia,
-                            alarme_hora             hora,
                             alarme_foto             foto
                         FROM alarmes`
 
     const [linhas] = await con.query(comando)
     return linhas
 }
-export async function alarmePorId(id) {
-    console.log(id)
-    const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
+export async function alarmePorCep(cpf) {
+    const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, h.horarios_id, h.hora
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
     WHERE a.cpf = ?
     ORDER BY h.hora`;
     
-    const [result] = await con.query(comando, [id]);
+    const [result] = await con.query(comando, [cpf]);
 
     return result;
 }

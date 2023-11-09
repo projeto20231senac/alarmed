@@ -1,35 +1,22 @@
-import { con } from './connection.js'
+import { con } from './../repository/connection.js'
 
-export async function inserirUsuario(cpf, cep, dataNascimento) {
-    const sql = `INSERT INTO usuarios (cpf, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
-    const [resposta] = await con.query(sql, [cpf, cep, dataNascimento]);
-    console.log(resposta);
-    return resposta;
-  }
-
-  
-export async function buscarUserPorId(id){
-    const comando = `SELECT * FROM usuarios WHERE cpf = ?`
-    const [resposta] = await con.query(comando, [id])
-    return resposta
+export async function inserirUsuario(usuario) {
+  const sql = `INSERT INTO usuarios (cpf, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
+  const [resposta] = await con.query(sql, [usuario.cpf, usuario.cep, usuario.dataNascimento]);
+  return usuario;
 }
 
-  export async function listarTodosUsuario() {
-    const comando = `SELECT    *
-                        FROM usuarios`
-
-    const [linhas] = await con.query(comando)
-    return linhas
-}
-export async function buscarUserPorCep(cep){
-    const comando = `SELECT * FROM usuarios WHERE user_cep= ?`
-    const [resposta] = await con.query(comando, [cep])
+export async function buscarUserPorCpf(cpf){
+    const sql = `SELECT * FROM usuarios WHERE cpf= ?`
+    const [resposta] = await con.query(sql, [cpf])
     return resposta[0]
 }
 
-export async function alterarUsuario(id, updatedData) {
-    const { user_cep, user_dtnascimento } = updatedData;
-    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE cpf = ?`;
-    const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
+export async function alterarUsuario(cpf, updatedData) {
+    const comando = `UPDATE usuarios SET user_cep = ?, user_dtnascimento = ? WHERE cpf = ?`;
+    const [resposta] = await con.query(comando, [updatedData.user_cep, updatedData.user_dtnascimento,cpf]);
     return resposta.affectedRows;
 }
+
+
+
