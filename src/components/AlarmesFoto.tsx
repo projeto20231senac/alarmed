@@ -3,83 +3,84 @@ import { Camera, CameraType } from 'expo-camera';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View ,Image} from 'react-native';
 import { api } from '../service/AlarmesService';
+import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 
 export default function AlarmesFoto() {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const { navigate } = useNavigation();
+  const [showCamera, setShowCamera] = useState(true);
+  const [Permissao, requestPermissao] = Camera.useCameraPermissions();
   const [cameraRef, setCameraRef] = useState(null);
-  const [capturedImage, setCapturedImage] = useState(null);
-  if (!permission) {
-    // Camera permissions are still loading
+  const [capturarImagem, setCapturarImagem] = useState(null);
+  if (!Permissao) {
+    
     return <View />;
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
+  if (!Permissao.granted) {
+    // Permissões de câmera ainda não foram concedidas
     return (
       <View style={styles.container}>
         <Text style={{ textAlign: 'center' }}>Para capiturar a foto precisamos acessar a sua camera</Text>
-        <Button onPress={requestPermission} title="Permitir" />
+        <Button onPress={requestPermissao} title="Permitir" />
       </View>
     );
   }
 
-  const takePicture = async () => {
+  const imagem = async () => {
     if (cameraRef) {
-      const options = { quality: 0.8, base64: true, skipProcessing: true };
+      const options = { quality:0.8, base64: true,scale:2};
       const data = await cameraRef.takePictureAsync(options);
-      
-     
-      setCapturedImage(data.uri);
-    
-    
+      setCapturarImagem(data.uri);
     }
   };
-  
-
-
-
+  // style={{  justifyContent: 'center', alignItems: 'center',backgroundColor:'red' }}
   async function salvarFoto(){
     try {
-      
-      const cpf = await AsyncStorage.getItem('CPF');
-      const nome = await AsyncStorage.getItem('AlarmesNome')
-      
-      const imagem = {cpf,nome,capturedImage}
-    const salvar = await api.post('/alarmes',imagem)
-    console.log("enviado",imagem);
+      const imagem = capturarImagem
+      await AsyncStorage.setItem("foto",imagem)
+      navigate("Alarmes")
     
-      
     } catch (error) {
       console.log("erro ao salvar foto",error);
       
     }
   }
-  salvarFoto()
+  const cancelCapture = () => {
+    setCapturarImagem(null);
+    setShowCamera(true);
+  };
+ 
+  
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-      <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={(ref) => { setCameraRef(ref); }}>
+      {/* <StatusBar/> */}
+      {showCamera && (  <View style={styles.container}>
+      <Camera style={styles.camera}  type={Camera.Constants.Type.back}  ref={(ref) => { setCameraRef(ref); }}>
         <View style={styles.buttonContainer}> 
-        <TouchableOpacity onPress={takePicture} style={styles.button}>
-          <Text  style={styles.text}> Tirar foto </Text>
+        <TouchableOpacity onPress={imagem} style={styles.button}>
+          {/* <Text  style={styles.text}> T</Text> */}
+          {/* <AntDesign name="camera" size={64} color="#fff" /> */}
+          <Entypo name="camera" size={64} color="white" />
         </TouchableOpacity>
         </View>
     
       </Camera>
-      
-      
-    </View>
-        <View style={{position:'absolute', justifyContent: 'center', alignItems: 'center',height:800 }}>
-        {capturedImage && (
-        <View style={{  justifyContent: 'center', alignItems: 'center',backgroundColor:'red' }}>
-          <Image source={{ uri: capturedImage }} style={{ width: 500, height: 500 }} />
-           <View style={{flexDirection:'row',marginTop:10}}>
-               <TouchableOpacity onPress={takePicture} style={{ justifyContent: 'center', alignItems: 'center' ,padding:8}}>
-                <Text  style={{color: 'black',backgroundColor:'gray',padding:8}}> Cancelar</Text>
+      </View>)}
+     
+        <View style={styles.imagem}>
+        {capturarImagem && (
+          <View style={{  justifyContent: 'center', alignItems: 'center' }}>
+          <View >
+            <Image source={{ uri: capturarImagem }} style={{ width: 400, height: 600}} />
+           </View>
+          <View style={styles.botaoArea}>
+               <TouchableOpacity onPress={cancelCapture} style={{ justifyContent: 'center', alignItems: 'center' ,padding:8}}>
+                <Text  style={styles.botaoCancelar}> Cancelar</Text>
                 </TouchableOpacity>
               <TouchableOpacity onPress={salvarFoto} style={{ justifyContent: 'center', alignItems: 'center',padding:8 }}>
-                <Text  style={{color: 'black',backgroundColor:'blue',padding:8}}> Salvar foto</Text>
+                <Text  style={styles.botaoSalvar}> Salvar foto</Text>
               </TouchableOpacity>
            </View>
         </View>
@@ -93,25 +94,65 @@ export default function AlarmesFoto() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+  
   },
   camera: {
-    flex: 1,
+    flex:1,
   },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'transparent',
     margin: 64,
+    alignItems:'center',
+    justifyContent:'center',
   },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
+ 
   text: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+    textAlign:'center'
   },
+  button: {
+      alignSelf: 'flex-end',
+      justifyContent:'center',
+    backgroundColor: 'transparent',
+    borderRadius:100,
+    height:70,
+    width:70
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  imagem:{
+    
+    
+  },
+  botaoArea:{
+    flexDirection:'row',
+    position:'absolute',
+    bottom:0,
+    alignItems:'center',
+    justifyContent:'space-between',
+    width:'100%',
+    paddingBottom:30
+  },
+  botaoSalvar: {
+    padding: 15,
+    color:'white',
+    fontWeight:'bold',
+    backgroundColor: '#0085FF',
+    borderRadius: 10,
+  },
+  botaoCancelar: {
+    padding: 15,
+    color:'white',
+    fontWeight:'bold',
+    backgroundColor: 'gray',
+    borderRadius: 10,
+  },
+  
 });

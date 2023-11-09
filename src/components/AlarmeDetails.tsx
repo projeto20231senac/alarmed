@@ -1,27 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
+  Alert,
   Text,
   TextInput,
   Image,
   TouchableOpacity,
-  ScrollView,
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmesDetails } from './styles/stylesAlarmesDetails';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons, Entypo } from '@expo/vector-icons';
+import {
+  AntDesign,
+  FontAwesome5,
+  FontAwesome,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+  Entypo,
+} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 
 export const AlarmeDetails = () => {
+  const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
   const [dados, setDados] = useState([])
   const [errorMessage, setErrorMessage] = useState(null);
-  const [editando, setEditando] = useState(false);
+  const [editando, setEditando] = useState(false); 
+
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState([['Comprimido', 'Gotas', 'Liquido', 'Injetavel']])
+  const [items, setItems] = useState([
+    { label: 'Comprimido', value: 'Comprimido' },
+    { label: 'Gotas', value: 'Gotas' },
+    { label: 'Líquido', value: 'Liquido' },
+    { label: 'Injetável', value: 'Injetavel' },
+  ]);
+
 
   const [editedData, setEditedData] = useState({
     alarme_nome: '',
@@ -110,6 +131,40 @@ export const AlarmeDetails = () => {
     setEditando(false)
   }
 
+  const handleDelete = async (alarme_id) => {
+    // Exibe um alerta de confirmação
+    Alert.alert(
+      'Confirmar Exclusão',
+      'Tem certeza de que deseja excluir este alarme?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          onPress: async () => {
+            console.log("Alarme para deletar: ", alarme_id);
+            try {
+              const response = await api.delete(`/alarmes/${alarme_id}`);
+
+              if (response.status === 204) {
+                console.log('Alarme deletado com sucesso!');
+                navigate('Alarmes');
+              } else {
+                console.error('Erro ao deletar os dados:', response.status);
+              }
+            } catch (error) {
+              console.error('Erro ao fazer a solicitação para a API:', error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />      
@@ -127,26 +182,25 @@ export const AlarmeDetails = () => {
         style={{ flex: 2 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={stylesAlarmesDetails.alarmes}>
-      <ScrollView>
         {dados.length > 0 ? (
           dados.map((alarme) => (
             <View style={stylesAlarmesDetails.alarmesChild}key={alarme.alarme_id}>
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
                   <View style={stylesAlarmesDetails.alarmesChildColumn}>
-                    <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 10}}>Detalhes</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>Detalhes</Text>
                   </View>
                   {editando ? (
                     <>
                       <MaterialIcons name="mode-edit" size={20} color="#000" />
-                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>Editando</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 16}}>Editando</Text>
                     </>
                       
                   ) : (
                     <>
                       <MaterialIcons name="mode-edit" size={20} color="#000" />
                       <TouchableOpacity onPress={handleEdit}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>Editar</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16}}>Editar</Text>
                       </TouchableOpacity>
                     </>
                   )}
@@ -229,38 +283,43 @@ export const AlarmeDetails = () => {
 
                 {editando ? (
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
-                     {alarme.medicamentos_tipo === 'Liquido' ? (
-                        <FontAwesome5 name="syringe" size={24} color="#000" style={{marginRight: 10}}/>                    
+                    <DropDownPicker
+                      open={open}
+                      value={value}
+                      items={items}
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                      onSelectItem={(item) => {
+                        console.log(item.value);
+                      }}
+                      onChangeValue={(item) => {
+                        setEditedData({...editedData, medicamentos_tipo: item.value})
+                      }}
+
+                      style={{ backgroundColor: '#77777722', borderColor: '#77777722' }}
+                      itemStyle={{
+                        justifyContent: 'flex-start',
+                      }}
+                      dropDownStyle={{ backgroundColor: '#aaaaaa' }}
+                    />
+                  </View>
+                ) : (
+                  <View style={stylesAlarmesDetails.alarmesChildLine}>
+                    <Text style={stylesAlarmesDetails.alarmesChildText}>
+                      {alarme.medicamentos_tipo === 'Liquido' ? (
+                        <FontAwesome5 name="syringe" size={24} color="#000" style={{ marginRight: 10 }} />
                       ) : alarme.medicamentos_tipo === 'Gotas' ? (
-                        <Ionicons name="water" size={24} color="#000" style={{marginRight: 10}}/>
+                        <Ionicons name="water" size={24} color="#000" style={{ marginRight: 10 }} />
                       ) : alarme.medicamentos_tipo === 'Comprimido' ? (
-                        <MaterialCommunityIcons name="pill" size={24} color="#000" style={{marginRight: 10}}/>
+                        <MaterialCommunityIcons name="pill" size={24} color="#000" style={{ marginRight: 10 }} />
                       ) : (
                         <>
                         </>
                       )}
-                     <TextInput style={stylesAlarmesDetails.alarmesChildText}
-                      value={editando ? editedData.medicamentos_tipo : dados[0].medicamentos_tipo}
-                      onChangeText={(text) => {
-                        setEditedData({ ...editedData, medicamentos_tipo: text });
-                      }}
-                     />
-                </View>
-                ) : (
-                <View style={stylesAlarmesDetails.alarmesChildLine}>
-                  <Text style={stylesAlarmesDetails.alarmesChildText}>
-                    {alarme.medicamentos_tipo === 'Liquido' ? (
-                        <FontAwesome5 name="syringe" size={24} color="#000" style={{marginRight: 10}}/>                    
-                      ) : alarme.medicamentos_tipo === 'Gotas' ? (
-                        <Ionicons name="water" size={24} color="#000" style={{marginRight: 10}}/>
-                      ) : alarme.medicamentos_tipo === 'Comprimido' ? (
-                        <MaterialCommunityIcons name="pill" size={24} color="#000" style={{marginRight: 10}}/>
-                      ) : (
-                        <>
-                        </>
-                      )}{alarme.medicamentos_tipo}
-                  </Text>
-                </View>
+                      {alarme.medicamentos_tipo}
+                    </Text>
+                  </View>
                 )}
 
                 <View style={stylesAlarmesDetails.alarmesChildLine}>
@@ -320,7 +379,6 @@ export const AlarmeDetails = () => {
                       <TouchableOpacity onPress={handleSave}>
                         <Text style={stylesAlarmesDetails.saveButtonText}>Salvar Alarme</Text>
                       </TouchableOpacity>
-                      
                     </View>
                     <>                  
                       <TouchableOpacity onPress={handleCancel}>
@@ -329,17 +387,24 @@ export const AlarmeDetails = () => {
                     </>
                   </>
 
-                  ) : null }         
+                  ) : (
+                    <View style={stylesAlarmesDetails.deleteButton}>
+                      <FontAwesome5 name="trash-alt" size={24} color="#F00" style={{marginRight: 5}} />
+                      <TouchableOpacity onPress={() => handleDelete(alarme.alarme_id)}>
+                        <Text style={stylesAlarmesDetails.deleteButtonText}>Excluir Alarme</Text>
+                      </TouchableOpacity>
+
+                    </View>
+                  ) }
               </View>
           ))
         ) : (
           <View style={stylesAlarmesDetails.noAlarms}>
             <Text style={stylesAlarmesDetails.noAlarmsMessage}>Detalhes não encontrados para esse alarme.</Text>
-            <FontAwesome5 name="bell-slash" size={60} color="#ff000055" />
+            <FontAwesome name="bell-slash" size={60} color="#ff000055" />
             <Text style={stylesAlarmesDetails.noAlarmsMessage}>Tente novamente.</Text>
           </View>
         )}
-        </ScrollView>
       </View>
       </KeyboardAvoidingView>
     </View>
