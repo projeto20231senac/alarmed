@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, Image, Alert, TouchableOpacity } from 'react-native';
+import { Text, View, Image, Alert, TouchableOpacity, ScrollView } from 'react-native';
 import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
 import { styles } from './styles/sharedStyles';
@@ -65,6 +65,8 @@ export const Home = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={false} />
+      
+      <ScrollView>
       <View style={styles.containerTitleSubTitle}>
         <Text style={styles.title}>Seja bem-vindo!</Text>
         <Text style={styles.subtitle}>
@@ -107,6 +109,7 @@ export const Home = () => {
           <Text style={styles.buttonText}>Iniciar</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </View>
   );
 };

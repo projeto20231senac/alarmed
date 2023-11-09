@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const stylesAlarmesNome = StyleSheet.create({
+export const sharedStylesForms = StyleSheet.create({
     input: {
       width: '100%',
       height: 60,
@@ -15,6 +15,9 @@ export const stylesAlarmesNome = StyleSheet.create({
       padding: 20,
       marginVertical: 30,
       flex: 1,
+    },
+    fieldset:{
+      marginVertical: 10,
     },
     datetime:{
       width: '100%',

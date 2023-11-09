@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
     },
     back: {
-      right: 50,
+      right: 20,
     },
     header: {
       flexDirection: 'row',

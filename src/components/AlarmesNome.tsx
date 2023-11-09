@@ -8,7 +8,7 @@ import {
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
-import { stylesAlarmesNome } from './styles/stylesAlarmesNome';
+import { sharedStylesForms } from './styles/sharedStylesForms';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AlarmesNome = () => {
@@ -35,9 +35,9 @@ export const AlarmesNome = () => {
     <View style={styles.container}>
       <Logo showBackButton={true} />
       <Text style={styles.title}>Qual é o nome do medicamento?</Text>
-      <View style={stylesAlarmesNome.form}>
+      <View style={sharedStylesForms.form}>
         <TextInput 
-            style={stylesAlarmesNome.input} 
+            style={sharedStylesForms.input} 
             value={medicamento}
             onChangeText={(text) => setMedicamento(text)}>
         </TextInput> 
