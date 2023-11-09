@@ -125,7 +125,7 @@ export const Alarmes = () => {
                 <View style={stylesAlarmes.alarmesChildLine}>
                   <Text 
                   style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
-                    <Text style={{color: '#000', fontWeight: 'normal'}}>, deverá ser administrado às </Text>
+                    <Text style={{color: '#000', fontWeight: 'normal', fontSize: 18}}>, deverá ser administrado às </Text>
                     <Text style={stylesAlarmes.alarmesChildHora}>
                       {formattedHour(alarme.hora)}
                     </Text>
