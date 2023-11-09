@@ -5,32 +5,24 @@ export const styles = StyleSheet.create({
       flex: 1,
       paddingVertical: 20,
     },
-    logo: {
-      width: 200,
-      height: 50,
-    },
-    containerLogo: {
-      flex: 1,
-      justifyContent: 'center',
-    },
     containerTitleSubTitle: {
       alignItems: 'center',
     },
     title: {
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 'bold',
       textAlign: 'center',
     },
     subtitle: {
-      fontSize: 18,
+      fontSize: 16,
       textAlign: 'center',
       color: '#0085FF',
       paddingTop: 15,
     },
     containerMainContent: {
-      flex: 2,
       flexDirection: 'column',
       justifyContent: 'center',
+      marginVertical: 10, 
     },
     containerMainContentChild: {
       flexDirection: 'row',
@@ -48,7 +40,7 @@ export const styles = StyleSheet.create({
     },
     subtitleMainContent: {
       paddingTop: 30,
-      fontSize: 18,
+      fontSize: 16,
       width: '100%',
       textAlign: 'center',
       color: '#0085FF',
@@ -57,7 +49,7 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      paddingVertical: 20,
+      paddingVertical: 10,
       paddingHorizontal: 30,
     },
     termsText: {
@@ -71,19 +63,19 @@ export const styles = StyleSheet.create({
     areaButton: {
       paddingTop: 20,
       paddingBottom: 10,
-      paddingHorizontal: 45,
+      paddingHorizontal: 35,
       justifyContent: 'center',
       alignItems: 'center',
     },
     button: {
       paddingVertical: 20,
-      paddingHorizontal: 80,
+      paddingHorizontal: 50,
       backgroundColor: '#0085FF',
       borderRadius: 10,
     },
     buttonText: {
       color: '#ffffff',
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: 'bold',
     },
     error:{

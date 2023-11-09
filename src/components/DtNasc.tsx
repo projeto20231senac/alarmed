@@ -10,7 +10,7 @@ import {
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
-import { stylesDTNasc } from './styles/stylesDTNasc';
+import { sharedStylesForms } from './styles/sharedStylesForms';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
@@ -114,7 +114,7 @@ export const Nascimento = () => {
         style={{ flex: 2 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Text style={styles.title}>Qual é a sua data de nascimento?</Text>
-        <View style={stylesDTNasc.form}>
+        <View style={sharedStylesForms.form}>
           <View>
             {Platform.OS === 'ios' ? (
               <DateTimePicker
@@ -134,7 +134,7 @@ export const Nascimento = () => {
                     showDatepicker();
                   }}
                   placeholder="00/00/0000"
-                  style={stylesDTNasc.input}
+                  style={sharedStylesForms.input}
                 />
                 {show && (
                   <DateTimePicker

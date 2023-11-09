@@ -11,7 +11,7 @@ import {
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
-import { stylesCPF } from './styles/stylesCPF';
+import { sharedStylesForms } from './styles/sharedStylesForms';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -97,11 +97,11 @@ export const Edit = () => {
           Estes são seus dados pessoais:
         </Text>
 
-        <View style={stylesCPF.form}>
-            <View style={stylesCPF.fieldset}>            
+        <View style={sharedStylesForms.form}>
+            <View style={sharedStylesForms.fieldset}>            
                 <Text>CEP: </Text>
                 <TextInput
-                style={stylesCPF.input}
+                style={sharedStylesForms.input}
                 value={cep}
                 onChangeText={(text) => setCep(text)}
                 placeholder="CEP"
@@ -109,7 +109,7 @@ export const Edit = () => {
                 keyboardType="numeric"
                 />
             </View>
-            <View style={stylesCPF.fieldset}>
+            <View style={sharedStylesForms.fieldset}>
                 <Text>Data de Nascimento: </Text>
                 {Platform.OS === 'ios' ? (
                         <DateTimePicker
@@ -127,7 +127,7 @@ export const Edit = () => {
                         <>
                             <TouchableOpacity onPress={() => {showDatepicker()}}>
                                 <TextInput
-                                style={stylesCPF.input}
+                                style={sharedStylesForms.input}
                                 value={birthDate.toLocaleDateString('pt-BR')}
                                 placeholder="00/00/0000"
                                 placeholderTextColor="#000"

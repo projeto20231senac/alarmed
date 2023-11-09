@@ -11,7 +11,7 @@ import {
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
-import { stylesCPF } from './styles/stylesCPF';
+import { sharedStylesForms } from './styles/sharedStylesForms';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validate, format } from 'cpf-check';
 import { api } from '../service/AlarmesService';
@@ -129,9 +129,9 @@ export const Cpf = () => {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Text style={styles.title}>Qual é o seu CPF?</Text>
-        <View style={stylesCPF.form}>
+        <View style={sharedStylesForms.form}>
           <TextInput
-            style={stylesCPF.input}
+            style={sharedStylesForms.input}
             value={cpf}
             onChangeText={(text) => setCpf(text)}
             placeholder="999.999.999-99"

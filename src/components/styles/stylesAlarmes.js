@@ -69,8 +69,8 @@ export const stylesAlarmes = StyleSheet.create({
         marginRight: 10,
     },
     imgAlarmes:{
-        width: 85,
-        height: 85,
+        maxWidth: 85,
+        maxHeight: 85,
         margin: 5,
     },
     alarmes:{
@@ -78,7 +78,8 @@ export const stylesAlarmes = StyleSheet.create({
     },
     alarmesChild:{
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: '#77777722',
         padding: 10,
         borderRadius: 10,
@@ -103,12 +104,12 @@ export const stylesAlarmes = StyleSheet.create({
         flex: 1,
         color: '#0085FF',
         fontWeight: '900',
-        fontSize: 24,
+        fontSize: 22,
     },
     alarmesChildHora:{
         color: '#f00',
         fontWeight: '900',
-        fontSize: 24,
+        fontSize: 18,
     },
     noAlarms:{
         flex: 1,
@@ -125,6 +126,6 @@ export const stylesAlarmes = StyleSheet.create({
     },
     moreDetails:{
         fontWeight: 'bold',
-        marginHorizontal: 10,
+        marginLeft: 15,
     },
 })
