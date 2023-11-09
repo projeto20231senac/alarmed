@@ -2,10 +2,10 @@ import { con } from './connection.js'
 
 export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     const comando = `
-        SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo, h.hora
+        SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto, a.count_disparos, m.medicamentos_dose, m.medicamentos_posologia, m.medicamentos_tipo, h.hora
         FROM alarmes AS a
         INNER JOIN medicamentos AS m ON a.alarme_id = m.alarme_id
-        INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
+        INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
         WHERE a.alarme_id = ? AND h.horarios_id = ?`
     const [resposta] = await con.query(comando, [alarme_id, horarios_id])
     return resposta
@@ -38,19 +38,32 @@ export async function listarTodosAlarmes() {
 }
 export async function alarmePorId(id) {
     console.log(id)
-    const comando = `SELECT a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
+    const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
-    INNER JOIN horarios AS h ON a.alarme_id = h.alarmes_id
-    WHERE a.cpf = ?`;
+    INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
+    WHERE a.cpf = ?
+    ORDER BY h.hora`;
     
     const [result] = await con.query(comando, [id]);
 
     return result;
 }
 
-export async function alterarAlarme(id, alarme) {
-    const comando = `UPDATE alarmes SET  alarme_nome =? , alarme_hora =? ,alarme_foto=? WHERE alarme_id=?  `
-    const [resposta] = await con.query(comando, [alarme.nome, alarme.hora, alarme.foto, id])
+export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia) {
+    const comando = `
+    UPDATE alarmes
+    JOIN horarios ON alarme.alarme_id = horarios.alarme_id
+    JOIN medicamentos ON alarme.alarme_id = medicamentos.alarme_id
+    SET
+      alarmes.alarme_nome = ?,
+      alarmes.alarme_recorrencia = ?,
+      horarios.hora = ?,
+      medicamentos.medicamentos_tipo = ?,
+      medicamentos.medicamentos_dose = ?,
+      medicamentos.medicamentos_posologia = ?
+    WHERE
+      alarmes.alarme_id = ? AND horarios.horarios_id = ?`
+    const [resposta] = await con.query(comando, [alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id])
     return resposta.affectedRows
 }
 
@@ -62,7 +75,7 @@ export async function alterarUsuario(id, updatedData) {
 }
 
 export async function removerAlarme(id) {
-    const comando = `DELETE FROM alarmes WHERE alarme_id=?`
+    const comando = `DELETE FROM alarmes WHERE alarme_id = ?`
     const [resposta] = await con.query(comando, [id])
     return resposta.affectedRows
 }

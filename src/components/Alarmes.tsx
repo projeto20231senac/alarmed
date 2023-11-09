@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Logo } from './Logo';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useFocusEffect  } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -39,6 +39,28 @@ export const Alarmes = () => {
     }
   }
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadDados = async () => {
+        const cpf = await AsyncStorage.getItem('CPF');
+        console.log("CPF: ", cpf);
+  
+        const response = await api.get(`/alarmes/${cpf}`);
+  
+        const dadosAPI = response.data;
+  
+        if (dadosAPI) {
+          setDados(dadosAPI);
+        } else {
+          console.log("Nenhum dado de alarme ou horário recebido da API.");
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+        }
+      };
+  
+      loadDados(); // Chame a função que carrega os dados.
+    }, [])
+  );
+
   useEffect(() => {
     const options = {
       weekday: 'long',
@@ -50,24 +72,7 @@ export const Alarmes = () => {
 
     const currentDate = new Date().toLocaleString('pt-BR', options);
     setCurrentDate(currentDate);
-
-    const loadDados = async () => {
-      const cpf = await AsyncStorage.getItem('CPF');
-      console.log("CPF: ", cpf);
-
-      const response = await api.get(`/alarmes/${cpf}`);
-
-      const dadosAPI = response.data;
-
-      if (dadosAPI) {
-        setDados(dadosAPI);
-      } else {
-        console.log("Nenhum dado de alarme ou horário recebido da API.");
-        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-      }
-    };
-
-    loadDados();
+    
   }, []);
 
   const formattedHour = (horaString) => {
@@ -87,7 +92,7 @@ export const Alarmes = () => {
 
   return (
     <View style={styles.container}>
-      <Logo showBackButton={false} />
+      <Logo showBackButton={true} />
       {errorMessage && (
           <View style={styles.error}>
             <MaterialIcons name="error" size={24} color="#f00" />

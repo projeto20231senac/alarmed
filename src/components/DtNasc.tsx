@@ -121,7 +121,7 @@ export const Nascimento = () => {
                 testID="dateTimePicker"
                 value={date}
                 mode={'date'}
-                onChange={onChange()}
+                onChange={onChange}
                 display="spinner"
                 textColor="#000"
                 locale="pt-BR"
