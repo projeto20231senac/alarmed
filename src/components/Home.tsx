@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, Image, Alert, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
 import { styles } from './styles/sharedStyles';
@@ -15,18 +22,18 @@ export const Home = () => {
   useEffect(() => {
     const checkAsyncStorage = async () => {
       try {
-        const CPF = await AsyncStorage.getItem('CPF')
+        const CPF = await AsyncStorage.getItem('CPF');
         const dataNascimento = await AsyncStorage.getItem('dataNascimento');
         const cepData = await AsyncStorage.getItem('CEP');
 
-        console.log('CPF definido: ', CPF)
-        console.log('CEP definido: ', cepData)
-        console.log('Data de Nascimento: ', dataNascimento)
+        console.log('CPF definido: ', CPF);
+        console.log('CEP definido: ', cepData);
+        console.log('Data de Nascimento: ', dataNascimento);
 
         if (CPF && dataNascimento && cepData) {
-          navigate('Alarmes')
-        } else{
-          navigate('Cpf')
+          navigate('Alarmes');
+        } else {
+          navigate('Cpf');
         }
       } catch (error) {
         console.error('Erro ao verificar o AsyncStorage:', error);
@@ -36,7 +43,6 @@ export const Home = () => {
     checkAsyncStorage();
   }, [navigate]);
 
-  
   const handleAcceptTerms = async () => {
     setTermsAccepted(true);
 
@@ -50,10 +56,12 @@ export const Home = () => {
             onPress: () => console.log('Cancelar'),
             style: 'cancel',
           },
-          { text: 'Aceitar', onPress: () => {
+          {
+            text: 'Aceitar',
+            onPress: () => {
               setTermsAccepted(true);
               navigate('Alarmes'); // Verifique novamente o AsyncStorage ao aceitar os termos.
-            } 
+            },
           },
         ],
       );
@@ -65,50 +73,51 @@ export const Home = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={false} />
-      
-      <ScrollView>
-      <View style={styles.containerTitleSubTitle}>
-        <Text style={styles.title}>Seja bem-vindo!</Text>
-        <Text style={styles.subtitle}>
-          Somos seu novo jeito de controlar seus medicamentos
-        </Text>
-      </View>
 
-      <View style={styles.containerMainContent}>
-        <View style={styles.containerMainContentChild}>
-          <Image
-            source={require('../assets/images/welcomePage/calendar.png')}
-            style={styles.imgWelcomePage}
-          />
-          <Text style={styles.description}>Defina seus horários</Text>
-        </View>
-        <View style={styles.containerMainContentChild}>
-          <Image
-            source={require('../assets/images/welcomePage/camera.png')}
-            style={styles.imgWelcomePage}
-          />
-          <Text style={styles.description}>tire uma foto do medicamento</Text>
-        </View>
-        <View style={styles.containerMainContentChild}>
-          <Text style={styles.subtitleMainContent}>
-            e pronto! O resto é com a gente...
+      <ScrollView>
+        <View style={styles.containerTitleSubTitle}>
+          <Text style={styles.title}>Seja bem-vindo!</Text>
+          <Text style={styles.subtitle}>
+            Somos seu novo jeito de controlar seus medicamentos
           </Text>
         </View>
-      </View>
-      <View style={styles.terms}>
-        <CheckBox
-          checked={termsAccepted}
-          onPress={() => setTermsAccepted(!termsAccepted)}
-        />
-        <Text style={styles.termsText}>
-          Aceito os <Text style={styles.termsTextHilighted}>termos de uso</Text>
-        </Text>
-      </View>
-      <View style={styles.areaButton}>
-        <TouchableOpacity style={styles.button} onPress={handleAcceptTerms}>
-          <Text style={styles.buttonText}>Iniciar</Text>
-        </TouchableOpacity>
-      </View>
+
+        <View style={styles.containerMainContent}>
+          <View style={styles.containerMainContentChild}>
+            <Image
+              source={require('../assets/images/welcomePage/calendar.png')}
+              style={styles.imgWelcomePage}
+            />
+            <Text style={styles.description}>Defina seus horários</Text>
+          </View>
+          <View style={styles.containerMainContentChild}>
+            <Image
+              source={require('../assets/images/welcomePage/camera.png')}
+              style={styles.imgWelcomePage}
+            />
+            <Text style={styles.description}>tire uma foto do medicamento</Text>
+          </View>
+          <View style={styles.containerMainContentChild}>
+            <Text style={styles.subtitleMainContent}>
+              e pronto! O resto é com a gente...
+            </Text>
+          </View>
+        </View>
+        <View style={styles.terms}>
+          <CheckBox
+            checked={termsAccepted}
+            onPress={() => setTermsAccepted(!termsAccepted)}
+          />
+          <Text style={styles.termsText}>
+            Aceito os{' '}
+            <Text style={styles.termsTextHilighted}>termos de uso</Text>
+          </Text>
+        </View>
+        <View style={styles.areaButton}>
+          <TouchableOpacity style={styles.button} onPress={handleAcceptTerms}>
+            <Text style={styles.buttonText}>Iniciar</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );

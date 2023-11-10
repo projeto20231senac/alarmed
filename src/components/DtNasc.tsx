@@ -34,7 +34,6 @@ export const Nascimento = () => {
       const response = await api.post('/usuarios', dados);
 
       if (response.status === 200) {
-        console.log("xxx",response);
         console.log('Dados enviados com sucesso!');
       } else {
         console.error('Erro ao enviar os dados para a API:', response.status);
