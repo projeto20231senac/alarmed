@@ -8,19 +8,12 @@ export async function inserirUsuario(cpf, cep, dataNascimento) {
   }
 
   
-export async function buscarUserPorId(id){
+export async function buscarUserPorCpf(cpf){
     const comando = `SELECT * FROM usuarios WHERE cpf = ?`
-    const [resposta] = await con.query(comando, [id])
+    const [resposta] = await con.query(comando, [cpf])
     return resposta
 }
 
-  export async function listarTodosUsuario() {
-    const comando = `SELECT    *
-                        FROM usuarios`
-
-    const [linhas] = await con.query(comando)
-    return linhas
-}
 export async function buscarUserPorCep(cep){
     const comando = `SELECT * FROM usuarios WHERE user_cep= ?`
     const [resposta] = await con.query(comando, [cep])

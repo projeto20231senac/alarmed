@@ -1,10 +1,61 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorId, removerAlarme, buscarDetalhesAlarmePorId } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
-const updload = multer({ dest: 'storage/fotoMedicamentos' })
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,'storage/fotosMedicamentos/')
+    },
+    filename: function(req,file,cb){
+        cb(null,file.originalname)
+    },
+    
+    
+})
+const upload = multer({ storage: storage
+  })
+//criar um novo alarme
+endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
+    try {
+        
+      if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
+        resp.status(422).send({
+            erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
+        })
+      }else{
+
+          const novoAlarme = req.body;
+          novoAlarme.foto= req.file.filename
+          const novo = await inserirAlarme(novoAlarme);
+          resp.status(200).send(novoAlarme)
+         
+      }
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+endpoint.post('/medicamentos', async (req, resp) => {
+    try {
+        
+     
+
+          const novoMedicamento = req.body;
+          const medicamento = await inserirMedicamento(novoMedicamento);
+          resp.status(200).send(medicamento)
+         
+      
+    } catch (err) {
+        console.log("Oi",err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
 
 //criar um novo alarme
 endpoint.post('/alarmes', async (req, resp) => {
@@ -36,9 +87,9 @@ endpoint.get('/alarmes', async (req, resp) => {
 endpoint.get('/alarmes/:cpf', async (req, resp) => {
     try {
         const cpf = req.params.cpf;
-        const buscaAlarmePorId = await alarmePorId(cpf);
-        console.log(buscaAlarmePorId)
-        resp.status(200).send(buscaAlarmePorId);
+        const buscaAlarmePorCpf = await alarmePorCpf(cpf);
+        console.log(buscaAlarmePorCpf)
+        resp.status(200).send(buscaAlarmePorCpf);
     } catch (err) {
         resp.status(400).send({
             erro: err.message

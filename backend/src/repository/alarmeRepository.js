@@ -19,6 +19,19 @@ export async function inserirAlarme(alarm) {
     return filme
 }
 
+export async function inserirMedicamento(nome) {
+    const comando = `INSERT INTO medicamentos (alarme_id ,cpf,medicamentos_dose,medicamentos_posologia,medicamentos_tipo) VALUES (?,?,?,?,?)`;
+    const [resposta] = await con.query(comando, [nome.idAlarme,nome.cpf,nome.dose,nome.posologia,nome.tipo]);
+  console.log(nome);
+    return nome
+}
+export async function inserirHorario(horario, cpf) {
+    const comando = `INSERT INTO horarios (hora) VALUES (?) WHERE cpf = ?`;
+    const [resposta] = await con.query(comando, [req.body.horario,req.body.cpf]);
+  
+    return horario
+}
+
 export async function alterarImagem(foto, id) {
     const comando = `UPDATE alarmes SET alarme_foto =? WHERE alarme_id = ? `;
     const [resposta] = await con.query(comando, [foto, id]);
@@ -36,15 +49,15 @@ export async function listarTodosAlarmes() {
     const [linhas] = await con.query(comando)
     return linhas
 }
-export async function alarmePorId(id) {
-    console.log(id)
+export async function alarmePorCpf(cpf) {
+    console.log(cpf)
     const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
     WHERE a.cpf = ?
     ORDER BY h.hora`;
     
-    const [result] = await con.query(comando, [id]);
+    const [result] = await con.query(comando, [cpf]);
 
     return result;
 }
@@ -65,13 +78,6 @@ export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_
       alarmes.alarme_id = ? AND horarios.horarios_id = ?`
     const [resposta] = await con.query(comando, [alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id])
     return resposta.affectedRows
-}
-
-export async function alterarUsuario(id, updatedData) {
-    const { user_cep, user_dtnascimento } = updatedData;
-    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE cpf = ?`;
-    const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
-    return resposta.affectedRows;
 }
 
 export async function removerAlarme(id) {

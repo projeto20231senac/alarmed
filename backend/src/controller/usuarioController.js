@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import {inserirUsuario, listarTodosUsuario, buscarUserPorCep, buscarUserPorId, alterarUsuario} from '../repository/usuarioRepository.js'
+import {inserirUsuario, listarTodosUsuario, buscarUserPorCpf, alterarUsuario} from '../repository/usuarioRepository.js'
 
 const endpoint = express.Router();
 
@@ -32,7 +32,7 @@ endpoint.post('/usuarios', async (req, resp) => {
 endpoint.get('/usuarios/:cpf', async (req, resp) => {
     try {
             const cpf = req.params.cpf
-            const buscarUsuario = await buscarUserPorId(cpf)
+            const buscarUsuario = await buscarUserPorCpf(cpf)
             resp.status(200).send(buscarUsuario)
     } catch(error){
         resp.status(400).send({erro : error.message})
