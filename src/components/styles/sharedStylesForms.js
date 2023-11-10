@@ -19,6 +19,18 @@ export const sharedStylesForms = StyleSheet.create({
     fieldset:{
       marginVertical: 10,
     },
+    terms:{
+      maxHeight: 500,
+      backgroundColor: '#77777722',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      padding: 20,
+      margin: 30,
+      borderRadius: 10,
+    },
+    termsText:{
+      textAlign: 'justify',
+    },
     datetime:{
       width: '100%',
     }

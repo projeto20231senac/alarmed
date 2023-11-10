@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento, promocoesPorCep } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -117,6 +117,21 @@ endpoint.get('/alarmes/:cpf', async (req, resp) => {
         const buscaAlarmePorCpf = await alarmePorCpf(cpf);
         console.log(buscaAlarmePorCpf)
         resp.status(200).send(buscaAlarmePorCpf);
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+//obter promocoes do cep
+endpoint.get('/promocoes/:cep/:alarmeNome', async (req, resp) => {
+    try {
+        const cep = req.params.cep;
+        const alarmeNome = req.params.alarmeNome;
+        const buscaPromocoesPorCep = await promocoesPorCep(cep, alarmeNome);
+        console.log(buscaPromocoesPorCep)
+        resp.status(200).send(buscaPromocoesPorCep);
     } catch (err) {
         resp.status(400).send({
             erro: err.message

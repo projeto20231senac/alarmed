@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   KeyboardAvoidingView,
+  Vibration,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -33,7 +34,7 @@ export const AlarmeDetails = () => {
   const [dados, setDados] = useState([])
   const [errorMessage, setErrorMessage] = useState(null);
   const [editando, setEditando] = useState(false); 
-
+  const [promocoes, setPromocoes] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState()
@@ -62,7 +63,7 @@ export const AlarmeDetails = () => {
   });
 
   useFocusEffect(
-    React.useCallback(() => {
+    React.useCallback(async () =>{
       const loadDados = async () => {
         try {
           const alarmeId = await AsyncStorage.getItem('alarmeId');
@@ -79,6 +80,7 @@ export const AlarmeDetails = () => {
             if (dadosAPI) {
               setDados(dadosAPI);
               setValue(dadosAPI[0].medicamentos_tipo);
+              await AsyncStorage.setItem('alarmeNome', dadosAPI[0].alarme_nome);
             } else {
               console.log("Nenhum dado de alarme recebido da API.");
               setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
@@ -91,8 +93,30 @@ export const AlarmeDetails = () => {
           setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
         }
       };
-  
-      loadDados();
+
+      await loadDados();
+
+      const loadPromocoes = async () => {
+        try {
+          const CEP = await AsyncStorage.getItem('CEP');
+          const alarmenome = await AsyncStorage.getItem('alarmeNome')
+          console.log('CEP da Promoção: ', CEP, 'Nome: ', alarmenome)
+          const response = await api.get(`/promocoes/${CEP}/${alarmenome}`);
+
+          if (response.status === 200){
+            setPromocoes(response.data)
+          } else {
+            console.log("Nenhum dado de alarme recebido da API.");
+            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+          }
+        } catch (err) {
+          console.error('Erro ao obter os dados:', err);
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+        }
+      }
+      await loadPromocoes();
+      
+      
     }, [])
   )
 
@@ -133,6 +157,7 @@ export const AlarmeDetails = () => {
       const response = await api.put(`/alarmes/editar/${alarmeId}/${horariosId}`, editedData);
       if (response.status === 204) {
           console.log('Alarme atualizado com sucesso!');
+          Vibration.vibrate(1000);
           Alert.alert('Seu alarme foi atualizado','Suas novas informações já estão atualizadas');
           navigate('Alarmes')
       } else {
@@ -197,6 +222,44 @@ export const AlarmeDetails = () => {
         <KeyboardAvoidingView 
           style={{ flex: 2 }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={stylesAlarmesDetails.alarmes}>
+          {promocoes.length > 0 ? (
+            promocoes.map((promocao, index) => (
+              <View style={stylesAlarmesDetails.promocoesChild}key={promocao.promocoes_id}>
+                  <View style={stylesAlarmesDetails.promocoesChildColumn}>
+                    <View style={stylesAlarmesDetails.promocoesChildTitle}>
+                      <MaterialCommunityIcons name="alert-octagram" size={24} color="#ff0000" />
+                      <Text style={{fontWeight: 'bold', fontSize: 18, color: '#f00'}}>Promoção</Text>
+                    </View>
+                  </View>
+                  <View style={stylesAlarmesDetails.promocoesChildColumn}>
+                    <View style={stylesAlarmesDetails.promocoesChildLine}>
+                      <Text style={stylesAlarmesDetails.promocao_titulo}>
+                        {promocao.promocoes_medicamento}
+                      </Text>
+                      <Text style={stylesAlarmesDetails.promocao_preco}>
+                        R$ {Number(promocao.promocoes_preco).toLocaleString('pt-BR')}
+                      </Text>
+                      
+                    </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                        <FontAwesome5 name="store-alt" size={18} color="#000" style={{margin: 10}}/>
+                        <Text style={{fontSize: 16}}>
+                          Em qualquer <Text style={{fontWeight: 'bold'}}>{promocao.promocoes_fornecedor}</Text> mais próxima
+                        </Text>
+                    </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                        <FontAwesome name="whatsapp" size={24} color="#090" style={{margin: 10}} />
+                        <Text style={{color: '#090', fontWeight: 'bold', fontSize: 16}}>
+                          {promocao.promocoes_fornecedor_telefone}
+                        </Text>
+                    </View>
+                  </View>
+              </View>
+              )
+             )
+          ) : (null)}
+        </View>
         <View style={stylesAlarmesDetails.alarmes}>
           {dados.length > 0 ? (
             dados.map((alarme) => (

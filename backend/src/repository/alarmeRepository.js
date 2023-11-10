@@ -61,6 +61,17 @@ export async function alarmePorCpf(cpf) {
     return result;
 }
 
+export async function promocoesPorCep(cep, alarmeNome, dataAtual = new Date()){
+    const comando = `
+        SELECT promocoes_cep, promocoes_medicamento, promocoes_preco, promocoes_inicio, promocoes_fim, promocoes_fornecedor, promocoes_fornecedor_telefone
+        FROM promocoes 
+        WHERE promocoes_cep = ? AND promocoes_medicamento = ? AND ? BETWEEN promocoes_inicio AND promocoes_fim`
+
+        const [result] = await con.query(comando, [cep, alarmeNome, dataAtual]);
+
+        return result;
+}
+
 export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia) {
     const comando = `
         UPDATE alarmes a

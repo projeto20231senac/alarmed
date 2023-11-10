@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform,
   Alert,
+  Vibration,
   KeyboardAvoidingView,
 } from 'react-native';
 import { Logo } from './Logo';
@@ -63,10 +64,11 @@ export const Edit = () => {
       const response = await api.put(`/usuarios/${cpf}`, updatedData);
 
       if (response.status === 204) {
-        await AsyncStorage.setItem('user_cep', cep);
-        await AsyncStorage.setItem('user_dtnascimento', birthDate.toISOString());
+        await AsyncStorage.setItem('CEP', cep);
+        await AsyncStorage.setItem('dataNascimento', birthDate.toISOString().split('T')[0]);
 
-        console.log('Dados alterados com sucesso.');
+        console.log('Dados alterados com sucesso. Novos dados: ', cep,' e ', birthDate.toISOString().split('T')[0]);
+        Vibration.vibrate(100)
         Alert.alert('Dados alterados com sucesso.', 'Seus novos dados foram gravados.')
         navigate('Alarmes');
       } else {
