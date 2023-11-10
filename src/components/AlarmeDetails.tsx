@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Logo } from './Logo';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmesDetails } from './styles/stylesAlarmesDetails';
@@ -38,10 +38,10 @@ export const AlarmeDetails = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState()
   const [items, setItems] = useState([
-    { label: 'Comprimido', value: 'Comprimido' },
-    { label: 'Gotas', value: 'Gotas' },
-    { label: 'Líquido', value: 'Liquido' },
-    { label: 'Injetável', value: 'Injetavel' },
+    { label: 'Comprimido', value: 'Comprimido', icon: () => <MaterialCommunityIcons name="pill" size={16} color="#0085ff"/> },
+    { label: 'Gotas', value: 'Gotas', icon: () => <Ionicons name="water" size={16} color="#0085ff" /> },
+    { label: 'Líquido', value: 'Liquido', icon: () => <FontAwesome5 name="prescription-bottle-alt" size={16} color="#0085ff" /> },
+    { label: 'Injetável', value: 'Injetavel', icon: () => <FontAwesome5 name="syringe" size={16} color="#0085ff" /> },
     { label: 'Cremes', value: 'Cremes' },
     { label: 'Pomadas', value: 'Pomadas'},
     { label: 'Pastas', value: 'Pastas' },
@@ -61,6 +61,41 @@ export const AlarmeDetails = () => {
     medicamentos_posologia: '',
   });
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadDados = async () => {
+        try {
+          const alarmeId = await AsyncStorage.getItem('alarmeId');
+          const horariosId = await AsyncStorage.getItem('horariosId');
+          console.log("Alarme ID recebido: ", alarmeId);
+          console.log('Horarios ID recebido: ', horariosId)
+  
+          const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
+  
+          if (response.status === 200) {
+            const dadosAPI = response.data;
+            console.log(dadosAPI)
+  
+            if (dadosAPI) {
+              setDados(dadosAPI);
+              setValue(dadosAPI[0].medicamentos_tipo);
+            } else {
+              console.log("Nenhum dado de alarme recebido da API.");
+              setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+            }
+          }else{
+            setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
+          }
+        } catch (error) {
+          console.error('Erro ao obter os dados:', error);
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+        }
+      };
+  
+      loadDados();
+    }, [])
+  )
+
   useEffect(() => {
     const options = {
       weekday: 'long',
@@ -73,36 +108,6 @@ export const AlarmeDetails = () => {
     const currentDate = new Date().toLocaleString('pt-BR', options);
     setCurrentDate(currentDate);
 
-    const loadDados = async () => {
-      try {
-        const alarmeId = await AsyncStorage.getItem('alarmeId');
-        const horariosId = await AsyncStorage.getItem('horariosId');
-        console.log("Alarme ID recebido: ", alarmeId);
-        console.log('Horarios ID recebido: ', horariosId)
-
-        const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
-
-        if (response.status === 200) {
-          const dadosAPI = response.data;
-          console.log(dadosAPI)
-
-          if (dadosAPI) {
-            setDados(dadosAPI);
-            setValue(dadosAPI[0].medicamentos_tipo);
-          } else {
-            console.log("Nenhum dado de alarme recebido da API.");
-            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-          }
-        }else{
-          setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
-        }
-      } catch (error) {
-        console.error('Erro ao obter os dados:', error);
-        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-      }
-    };
-
-    loadDados();
   }, []);
 
 
@@ -119,20 +124,22 @@ export const AlarmeDetails = () => {
   };
 
   const handleSave = async () => {
+    console.log('Dados recebidos para atualização: ', editedData)
     setEditando(false);
     const alarmeId = await AsyncStorage.getItem('alarmeId');
     const horariosId = await AsyncStorage.getItem('horariosId');
   
     try {
       const response = await api.put(`/alarmes/editar/${alarmeId}/${horariosId}`, editedData);
-      if (response.status === 200) {
-        // Os dados foram atualizados com sucesso
-        // Você pode atualizar o estado dados (ou recarregar os dados da API) aqui
+      if (response.status === 204) {
+          console.log('Alarme atualizado com sucesso!');
+          Alert.alert('Seu alarme foi atualizado','Suas novas informações já estão atualizadas');
+          navigate('Alarmes')
       } else {
         console.error('Erro ao atualizar os dados:', response.status);
       }
-    } catch (error) {
-      console.error('Erro ao fazer a solicitação para a API:', error);
+    } catch (err) {
+      console.error('Erro ao fazer a solicitação para a API:', err);
     }
   };
 
@@ -302,25 +309,29 @@ export const AlarmeDetails = () => {
                           console.log(item.value);
                         }}
                         onChangeValue={(item) => {
-                          setEditedData({...editedData, medicamentos_tipo: item.value})
+                          setEditedData({...editedData, medicamentos_tipo: item})
                         }}
 
-                        style={{ backgroundColor: '#77777722', borderColor: '#77777722' }}
+                        style={{ backgroundColor: '#ccc', borderColor: '#77777722' }}
                         itemStyle={{
                           justifyContent: 'flex-start',
                         }}
                         dropDownStyle={{ backgroundColor: '#aaaaaa' }}
+                        dropDownDirection="TOP"
+                        
                       />
                     </View>
                   ) : (
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
                       <Text style={stylesAlarmesDetails.alarmesChildText}>
                         {alarme.medicamentos_tipo === 'Liquido' ? (
-                          <FontAwesome5 name="syringe" size={24} color="#000" style={{ marginRight: 10 }} />
+                          <FontAwesome5 name="prescription-bottle-alt" size={24} color="#000" style={{ marginRight: 10 }}  />
                         ) : alarme.medicamentos_tipo === 'Gotas' ? (
                           <Ionicons name="water" size={24} color="#000" style={{ marginRight: 10 }} />
                         ) : alarme.medicamentos_tipo === 'Comprimido' ? (
                           <MaterialCommunityIcons name="pill" size={24} color="#000" style={{ marginRight: 10 }} />
+                        ) : alarme.medicamentos_tipo === 'Injetavel' ? (
+                          <FontAwesome5 name="syringe" size={24} color="#000" style={{ marginRight: 10 }} />
                         ) : (
                           <>
                           </>

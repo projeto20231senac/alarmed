@@ -139,13 +139,16 @@ endpoint.get('/detalhes/:alarme_id/:horarios_id', async (req, resp) => {
     }
 })
 
-endpoint.put('/alarmes/editar/:alarme_id}/:horarios_id}', async (req, resp) => {
+endpoint.put('/alarmes/editar/:alarme_id/:horarios_id', async (req, resp) => {
     try {
         const alarme_id = req.params.alarme_id
         const horarios_id = req.params.horarios_id
-        const resposta = await alterarAlarme(alarme_id, horarios_id, req.bodyalarme_nome, req.bodyalarme_recorrencia, req.bodyhora, req.bodymedicamentos_tipo, req.bodymedicamentos_dose, req.bodymedicamentos_posologia)
+        const { alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia } = req.body;
+
+        const resposta = await alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia);
+        
         resp.sendStatus(204)
-    } catch (error) {
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
         })
