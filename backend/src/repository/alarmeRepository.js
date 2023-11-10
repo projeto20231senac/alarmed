@@ -64,20 +64,24 @@ export async function alarmePorCpf(cpf) {
 
 export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia) {
     const comando = `
-    UPDATE alarmes
-    JOIN horarios ON alarme.alarme_id = horarios.alarme_id
-    JOIN medicamentos ON alarme.alarme_id = medicamentos.alarme_id
-    SET
-      alarmes.alarme_nome = ?,
-      alarmes.alarme_recorrencia = ?,
-      horarios.hora = ?,
-      medicamentos.medicamentos_tipo = ?,
-      medicamentos.medicamentos_dose = ?,
-      medicamentos.medicamentos_posologia = ?
-    WHERE
-      alarmes.alarme_id = ? AND horarios.horarios_id = ?`
-    const [resposta] = await con.query(comando, [alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id])
-    return resposta.affectedRows
+        UPDATE alarmes a
+            INNER JOIN
+                horarios h ON a.alarme_id = h.alarme_id
+            INNER JOIN
+                medicamentos m ON a.alarme_id = m.alarme_id 
+        SET 
+            a.alarme_nome = ?,
+            a.alarme_recorrencia = ?,
+            h.hora = ?,
+            m.medicamentos_tipo = ?,
+            m.medicamentos_dose = ?,
+            m.medicamentos_posologia = ?
+        WHERE
+            a.alarme_id = ?`
+    
+    const [resposta] = await con.query(comando, [alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id]);
+    
+    return resposta.affectedRows;
 }
 
 export async function removerAlarme(id) {
