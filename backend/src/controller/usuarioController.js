@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import {inserirUsuario, alterarUsuario, buscarUserPorCpf} from '../repository/usuarioRepository.js'
+import {inserirUsuario, listarTodosUsuario, buscarUserPorCpf, alterarUsuario} from '../repository/usuarioRepository.js'
 
 const endpoint = express.Router();
 
