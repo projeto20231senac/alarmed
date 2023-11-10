@@ -163,4 +163,42 @@ export const stylesAlarmesDetails = StyleSheet.create({
         fontWeight: 'bold',
         marginHorizontal: 10,
     },
+    promocoesChild:{
+        backgroundColor: '#77777722',
+        padding: 10,
+        borderRadius: 10,
+        margin: 10,
+        borderWidth: 1,
+        borderColor: '#aaa',
+        flexBasis: 200,
+    },
+    promocoesChildColumn:{
+        flexDirection:'column',
+        flexGrow: 2,
+    },
+    promocoesChildLine:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 5,
+    },
+    promocoesChildTitle:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#ff000044',
+        borderWidth: 1,
+        borderColor: '#f00',
+        borderRadius: 10,
+        padding: 5,
+    },
+    promocao_titulo:{
+        fontSize: 40,
+        color: '#f00',
+        fontWeight: 'bold',
+    },
+    promocao_preco:{
+        color: '#000',
+        fontSize: 24,
+    },
 })

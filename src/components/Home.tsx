@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { Text, View, Image, Alert, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
 import { styles } from './styles/sharedStyles';
@@ -10,64 +10,41 @@ export const Home = () => {
   const { navigate } = useNavigation();
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  useEffect(() => {
-    const checkAsyncStorage = async () => {
-      try {
-        const CPF = await AsyncStorage.getItem('CPF')
-        const dataNascimento = await AsyncStorage.getItem('dataNascimento');
-        const cepData = await AsyncStorage.getItem('CEP');
-
-        console.log('CPF definido: ', CPF)
-        console.log('CEP definido: ', cepData)
-        console.log('Data de Nascimento: ', dataNascimento)
-
-        if (CPF && dataNascimento && cepData) {
-          navigate('Alarmes')
-        } else{
-          navigate('Cpf')
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkAsyncStorage = async () => {
+        try {
+          const CPF = await AsyncStorage.getItem('CPF');
+          const dataNascimento = await AsyncStorage.getItem('dataNascimento');
+          const cepData = await AsyncStorage.getItem('CEP');
+          const termoAceito = await AsyncStorage.getItem('termoAceito');
+  
+          console.log('CPF definido: ', CPF);
+          console.log('CEP definido: ', cepData);
+          console.log('Data de Nascimento: ', dataNascimento);
+          console.log('Termo Aceito: ', termoAceito);
+  
+          if (CPF && dataNascimento && cepData && (termoAceito === 'sim' || termsAccepted)) {
+            navigate('Alarmes');
+          } else if (termoAceito === null || termoAceito === 'nao') {
+            navigate('Terms');
+          } else {
+            navigate('Cpf');
+          }
+        } catch (error) {
+          console.error('Erro ao verificar o AsyncStorage:', error);
         }
-      } catch (error) {
-        console.error('Erro ao verificar o AsyncStorage:', error);
-      }
-    };
-
-    checkAsyncStorage();
-  }, [navigate]);
+      };
+  
+      checkAsyncStorage();
+    }, [navigate])
+  );
 
   const handleNextPage = (value) => {
     if(value === 'terms'){
       navigate('Terms')
     }
   }
-
-
-  const handleAcceptTerms = async () => {
-    setTermsAccepted(true);
-
-    if (!termsAccepted) {
-      Alert.alert(
-        'Termos de uso',
-        'Você deve aceitar os termos de uso antes de avançar.',
-        [
-          {
-            text: 'Rejeitar',
-            onPress: () => {
-              console.log('Cancelar')
-              navigate('Terms');
-            },
-            style: 'cancel',
-          },
-          { text: 'Aceitar', onPress: () => {
-              setTermsAccepted(true);
-              navigate('Alarmes'); // Verifique novamente o AsyncStorage ao aceitar os termos.
-            } 
-          },
-        ],
-      );
-    } else {
-      navigate('Cpf');
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -105,14 +82,14 @@ export const Home = () => {
       <View style={styles.terms}>
         <CheckBox
           checked={termsAccepted}
-          onPress={() => setTermsAccepted(!termsAccepted)}
+          onPress={() => handleNextPage('terms')}
         />
         <Text style={styles.termsText}>
           Aceito os <Text style={styles.termsTextHilighted} onPress={() => {handleNextPage('terms')}}>termos de uso</Text>
         </Text>
       </View>
       <View style={styles.areaButton}>
-        <TouchableOpacity style={styles.button} onPress={handleAcceptTerms}>
+        <TouchableOpacity style={styles.button} /*onPress={handleAcceptTerms}*/>
           <Text style={styles.buttonText}>Iniciar</Text>
         </TouchableOpacity>
       </View>
