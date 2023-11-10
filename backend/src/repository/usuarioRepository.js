@@ -1,14 +1,22 @@
 import { con } from './../repository/connection.js'
 
-export async function inserirUsuario(usuario) {
-  const sql = `INSERT INTO usuarios (cpf, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
-  const [resposta] = await con.query(sql, [usuario.cpf, usuario.cep, usuario.dataNascimento]);
-  return usuario;
+export async function inserirUsuario(cpf, cep, dataNascimento) {
+    const sql = `INSERT INTO usuarios (cpf, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
+    const [resposta] = await con.query(sql, [cpf, cep, dataNascimento]);
+    console.log(resposta);
+    return resposta;
+  }
+
+  
+export async function buscarUserPorCpf(cpf){
+    const comando = `SELECT * FROM usuarios WHERE cpf = ?`
+    const [resposta] = await con.query(comando, [cpf])
+    return resposta
 }
 
-export async function buscarUserPorCpf(cpf){
-    const sql = `SELECT * FROM usuarios WHERE cpf= ?`
-    const [resposta] = await con.query(sql, [cpf])
+export async function buscarUserPorCep(cep){
+    const comando = `SELECT * FROM usuarios WHERE user_cep= ?`
+    const [resposta] = await con.query(comando, [cep])
     return resposta[0]
 }
 

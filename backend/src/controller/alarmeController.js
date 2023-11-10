@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCep, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -16,6 +16,47 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage
   })
+//criar um novo alarme
+endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
+    try {
+        
+      if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
+        resp.status(422).send({
+            erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
+        })
+      }else{
+
+          const novoAlarme = req.body;
+          novoAlarme.foto= req.file.filename
+          const novo = await inserirAlarme(novoAlarme);
+          resp.status(200).send(novoAlarme)
+         
+      }
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+endpoint.post('/medicamentos', async (req, resp) => {
+    try {
+        
+     
+
+          const novoMedicamento = req.body;
+          const medicamento = await inserirMedicamento(novoMedicamento);
+          resp.status(200).send(medicamento)
+         
+      
+    } catch (err) {
+        console.log("Oi",err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+
 //criar um novo alarme
 endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
     try {
@@ -73,9 +114,9 @@ endpoint.get('/alarmes', async (req, resp) => {
 endpoint.get('/alarmes/:cpf', async (req, resp) => {
     try {
         const cpf = req.params.cpf;
-        const buscaAlarmePorId = await alarmePorCep(cpf);
-        console.log("cpf",buscaAlarmePorId)
-        resp.status(200).send(buscaAlarmePorId);
+        const buscaAlarmePorCpf = await alarmePorCpf(cpf);
+        console.log(buscaAlarmePorCpf)
+        resp.status(200).send(buscaAlarmePorCpf);
     } catch (err) {
         resp.status(400).send({
             erro: err.message
@@ -98,13 +139,16 @@ endpoint.get('/detalhes/:alarme_id/:horarios_id', async (req, resp) => {
     }
 })
 
-endpoint.put('/alarmes/editar/:alarme_id}/:horarios_id}', async (req, resp) => {
+endpoint.put('/alarmes/editar/:alarme_id/:horarios_id', async (req, resp) => {
     try {
         const alarme_id = req.params.alarme_id
         const horarios_id = req.params.horarios_id
-        const resposta = await alterarAlarme(alarme_id, horarios_id, req.bodyalarme_nome, req.bodyalarme_recorrencia, req.bodyhora, req.bodymedicamentos_tipo, req.bodymedicamentos_dose, req.bodymedicamentos_posologia)
+        const { alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia } = req.body;
+
+        const resposta = await alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia);
+        
         resp.sendStatus(204)
-    } catch (error) {
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
         })
