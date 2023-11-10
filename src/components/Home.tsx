@@ -5,8 +5,6 @@ import { Logo } from './Logo';
 import { CheckBox } from 'react-native-elements';
 import { styles } from './styles/sharedStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
-import { api } from '../service/AlarmesService';
 
 export const Home = () => {
   const { navigate } = useNavigation();
@@ -36,7 +34,13 @@ export const Home = () => {
     checkAsyncStorage();
   }, [navigate]);
 
-  
+  const handleNextPage = (value) => {
+    if(value === 'terms'){
+      navigate('Terms')
+    }
+  }
+
+
   const handleAcceptTerms = async () => {
     setTermsAccepted(true);
 
@@ -47,7 +51,10 @@ export const Home = () => {
         [
           {
             text: 'Rejeitar',
-            onPress: () => console.log('Cancelar'),
+            onPress: () => {
+              console.log('Cancelar')
+              navigate('Terms');
+            },
             style: 'cancel',
           },
           { text: 'Aceitar', onPress: () => {
@@ -101,7 +108,7 @@ export const Home = () => {
           onPress={() => setTermsAccepted(!termsAccepted)}
         />
         <Text style={styles.termsText}>
-          Aceito os <Text style={styles.termsTextHilighted}>termos de uso</Text>
+          Aceito os <Text style={styles.termsTextHilighted} onPress={() => {handleNextPage('terms')}}>termos de uso</Text>
         </Text>
       </View>
       <View style={styles.areaButton}>
