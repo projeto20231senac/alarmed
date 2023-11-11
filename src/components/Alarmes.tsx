@@ -92,7 +92,7 @@ export const Alarmes = () => {
 
   return (
     <View style={styles.container}>
-      <Logo showBackButton={true} />
+      <Logo showBackButton={false} />
       {errorMessage && (
           <View style={styles.error}>
             <MaterialIcons name="error" size={24} color="#f00" />
@@ -125,7 +125,7 @@ export const Alarmes = () => {
                 <View style={stylesAlarmes.alarmesChildLine}>
                   <Text 
                   style={stylesAlarmes.alarmesChildTitle}>{alarme.alarme_nome}
-                    <Text style={{color: '#000', fontWeight: 'normal', fontSize: 18}}>, deverá ser administrado às </Text>
+                    <Text style={{color: '#000', fontWeight: 'normal', fontSize: 18}}> deverá ser administrado às </Text>
                     <Text style={stylesAlarmes.alarmesChildHora}>
                       {formattedHour(alarme.hora)}
                     </Text>

@@ -179,7 +179,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
     promocoesChildLine:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'baseline',
         marginVertical: 5,
     },
     promocoesChildTitle:{

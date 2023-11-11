@@ -205,6 +205,18 @@ export const AlarmeDetails = () => {
     );
   };
   
+  const formatarData = (data) => {
+    const dataObj = new Date(data);
+    const dia = dataObj.getDate();
+    const mes = dataObj.getMonth() + 1; // Os meses começam do zero
+    const ano = dataObj.getFullYear();
+  
+    // Adicionando zeros à esquerda para manter o formato "dd/mm/yyyy"
+    const diaFormatado = dia < 10 ? `0${dia}` : dia;
+    const mesFormatado = mes < 10 ? `0${mes}` : mes;
+  
+    return `${diaFormatado}/${mesFormatado}/${ano}`;
+  };
 
   return (
     <View style={styles.container}>
@@ -231,8 +243,9 @@ export const AlarmeDetails = () => {
                       <MaterialCommunityIcons name="alert-octagram" size={24} color="#ff0000" />
                       <Text style={{fontWeight: 'bold', fontSize: 18, color: '#f00'}}>Promoção</Text>
                     </View>
-                  </View>
-                  <View style={stylesAlarmesDetails.promocoesChildColumn}>
+                    <Text style={{fontSize: 16, marginTop: 10}}>
+                        Temos uma promoção especial para você:
+                    </Text>
                     <View style={stylesAlarmesDetails.promocoesChildLine}>
                       <Text style={stylesAlarmesDetails.promocao_titulo}>
                         {promocao.promocoes_medicamento}
@@ -242,17 +255,20 @@ export const AlarmeDetails = () => {
                       </Text>
                       
                     </View>
-                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'baseline', flexWrap: 'wrap' }}>
                         <FontAwesome5 name="store-alt" size={18} color="#000" style={{margin: 10}}/>
-                        <Text style={{fontSize: 16}}>
-                          Em qualquer <Text style={{fontWeight: 'bold'}}>{promocao.promocoes_fornecedor}</Text> mais próxima
+                        <Text style={{fontSize: 16, textAlign: 'justify'}}>
+                          Na <Text style={{fontWeight: 'bold'}}>{promocao.promocoes_fornecedor}</Text> mais próxima
                         </Text>
                     </View>
                     <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                         <FontAwesome name="whatsapp" size={24} color="#090" style={{margin: 10}} />
                         <Text style={{color: '#090', fontWeight: 'bold', fontSize: 16}}>
-                          {promocao.promocoes_fornecedor_telefone}
+                          {promocao.promocoes_fornecedor_telefone} - Peça Já
                         </Text>
+                    </View>
+                    <View>
+                        <Text style={{textAlign: 'center', fontSize: 12, color: '#aaa'}}>Promoção válida até {formatarData(promocao.promocoes_fim)} ou enquanto durarem os estoques</Text>
                     </View>
                   </View>
               </View>
