@@ -41,9 +41,6 @@ export const stylesAlarmes = StyleSheet.create({
     addButtonText:{
         color: '#0085FF',
         fontSize: 20,
-        '@media (max-width: 480px) and (min-width: 240px)': {
-            fontSize: 14,
-        },
         paddingHorizontal: 3,
     },
     editButtonText:{

@@ -9,9 +9,10 @@ import {
   Platform,
   ScrollView,
   KeyboardAvoidingView,
+  Vibration,
 } from 'react-native';
 import { Logo } from './Logo';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmesDetails } from './styles/stylesAlarmesDetails';
@@ -33,15 +34,15 @@ export const AlarmeDetails = () => {
   const [dados, setDados] = useState([])
   const [errorMessage, setErrorMessage] = useState(null);
   const [editando, setEditando] = useState(false); 
-
+  const [promocoes, setPromocoes] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState()
   const [items, setItems] = useState([
-    { label: 'Comprimido', value: 'Comprimido' },
-    { label: 'Gotas', value: 'Gotas' },
-    { label: 'Líquido', value: 'Liquido' },
-    { label: 'Injetável', value: 'Injetavel' },
+    { label: 'Comprimido', value: 'Comprimido', icon: () => <MaterialCommunityIcons name="pill" size={16} color="#0085ff"/> },
+    { label: 'Gotas', value: 'Gotas', icon: () => <Ionicons name="water" size={16} color="#0085ff" /> },
+    { label: 'Líquido', value: 'Liquido', icon: () => <FontAwesome5 name="prescription-bottle-alt" size={16} color="#0085ff" /> },
+    { label: 'Injetável', value: 'Injetavel', icon: () => <FontAwesome5 name="syringe" size={16} color="#0085ff" /> },
     { label: 'Cremes', value: 'Cremes' },
     { label: 'Pomadas', value: 'Pomadas'},
     { label: 'Pastas', value: 'Pastas' },
@@ -61,6 +62,64 @@ export const AlarmeDetails = () => {
     medicamentos_posologia: '',
   });
 
+  useFocusEffect(
+    React.useCallback(async () =>{
+      const loadDados = async () => {
+        try {
+          const alarmeId = await AsyncStorage.getItem('alarmeId');
+          const horariosId = await AsyncStorage.getItem('horariosId');
+          console.log("Alarme ID recebido: ", alarmeId);
+          console.log('Horarios ID recebido: ', horariosId)
+  
+          const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
+  
+          if (response.status === 200) {
+            const dadosAPI = response.data;
+            console.log(dadosAPI)
+  
+            if (dadosAPI) {
+              setDados(dadosAPI);
+              setValue(dadosAPI[0].medicamentos_tipo);
+              await AsyncStorage.setItem('alarmeNome', dadosAPI[0].alarme_nome);
+            } else {
+              console.log("Nenhum dado de alarme recebido da API.");
+              setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+            }
+          }else{
+            setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
+          }
+        } catch (error) {
+          console.error('Erro ao obter os dados:', error);
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+        }
+      };
+
+      await loadDados();
+
+      const loadPromocoes = async () => {
+        try {
+          const CEP = await AsyncStorage.getItem('CEP');
+          const alarmenome = await AsyncStorage.getItem('alarmeNome')
+          console.log('CEP da Promoção: ', CEP, 'Nome: ', alarmenome)
+          const response = await api.get(`/promocoes/${CEP}/${alarmenome}`);
+
+          if (response.status === 200){
+            setPromocoes(response.data)
+          } else {
+            console.log("Nenhum dado de alarme recebido da API.");
+            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+          }
+        } catch (err) {
+          console.error('Erro ao obter os dados:', err);
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+        }
+      }
+      await loadPromocoes();
+      
+      
+    }, [])
+  )
+
   useEffect(() => {
     const options = {
       weekday: 'long',
@@ -73,36 +132,6 @@ export const AlarmeDetails = () => {
     const currentDate = new Date().toLocaleString('pt-BR', options);
     setCurrentDate(currentDate);
 
-    const loadDados = async () => {
-      try {
-        const alarmeId = await AsyncStorage.getItem('alarmeId');
-        const horariosId = await AsyncStorage.getItem('horariosId');
-        console.log("Alarme ID recebido: ", alarmeId);
-        console.log('Horarios ID recebido: ', horariosId)
-
-        const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
-
-        if (response.status === 200) {
-          const dadosAPI = response.data;
-          console.log(dadosAPI)
-
-          if (dadosAPI) {
-            setDados(dadosAPI);
-            setValue(dadosAPI[0].medicamentos_tipo);
-          } else {
-            console.log("Nenhum dado de alarme recebido da API.");
-            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-          }
-        }else{
-          setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
-        }
-      } catch (error) {
-        console.error('Erro ao obter os dados:', error);
-        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-      }
-    };
-
-    loadDados();
   }, []);
 
 
@@ -119,20 +148,23 @@ export const AlarmeDetails = () => {
   };
 
   const handleSave = async () => {
+    console.log('Dados recebidos para atualização: ', editedData)
     setEditando(false);
     const alarmeId = await AsyncStorage.getItem('alarmeId');
     const horariosId = await AsyncStorage.getItem('horariosId');
   
     try {
       const response = await api.put(`/alarmes/editar/${alarmeId}/${horariosId}`, editedData);
-      if (response.status === 200) {
-        // Os dados foram atualizados com sucesso
-        // Você pode atualizar o estado dados (ou recarregar os dados da API) aqui
+      if (response.status === 204) {
+          console.log('Alarme atualizado com sucesso!');
+          Vibration.vibrate(1000);
+          Alert.alert('Seu alarme foi atualizado','Suas novas informações já estão atualizadas');
+          navigate('Alarmes')
       } else {
         console.error('Erro ao atualizar os dados:', response.status);
       }
-    } catch (error) {
-      console.error('Erro ao fazer a solicitação para a API:', error);
+    } catch (err) {
+      console.error('Erro ao fazer a solicitação para a API:', err);
     }
   };
 
@@ -173,6 +205,18 @@ export const AlarmeDetails = () => {
     );
   };
   
+  const formatarData = (data) => {
+    const dataObj = new Date(data);
+    const dia = dataObj.getDate();
+    const mes = dataObj.getMonth() + 1; // Os meses começam do zero
+    const ano = dataObj.getFullYear();
+  
+    // Adicionando zeros à esquerda para manter o formato "dd/mm/yyyy"
+    const diaFormatado = dia < 10 ? `0${dia}` : dia;
+    const mesFormatado = mes < 10 ? `0${mes}` : mes;
+  
+    return `${diaFormatado}/${mesFormatado}/${ano}`;
+  };
 
   return (
     <View style={styles.container}>
@@ -190,6 +234,48 @@ export const AlarmeDetails = () => {
         <KeyboardAvoidingView 
           style={{ flex: 2 }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={stylesAlarmesDetails.alarmes}>
+          {promocoes.length > 0 ? (
+            promocoes.map((promocao, index) => (
+              <View style={stylesAlarmesDetails.promocoesChild}key={promocao.promocoes_id}>
+                  <View style={stylesAlarmesDetails.promocoesChildColumn}>
+                    <View style={stylesAlarmesDetails.promocoesChildTitle}>
+                      <MaterialCommunityIcons name="alert-octagram" size={24} color="#ff0000" />
+                      <Text style={{fontWeight: 'bold', fontSize: 18, color: '#f00'}}>Promoção</Text>
+                    </View>
+                    <Text style={{fontSize: 16, marginTop: 10}}>
+                        Temos uma promoção especial para você:
+                    </Text>
+                    <View style={stylesAlarmesDetails.promocoesChildLine}>
+                      <Text style={stylesAlarmesDetails.promocao_titulo}>
+                        {promocao.promocoes_medicamento}
+                      </Text>
+                      <Text style={stylesAlarmesDetails.promocao_preco}>
+                        R$ {Number(promocao.promocoes_preco).toLocaleString('pt-BR')}
+                      </Text>
+                      
+                    </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'baseline', flexWrap: 'wrap' }}>
+                        <FontAwesome5 name="store-alt" size={18} color="#000" style={{margin: 10}}/>
+                        <Text style={{fontSize: 16, textAlign: 'justify'}}>
+                          Na <Text style={{fontWeight: 'bold'}}>{promocao.promocoes_fornecedor}</Text> mais próxima
+                        </Text>
+                    </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                        <FontAwesome name="whatsapp" size={24} color="#090" style={{margin: 10}} />
+                        <Text style={{color: '#090', fontWeight: 'bold', fontSize: 16}}>
+                          {promocao.promocoes_fornecedor_telefone} - Peça Já
+                        </Text>
+                    </View>
+                    <View>
+                        <Text style={{textAlign: 'center', fontSize: 12, color: '#aaa'}}>Promoção válida até {formatarData(promocao.promocoes_fim)} ou enquanto durarem os estoques</Text>
+                    </View>
+                  </View>
+              </View>
+              )
+             )
+          ) : (null)}
+        </View>
         <View style={stylesAlarmesDetails.alarmes}>
           {dados.length > 0 ? (
             dados.map((alarme) => (
@@ -302,25 +388,29 @@ export const AlarmeDetails = () => {
                           console.log(item.value);
                         }}
                         onChangeValue={(item) => {
-                          setEditedData({...editedData, medicamentos_tipo: item.value})
+                          setEditedData({...editedData, medicamentos_tipo: item})
                         }}
 
-                        style={{ backgroundColor: '#77777722', borderColor: '#77777722' }}
+                        style={{ backgroundColor: '#ccc', borderColor: '#77777722' }}
                         itemStyle={{
                           justifyContent: 'flex-start',
                         }}
                         dropDownStyle={{ backgroundColor: '#aaaaaa' }}
+                        dropDownDirection="TOP"
+                        
                       />
                     </View>
                   ) : (
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
                       <Text style={stylesAlarmesDetails.alarmesChildText}>
                         {alarme.medicamentos_tipo === 'Liquido' ? (
-                          <FontAwesome5 name="syringe" size={24} color="#000" style={{ marginRight: 10 }} />
+                          <FontAwesome5 name="prescription-bottle-alt" size={24} color="#000" style={{ marginRight: 10 }}  />
                         ) : alarme.medicamentos_tipo === 'Gotas' ? (
                           <Ionicons name="water" size={24} color="#000" style={{ marginRight: 10 }} />
                         ) : alarme.medicamentos_tipo === 'Comprimido' ? (
                           <MaterialCommunityIcons name="pill" size={24} color="#000" style={{ marginRight: 10 }} />
+                        ) : alarme.medicamentos_tipo === 'Injetavel' ? (
+                          <FontAwesome5 name="syringe" size={24} color="#000" style={{ marginRight: 10 }} />
                         ) : (
                           <>
                           </>

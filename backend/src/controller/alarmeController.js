@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento } from '../repository/alarmeRepository.js'
+import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento, promocoesPorCep } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -124,6 +124,21 @@ endpoint.get('/alarmes/:cpf', async (req, resp) => {
     }
 })
 
+//obter promocoes do cep
+endpoint.get('/promocoes/:cep/:alarmeNome', async (req, resp) => {
+    try {
+        const cep = req.params.cep;
+        const alarmeNome = req.params.alarmeNome;
+        const buscaPromocoesPorCep = await promocoesPorCep(cep, alarmeNome);
+        console.log(buscaPromocoesPorCep)
+        resp.status(200).send(buscaPromocoesPorCep);
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
 //obter detalhes dos alarmes filtrando pelo alarme_id e horarios_id
 endpoint.get('/detalhes/:alarme_id/:horarios_id', async (req, resp) => {
     try {
@@ -139,13 +154,16 @@ endpoint.get('/detalhes/:alarme_id/:horarios_id', async (req, resp) => {
     }
 })
 
-endpoint.put('/alarmes/editar/:alarme_id}/:horarios_id}', async (req, resp) => {
+endpoint.put('/alarmes/editar/:alarme_id/:horarios_id', async (req, resp) => {
     try {
         const alarme_id = req.params.alarme_id
         const horarios_id = req.params.horarios_id
-        const resposta = await alterarAlarme(alarme_id, horarios_id, req.bodyalarme_nome, req.bodyalarme_recorrencia, req.bodyhora, req.bodymedicamentos_tipo, req.bodymedicamentos_dose, req.bodymedicamentos_posologia)
+        const { alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia } = req.body;
+
+        const resposta = await alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia);
+        
         resp.sendStatus(204)
-    } catch (error) {
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
         })
