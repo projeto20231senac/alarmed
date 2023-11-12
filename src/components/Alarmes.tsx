@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -13,14 +13,18 @@ import { stylesAlarmes } from './styles/stylesAlarmes';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
-
+import {AlarmeContext} from '../context/AlarmeContext'
 export const Alarmes = () => {
+
+  const {alarme} = useContext(AlarmeContext)
+  console.log("xx",alarme);
+  
   const { navigate } = useNavigation();
   const [currentDate, setCurrentDate] = useState('');
   const [dados, setDados] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleNextPage = (value, alarme_id, horarios_id) => {
+   const handleNextPage = (value, alarme_id, horarios_id) => {
     if(value === 'edit'){
       navigate('Edit')
     }else if(value === 'next'){
@@ -112,7 +116,12 @@ export const Alarmes = () => {
         </TouchableOpacity>
       </View>
       <ScrollView>
-      <Text style={stylesAlarmes.title}>Meus alarmes <MaterialCommunityIcons name="bell-ring" size={32} color="#0085FF" /></Text>
+      <Text style={stylesAlarmes.title}>Meus alarmes <MaterialCommunityIcons name="bell-ring" size={32} color="#0085FF" /> </Text>
+     <Text>
+      {/* <Image style={stylesAlarmes.imgAlarmes} source={require({{}})}></Image>  */}
+      
+      </Text> 
+    
       <View style={stylesAlarmes.alarmes}>
         {dados.length > 0 ? (
           dados.map((alarme) => (

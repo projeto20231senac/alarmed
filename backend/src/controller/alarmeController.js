@@ -20,7 +20,7 @@ const upload = multer({ storage: storage
 endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
     try {
         
-      if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
+      if(req.file.mimetype != 'image/jpeg' && req.file.mimetype  != 'image/png'){
         resp.status(422).send({
             erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
         })

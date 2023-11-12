@@ -138,6 +138,7 @@ export const Cpf = () => {
             placeholderTextColor="#000"
             textAlign="center"
             keyboardType="numeric"
+            
           />
         </View>
         <View style={styles.areaButton}>

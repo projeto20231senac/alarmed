@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -10,25 +10,27 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { sharedStylesForms } from './styles/sharedStylesForms';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {AlarmeContext} from '../context/AlarmeContext'
 export const AlarmesNome = () => {
+const {adicionarAlarme,alarme_nome} = useContext(AlarmeContext)
 
   const { navigate } = useNavigation();
-  const [medicamento, setMedicamento] = useState('');
+  const [nomeMedicamento, setMedicamento] = useState('');
 
   const handleNextPage = async () => {
     try {
-        // Salvando o valor do medicamento no AsyncStorage
-        await AsyncStorage.setItem('AlarmesNome', medicamento);
-        const f = await AsyncStorage.getItem('foto');
-        console.log("entao salvou",f);
-        
-        console.log(`Medicamento (${medicamento}) salvo com sucesso!`);
+        // Salvando o valor do nomeMedicamento no AsyncStorage
+        // await AsyncStorage.setItem('AlarmesNome', nomeMedicamento);
+        // const f = await AsyncStorage.getItem('foto');
+        // console.log("entao salvou",f);
+        adicionarAlarme(nomeMedicamento)
+        console.log(`Medicamento (${nomeMedicamento}) salvo com sucesso!`);
     } catch (error) {
         console.error('Erro ao salvar o medicamento:', error);
     }
 
     navigate('AlarmesFoto');
+  
   }
 
   return (
@@ -38,7 +40,7 @@ export const AlarmesNome = () => {
       <View style={sharedStylesForms.form}>
         <TextInput 
             style={sharedStylesForms.input} 
-            value={medicamento}
+            value={nomeMedicamento}
             onChangeText={(text) => setMedicamento(text)}>
         </TextInput> 
       </View>

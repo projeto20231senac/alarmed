@@ -1,11 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, CameraType } from 'expo-camera';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View ,Image, SafeAreaView, useWindowDimensions, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 import {  Entypo } from '@expo/vector-icons';
 import { Platform } from 'react-native';
+import {AlarmeContext} from '../context/AlarmeContext'
+
 
 export default function AlarmesFoto() {
   const { navigate } = useNavigation();
@@ -21,7 +23,7 @@ export default function AlarmesFoto() {
   const cameraLargura = cameraDimensao.width
   const screenRatio = cameraAltura/ cameraLargura
 
-
+  const {adicionarAlarme} = useContext(AlarmeContext)
   if (!Permissao) {
     
     return <View />;
@@ -49,7 +51,10 @@ export default function AlarmesFoto() {
     if (cameraRef) {
       const options = { quality:0.8, base64: true,};
       const data = await cameraRef.takePictureAsync(options);
+      const nomeImagem = data.uri.split('/').pop()
       setCapturarImagem(data.uri);
+      console.log("nome do arquivo",data.uri);
+      
     }
   };
   // função para calcular a proporção da camera de acordo com altura e largura o dispositivo
@@ -91,8 +96,9 @@ export default function AlarmesFoto() {
   async function salvarFoto(){
     try {
       const imagem = capturarImagem
-      await AsyncStorage.setItem("foto",imagem)
-      navigate("Alarmes")
+      // await AsyncStorage.setItem("foto",imagem)
+      adicionarAlarme(imagem)
+      navigate("AlarmeRecorrencia")
     
     } catch (error) {
       console.log("erro ao salvar foto",error);

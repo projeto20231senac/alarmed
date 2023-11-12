@@ -11,12 +11,11 @@ export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     return resposta
 }
 
-export async function inserirAlarme(alarm) {
-    const comando = `INSERT INTO alarmes (cpf,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
+export async function inserirAlarme(alarme) {
+    const comando = `INSERT INTO alarmes (cpf,alarme_nome,alarme_recorrencia,alarme_foto) VALUES (?,?,?,?)`;
 
-    const [resposta] = await con.query(comando, [alarm.id, alarm.nome, alarm.recorrencia, alarm.hora, alarm.foto]);
-    alarm.id = resposta.inserirAlarme
-    return filme
+    const [resposta] = await con.query(comando, [alarme.cpf, alarme.nome, alarme.recorrencia, alarme.foto]);
+    return alarme
 }
 
 export async function inserirMedicamento(nome) {
