@@ -16,9 +16,15 @@ export interface IAlarme {
   alarme_recorrencia:string,
   alarme_foto:string
  }
+ export interface IHorario{
+  cpf:string,
+  medicamentos_id:string,
+  alarme_id:string,
+  hora:string
+ }
 export interface IAlarmeContext {
   alarme: IAlarme[];
-  alarme_nome:string;
+  horario:IHorario[];
   adicionarAlarme():void
 }
 
@@ -26,8 +32,17 @@ export interface IAlarmeContext {
 export const AlarmeContext = React.createContext<IAlarmeContext>({} as IAlarmeContext);
 
 export const AlarmeProvider: React.FunctionComponent<IProps> = ({ children }) => {
-  const [data,setData] = React.useState<IAlarme[]>([]);
-  
+  const [data,setData] = useState<IAlarme[]>([]);
+  const [horario,setHorarios] = useState([])
+
+  const adicionarHorario = async (h)=>{
+    try{
+      const horarios = [...horario,h]
+      setHorarios(horarios)
+    }catch (error) {
+      console.log("error",error);
+    }
+  }
   const adicionarAlarme= async (nomeMedicamento:IAlarme)=>{
     try {
       const novoAlarme =[...data,nomeMedicamento]
@@ -36,9 +51,11 @@ export const AlarmeProvider: React.FunctionComponent<IProps> = ({ children }) =>
       console.log("error",error);
     }
   }
+  console.log("horarios",horario);
+  
   
   return (
-    <AlarmeContext.Provider value={{adicionarAlarme,alarme:data}}>
+    <AlarmeContext.Provider value={{alarme:data, adicionarAlarme,adicionarHorario,horario:horario}}>
       {children}
     </AlarmeContext.Provider>
   )

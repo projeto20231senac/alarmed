@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   Platform,
+  FlatList,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +17,8 @@ import { AlarmeContext } from '../context/AlarmeContext';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 export const AlarmeRecorrencia = () => {
-  const { adicionarAlarme } = useContext(AlarmeContext);
+  const {  adicionarHorario,horario} = useContext(AlarmeContext);
+
 
   const { navigate } = useNavigation();
   const [nomeMedicamento, setMedicamento] = useState('');
@@ -25,19 +27,23 @@ export const AlarmeRecorrencia = () => {
   const [show, setShow] = useState(false);
   const [inicio,setInicio] = useState('')
   const [inputValue, setInputValue] = useState('');
+console.log("h",horario);
 
   const onChange = ( event,selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
     const formataHora = currentDate.toLocaleTimeString('pt-BR');
-
-    setInputValue(formataHora);
+    
+    setInputValue(inputValue);
+    adicionarHorario(formataHora)
+  
   };
 
   const showMode = currentMode => {
     setShow(true);
     setMode(currentMode);
+    
   };
   const dataInicio =  date.toLocaleDateString('pt-BR');
   
@@ -50,7 +56,6 @@ export const AlarmeRecorrencia = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />
-      <ScrollView>
         <Text style={styles.title}>Qual é frequência?</Text>
         <View style={[{ flexDirection: 'row', alignItems: 'center',paddingTop:30,justifyContent:'center' }]}>
           <Text
@@ -81,28 +86,14 @@ export const AlarmeRecorrencia = () => {
           <Text>Iniciando em</Text>
           <Text style={{fontWeight:'bold'}}> {dataInicio}</Text>
         </View>
-        <View style={{paddingVertical:20}}>
-          <Text style={{paddingHorizontal:20,fontWeight:'bold',paddingBottom:20}}>Horarios</Text>
-
-          <View style={{paddingHorizontal:5,flexDirection:'row',alignItems:'center',justifyContent:"space-around"}}>
-            <TextInput
-              value={inputValue.slice(0,5)}
-              onPressIn={() => {
-                showTimepicker();
-              }}
-              placeholder="HH:MM"
-              style={{
-                textAlign: 'center',
-                fontSize: 18,
-                fontWeight: 'bold',
-                width:75,
-                borderWidth: 2,
-                borderRadius: 8,
-                borderColor: '#ccc',
-                paddingVertical: 8,
-                paddingHorizontal:5
-              }}
-            />
+        <ScrollView style={{flex:1}}>
+        <View style={{paddingVertical:20,flex:1}}>
+          <Text style={{fontSize:24,paddingHorizontal:20,fontWeight:'bold',paddingBottom:20}}>Horarios</Text>
+            <View  style={{paddingHorizontal:20,paddingBottom:20}}>
+              <FlatList data={horario}   renderItem={({item}) => <Text>{item} </Text>}/>
+            </View>
+          <View style={{paddingHorizontal:20,alignItems:'center',justifyContent:"space-between"}}>
+            
             {show && (
               <RNDateTimePicker
                 onChange={onChange}
@@ -112,19 +103,33 @@ export const AlarmeRecorrencia = () => {
                
               />
             )}
-          <TouchableOpacity  onPress={onChange} style={{flexDirection:'row'}}>
+            {horario.length !== 0 && (
+               <TouchableOpacity   onPressIn={() => {
+                showTimepicker();
+              }} style={{flexDirection:'row',alignItems:'center'}}>
           <Ionicons name="add-outline" size={24}  color="#0085FF" />
           <Text style={{color:"#0085FF",fontWeight:'bold'}}>Adicionar outro horário</Text>
           </TouchableOpacity>
+            )}
+            {horario.length === 0 &&(
+
+          <TouchableOpacity   onPressIn={() => {
+                showTimepicker();
+              }} style={{flexDirection:'row',alignItems:'center'}}>
+          <Ionicons name="add-outline" size={24}  color="#0085FF" />
+          <Text style={{color:"#0085FF",fontWeight:'bold'}}>Adicionar horário</Text>
+          </TouchableOpacity>
+            )}
           
           </View>
         </View>
+        </ScrollView>
         <View style={styles.areaButton}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+   
     </View>
   );
 };

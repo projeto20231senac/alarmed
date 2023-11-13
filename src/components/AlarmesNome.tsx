@@ -12,7 +12,7 @@ import { sharedStylesForms } from './styles/sharedStylesForms';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AlarmeContext} from '../context/AlarmeContext'
 export const AlarmesNome = () => {
-const {adicionarAlarme,alarme_nome} = useContext(AlarmeContext)
+const {adicionarAlarme} = useContext(AlarmeContext)
 
   const { navigate } = useNavigation();
   const [nomeMedicamento, setMedicamento] = useState('');
