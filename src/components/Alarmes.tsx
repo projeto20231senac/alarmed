@@ -99,6 +99,7 @@ export const Alarmes = () => {
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}
+      <ScrollView>
       <Text style={stylesAlarmes.subtitle}>Hoje é {currentDate}</Text>
       
       <View style={stylesAlarmes.areaButton}>
@@ -111,7 +112,7 @@ export const Alarmes = () => {
           <MaterialCommunityIcons name="alarm-plus" size={24} color="#0085FF" />
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      
       <Text style={stylesAlarmes.title}>Meus alarmes <MaterialCommunityIcons name="bell-ring" size={32} color="#0085FF" /></Text>
       <View style={stylesAlarmes.alarmes}>
         {dados.length > 0 ? (
