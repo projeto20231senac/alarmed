@@ -58,12 +58,39 @@ endpoint.post('/medicamentos', async (req, resp) => {
 
 
 //criar um novo alarme
-endpoint.post('/alarmes', async (req, resp) => {
+endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
     try {
-        const novoAlarme = req.body;
-        const novo = await inserirAlarme(novoAlarme);
-        resp.status(200).send(novo);
+        
+      if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
+        resp.status(422).send({
+            erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
+        })
+      }else{
+
+          const novoAlarme = req.body;
+          novoAlarme.foto= req.file.filename
+          const novo = await inserirAlarme(novoAlarme);
+          resp.status(200).send(novoAlarme)
+         
+      }
     } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+endpoint.post('/medicamentos', async (req, resp) => {
+    try {
+        
+     
+
+          const novoMedicamento = req.body;
+          const medicamento = await inserirMedicamento(novoMedicamento);
+          resp.status(200).send(medicamento)
+         
+      
+    } catch (err) {
+        console.log("Oi",err);
         resp.status(400).send({
             erro: err.message
         })

@@ -1,4 +1,4 @@
-import { con } from './connection.js'
+import { con } from './../repository/connection.js'
 
 export async function inserirUsuario(cpf, cep, dataNascimento) {
     const sql = `INSERT INTO usuarios (cpf, user_cep, user_dtnascimento) VALUES (?, ?, ?)`;
@@ -20,9 +20,11 @@ export async function buscarUserPorCep(cep){
     return resposta[0]
 }
 
-export async function alterarUsuario(id, updatedData) {
-    const { user_cep, user_dtnascimento } = updatedData;
-    const comando = `UPDATE usuarios SET user_cep = ? , user_dtnascimento = ? WHERE cpf = ?`;
-    const [resposta] = await con.query(comando, [user_cep, user_dtnascimento, id]);
+export async function alterarUsuario(cpf, updatedData) {
+    const comando = `UPDATE usuarios SET user_cep = ?, user_dtnascimento = ? WHERE cpf = ?`;
+    const [resposta] = await con.query(comando, [updatedData.user_cep, updatedData.user_dtnascimento,cpf]);
     return resposta.affectedRows;
 }
+
+
+

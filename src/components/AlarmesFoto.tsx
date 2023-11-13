@@ -1,72 +1,208 @@
-// import React, { useState } from 'react';
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   Image,
-// } from 'react-native';
-// import { Logo } from './Logo';
-// import { useNavigation } from '@react-navigation/native';
-// import { styles } from './styles/sharedStyles';
-// import { stylesAlarmesFoto } from './styles/stylesAlarmesFoto';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import ImagePicker from 'react-native-image-picker';
-// import RNFS from 'react-native-fs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Camera, CameraType } from 'expo-camera';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View ,Image, SafeAreaView, useWindowDimensions, Alert} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+import {  Entypo } from '@expo/vector-icons';
+import { Platform } from 'react-native';
+
+export default function AlarmesFoto() {
+  const { navigate } = useNavigation();
+  const [showCamera, setShowCamera] = useState(true);
+  const [ratio, setRatio] = useState('4:3')
+  const [type, setType] = useState(CameraType.back);
+  const [Permissao, requestPermissao] = Camera.useCameraPermissions();
+  const [cameraRef, setCameraRef] = useState(null);
+  const [capturarImagem, setCapturarImagem] = useState(null);
+  const [imageMargin, setImagePadding] = useState(0)
+  const cameraDimensao = useWindowDimensions()
+  const cameraAltura = cameraDimensao.height
+  const cameraLargura = cameraDimensao.width
+  const screenRatio = cameraAltura/ cameraLargura
 
 
-// export const AlarmesFoto = () => {
-//   const { navigate } = useNavigation();
-//   const [selectedImage, setSelectedImage] = useState(null);
+  if (!Permissao) {
+    
+    return <View />;
+  }
 
-//   const handleChooseImage = () => {
-//     const options = {
-//       title: 'Selecione uma imagem',
-//       storageOptions: {
-//         skipBackup: true,
-//         path: 'images', // O diretório onde a imagem será armazenada temporariamente
-//       },
-//     };
+  if (!Permissao.granted) {
+    // Permissões de câmera ainda não foram concedidas
+    return (
+      Alert.alert(
+        'Alarmed necessita acessar sua camera',
+        'Clique em permitir para captura a foto do medicamento.',
+        [
+          
+          { text: 'Aceitar', onPress: () => {
+            requestPermissao
+            } 
+          },
+        ],
+      )
+    );
+  }
 
-//     ImagePicker.showImagePicker(options, (response) => {
-//       if (response.didCancel) {
-//         console.log('Usuário cancelou a seleção de imagem');
-//       } else if (response.error) {
-//         console.error('Erro ao selecionar imagem:', response.error);
-//       } else if (response && response.uri){
-//         const source = { uri: response.uri };
+  // função para capturar a imagem
+  const imagem = async () => {
+    if (cameraRef) {
+      const options = { quality:0.8, base64: true,};
+      const data = await cameraRef.takePictureAsync(options);
+      setCapturarImagem(data.uri);
+    }
+  };
+  // função para calcular a proporção da camera de acordo com altura e largura o dispositivo
+   async function proporcoesCamera(){
+    if(Platform.OS === 'android' && cameraRef){
+      let cameraProporcao= screenRatio
+      const ratios =await cameraRef.getSupportedRatiosAsync()
+      let proporcaoReal=0
+      let distancias = {};
+      let ratioCamera = 0
+      let minDistancia =null
+      let valoresReais={}
+      for(const ratio of ratios){
+        const proporcao = ratio.split(':');
+        proporcaoReal = parseInt(proporcao[0]) / parseInt(proporcao[1]);
+        valoresReais[ratio] = proporcaoReal
+        const distancia = cameraProporcao -proporcaoReal
+        distancias[ratio] = proporcaoReal
 
-//         setSelectedImage(source);
+        if(minDistancia=== null){
+          minDistancia = ratio
+        }else if (distancia >= 0 && distancia < distancias[minDistancia]) {
+              minDistancia= ratio;
+            }
+      }
+      
+   ratioCamera = minDistancia
+   
+  //  calculando o margin a ser adicionado na camera
+   const remainder = Math.floor(
+    (cameraAltura - distancias[ratioCamera] * cameraLargura) / 2
+  );
+  
+  setImagePadding(remainder);
+  setRatio(minDistancia)
+    }
+ }
+  proporcoesCamera()
+  async function salvarFoto(){
+    try {
+      const imagem = capturarImagem
+      await AsyncStorage.setItem("foto",imagem)
+      navigate("Alarmes")
+    
+    } catch (error) {
+      console.log("erro ao salvar foto",error);
+      
+    }
+  }
+  const cancelCapture = () => {
+    setCapturarImagem(null);
+    setShowCamera(true);
+  };
+ 
+  return (
+   
+   <View  style={styles.container} >
+      <StatusBar/>
+      
+      {showCamera && (  <View style={styles.container}>
+      <Camera  ratio={ratio} style={[styles.camera,{marginTop: imageMargin, marginBottom: imageMargin}]}  type={type}  autoFocus={Camera.Constants.AutoFocus.on} ref={(ref) => { setCameraRef(ref); }}>
+        <View style={styles.botaoArea}> 
+        <TouchableOpacity onPress={imagem} style={[styles.button,{width:cameraLargura}]}>
+          <Entypo name="camera" size={64} color="white"  />
+        </TouchableOpacity>
+        </View>
+    
+      </Camera>
+      </View>)}
+     
+        <View>
+        {capturarImagem && (
+          <View style={{  justifyContent: 'center', alignItems: 'center' }}>
+          <View >
+            <Image source={{ uri: capturarImagem }} style={{ flex:1,width: cameraLargura,height:cameraAltura}} />
+           </View>
+          <View style={styles.botaoArea}>
+               <TouchableOpacity onPress={cancelCapture} style={{ justifyContent: 'center', alignItems: 'center' ,padding:8}}>
+                <Text  style={styles.botaoCancelar}> Cancelar</Text>
+                </TouchableOpacity>
+              <TouchableOpacity onPress={salvarFoto} style={{ justifyContent: 'center', alignItems: 'center',padding:8 }}>
+                <Text  style={styles.botaoSalvar}> Salvar foto</Text>
+              </TouchableOpacity>
+           </View>
+        </View>
+      )}
+      </View>
+   </View>
+    
+  );
+}
 
-//         // Salve a imagem no diretório do aplicativo
-//         const imagePath = `src/assets/medicamentosImages/medicamento.jpg`; // Caminho de destino da imagem
-//         RNFS.copyFile(response.uri, RNFS.DocumentDirectoryPath + '/' + imagePath)
-//           .then(() => {
-//             console.log('Imagem salva com sucesso:', imagePath);
-//           })
-//           .catch((error) => {
-//             console.error('Erro ao salvar a imagem:', error);
-//           });
-//       }
-//     });
-//   };
-
-//   const handleNextPage = () => {
-//     navigate('PróximaPágina');
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Logo showBackButton={true} />
-//       <Text style={styles.title}>Adicione uma foto do medicamento</Text>
-//       <TouchableOpacity style={stylesAlarmesFoto.imageButton} onPress={handleChooseImage}>
-//         {selectedImage && <Image source={selectedImage} style={stylesAlarmesFoto.image} />}
-//         {!selectedImage && <Text style={stylesAlarmesFoto.imageText}>Clique para escolher uma imagem</Text>}
-//       </TouchableOpacity>
-//       <View style={styles.areaButton}>
-//         <TouchableOpacity style={styles.button} onPress={handleNextPage}>
-//           <Text style={styles.buttonText}>Continuar</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent:'center',
+    backgroundColor:'#000'
+  },
+  camera: {
+   flex:1, 
+  },
+  // buttonContainer: {
+  //   // flex: 1,
+  //   position: 'absolute',
+  //   bottom:0,
+  //   flexDirection: 'row',
+  //   backgroundColor: 'transparent',
+  //   // margin:20,
+  //   alignItems:'center',
+  //   justifyContent:'space-between'
+  // },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign:'center'
+  },
+  button: {
+      alignSelf: 'flex-end',
+      justifyContent:'center',
+      alignItems:'center',
+    backgroundColor: 'transparent',
+    borderRadius:100,
+    height:70,
+    width:70
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  botaoArea:{
+    flexDirection:'row',
+    position:'absolute',
+    bottom:0,
+    alignItems:'center',
+    justifyContent:'space-evenly',
+    paddingBottom:30
+    
+  },
+  botaoSalvar: {
+    padding: 15,
+    color:'white',
+    fontWeight:'bold',
+    backgroundColor: '#0085FF',
+    borderRadius: 10,
+  },
+  botaoCancelar: {
+    padding: 15,
+    color:'white',
+    fontWeight:'bold',
+    backgroundColor: 'gray',
+    borderRadius: 10,
+  },
+  
+});

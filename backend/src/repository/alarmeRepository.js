@@ -39,10 +39,9 @@ export async function alterarImagem(foto, id) {
 }
 
 export async function listarTodosAlarmes() {
-    const comando = `SELECT  cpf                id,
+    const comando = `SELECT  cpf                cpf,
                             alarme_nome             nome,
                             alarme_recorrencia      recorrencia,
-                            alarme_hora             hora,
                             alarme_foto             foto
                         FROM alarmes`
 
