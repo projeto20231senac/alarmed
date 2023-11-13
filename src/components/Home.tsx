@@ -26,7 +26,7 @@ export const Home = () => {
   
           if (CPF && cepData && (termoAceito === 'sim' || termsAccepted)) {
             navigate('Alarmes');
-          } else if (CPF && dataNascimento && cepData && (termoAceito === null || termoAceito === 'nao')) {
+          } else if (termoAceito === null || termoAceito === 'nao') {
             navigate('Terms');
           } else {
             navigate('Cpf');

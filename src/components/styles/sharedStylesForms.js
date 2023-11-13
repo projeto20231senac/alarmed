@@ -8,7 +8,8 @@ export const sharedStylesForms = StyleSheet.create({
       borderRadius: 8,
       fontSize: 20,
       paddingHorizontal: 20,
-      borderColor: '#ccc',
+      borderColor: '#77777722',
+      textAlign: 'center',
     },
     form: {
       width: '100%',

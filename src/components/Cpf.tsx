@@ -53,7 +53,7 @@ export const Cpf = () => {
         
           
           setCep(resultado[0].postalCode);
-          
+          await AsyncStorage.setItem('CEP', resultado[0].postalCode)
         } catch (error) {
           console.error('Erro ao fazer reverse geocode:', error);
           setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
@@ -77,18 +77,16 @@ export const Cpf = () => {
              
               try {
                 const response = await api.get(`usuarios/${cpf}`);
-   
-                const cpfData = response.data.cpf
-                const cepData = response.data.user_cep
-
-                console.log("t",cpfData, cepData)
-   
-                await AsyncStorage.setItem('CEP', cep);
-
+                 
                 if (response.status === 200) {
                   if (response.data && response.data.length > 0) {
                     // Há este CPF
-                    await AsyncStorage.setItem('CPF', cpf);
+                    const cpfData = response.data.cpf
+                    const cepData = response.data.user_cep
+      
+                    await AsyncStorage.setItem('CEP', cepData);
+    
+                    await AsyncStorage.setItem('CPF', cpfData);
 
                     console.log(`CPF (${format(cpf)}) já existe no BD!`);
                     navigate('Alarmes');

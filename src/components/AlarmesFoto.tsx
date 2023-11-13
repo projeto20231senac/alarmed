@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, CameraType } from 'expo-camera';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View ,Image, SafeAreaView, useWindowDimensions, Alert} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View ,Image, SafeAreaView, useWindowDimensions, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 import {  Entypo } from '@expo/vector-icons';
