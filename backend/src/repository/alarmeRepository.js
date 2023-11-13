@@ -11,12 +11,10 @@ export async function buscarDetalhesAlarmePorId(alarme_id, horarios_id){
     return resposta
 }
 
-export async function inserirAlarme(alarm) {
-    const comando = `INSERT INTO alarmes (cpf,alarme_nome,alarme_recorrencia,alarme_hora,alarme_foto) VALUES (?,?,?,?,?)`;
-
-    const [resposta] = await con.query(comando, [alarm.id, alarm.nome, alarm.recorrencia, alarm.hora, alarm.foto]);
-    alarm.id = resposta.inserirAlarme
-    return filme
+export async function inserirAlarme(alarme, cpf) {
+    const comando = `INSERT INTO alarmes (cpf, alarme_nome) VALUES (?,?)`;
+    const [resposta] = await con.query(comando, [cpf, alarme]);
+    return { alarme_id: resposta.insertId }
 }
 
 export async function inserirMedicamento(nome) {
@@ -70,6 +68,19 @@ export async function promocoesPorCep(cep, alarmeNome, dataAtual = new Date()){
         const [result] = await con.query(comando, [cep, alarmeNome, dataAtual]);
 
         return result;
+}
+
+export async function alterarTipoNovoAlarme(alarme_id, tipo, cpf){
+    const comando = `INSERT INTO medicamentos (alarme_id, cpf, medicamentos_tipo) VALUES (?, ?, ?)`
+    const [resposta] = await con.query(comando, [alarme_id, cpf, tipo])
+    return { medicamentos_id: resposta.insertId };
+}
+
+
+export async function alterarMedicamento(novoMedicamentosId, novoAlarmeId, cpf, dose, unidade){
+    const comando = `UPDATE medicamentos SET medicamentos_dose = ?, medicamentos_posologia = ? WHERE medicamentos_id = ? AND alarme_id = ? AND cpf = ?`
+        const [resposta] = await con.query(comando, [dose, unidade, novoMedicamentosId, novoAlarmeId, cpf])
+        return resposta
 }
 
 export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia) {

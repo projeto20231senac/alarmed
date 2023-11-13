@@ -8,10 +8,9 @@ const endpoint = express.Router();
 //criar um novo usuario
 endpoint.post('/usuarios', async (req, resp) => {
     try {
-        const novoUsuario = req.body
-        const adicionarUsuario = await inserirUsuario(novoUsuario);
-        console.log(adicionarUsuario);
-        resp.status(200).send(adicionarUsuario);
+        console.log(req.body);
+        const novoUsuario = await inserirUsuario(req.body.cpf, req.body.cep, req.body.dataNascimento);
+        resp.status(200).send(novoUsuario);
        
     } catch (error) {
         resp.status(400).send({ erro: error.message });
@@ -30,7 +29,7 @@ endpoint.get('/usuarios/:cpf', async (req, resp) => {
 }) 
 
 //atualizar usuários por cpf
-endpoint.put('/usuario/:cpf', async (req, resp) => {
+endpoint.put('/usuarios/:cpf', async (req, resp) => {
     try {
         const {cpf} = req.params
         const updatedData = req.body;

@@ -10,6 +10,8 @@ import { AlarmesNome } from '../components/AlarmesNome';
 import { Edit } from '../components/Edit';
 import { AlarmeDetails } from '../components/AlarmeDetails';
 import AlarmesFoto from '../components/AlarmesFoto';
+import { AlarmesTipo } from '../components/AlarmesTipo';
+import { AlarmesDose } from '../components/AlarmesDose';
 
 
 export default function Navigation() {
@@ -31,6 +33,8 @@ export default function Navigation() {
       <Stack.Screen name="AlarmeDetails" component={AlarmeDetails} />
       <Stack.Screen name="AlarmesNome" component={AlarmesNome} />
       <Stack.Screen name="AlarmesFoto" component={AlarmesFoto} />
+      <Stack.Screen name="AlarmesTipo" component={AlarmesTipo} />
+      <Stack.Screen name="AlarmesDose" component={AlarmesDose} />
     </Stack.Navigator>
   );
 }

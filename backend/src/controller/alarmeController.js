@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento, promocoesPorCep } from '../repository/alarmeRepository.js'
+import { alterarAlarme, alterarTipoNovoAlarme, alterarMedicamento, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento, promocoesPorCep } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -16,8 +16,9 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage
   })
-//criar um novo alarme
-endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
+
+//editar um novo alarme com a imagem
+endpoint.put('/alarmes',upload.single('foto'), async (req, resp) => {
     try {
         
       if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
@@ -58,42 +59,33 @@ endpoint.post('/medicamentos', async (req, resp) => {
 
 
 //criar um novo alarme
-endpoint.post('/alarmes',upload.single('foto'), async (req, resp) => {
+endpoint.post('/alarmes', async (req, resp) => {
     try {
-        
-      if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
-        resp.status(422).send({
-            erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
-        })
-      }else{
+          const {medicamento, cpf} = req.body;
+          const novoAlarme = await inserirAlarme(medicamento, cpf);
+          resp.status(200).send({alarme_id: novoAlarme.alarme_id})
 
-          const novoAlarme = req.body;
-          novoAlarme.foto= req.file.filename
-          const novo = await inserirAlarme(novoAlarme);
-          resp.status(200).send(novoAlarme)
-         
-      }
-    } catch (err) {
-        resp.status(400).send({
-            erro: err.message
-        })
-    }
+    } catch (err) { resp.status(400).send({error: err.message})}
 })
-endpoint.post('/medicamentos', async (req, resp) => {
-    try {
-        
-     
 
-          const novoMedicamento = req.body;
-          const medicamento = await inserirMedicamento(novoMedicamento);
-          resp.status(200).send(medicamento)
-         
-      
-    } catch (err) {
-        console.log("Oi",err);
-        resp.status(400).send({
-            erro: err.message
-        })
+//cria um novo medicamento e insere o medicamentos_tipo
+endpoint.post('/tipo/:alarme_id', async (req, resp) => {
+    try{
+        const alarme_id = req.params.alarme_id
+        const { tipo, cpf } = req.body
+        const resposta = await alterarTipoNovoAlarme(alarme_id, tipo, cpf)
+        resp.status(200).send({medicamentos_id: resposta.medicamentos_id})
+
+    } catch (err) { resp.status(400).send({erro: err.message})}
+})
+
+endpoint.put('/medicamentos/editar/:novoMedicamentosId', async (req, resp) => {
+    try {
+          const novoMedicamentosId = req.params.novoMedicamentosId;
+          const {novoAlarmeId, cpf, dose, unidade} = req.body
+          const medicamento = await alterarMedicamento(novoMedicamentosId, novoAlarmeId, cpf, dose, unidade);
+          resp.status(204).send(medicamento)
+    } catch (err) {resp.status(400).send({ erro: err.message })
     }
 })
 
@@ -129,6 +121,7 @@ endpoint.get('/promocoes/:cep/:alarmeNome', async (req, resp) => {
     try {
         const cep = req.params.cep;
         const alarmeNome = req.params.alarmeNome;
+        console.log('Promocoes de:', cep, alarmeNome)
         const buscaPromocoesPorCep = await promocoesPorCep(cep, alarmeNome);
         console.log(buscaPromocoesPorCep)
         resp.status(200).send(buscaPromocoesPorCep);
@@ -169,6 +162,8 @@ endpoint.put('/alarmes/editar/:alarme_id/:horarios_id', async (req, resp) => {
         })
     }
 })
+
+
 
 
 endpoint.delete('/alarmes/:alarme_id', async (req, resp) => {

@@ -111,10 +111,10 @@ export const AlarmeDetails = () => {
         await loadData();
 
         const CEP = await AsyncStorage.getItem('CEP');
-        const alarmenome = await AsyncStorage.getItem('alarmeNome');
-        console.log('CEP da Promoção: ', CEP, 'Nome: ', alarmenome);
-        const response = await api.get(`/promocoes/${CEP}/${alarmenome}`);
-  
+        const alarmeNome = await AsyncStorage.getItem('alarmeNome');
+        console.log('CEP da Promoção: ', CEP, 'Nome: ', alarmeNome);
+        const response = await api.get(`/promocoes/${CEP}/${alarmeNome}`);
+
         if (response.status === 200) {
           setPromocoes(response.data);
         } else {
