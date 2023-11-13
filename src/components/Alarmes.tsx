@@ -7,14 +7,14 @@ import {
   ScrollView,
 } from 'react-native';
 import { Logo } from './Logo';
-import { useNavigation,useFocusEffect  } from '@react-navigation/native';
+import { useNavigation, useFocusEffect  } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
-import { configureNotifications } from './notificationService';
-import PushNotification from 'react-native-push-notification';
+// import { configureNotifications } from './notificationService';
+// import PushNotification from 'react-native-push-notification';
 
 export const Alarmes = () => {
   const { navigate } = useNavigation();
@@ -54,7 +54,7 @@ export const Alarmes = () => {
   
         if (dadosAPI) {
           setDados(dadosAPI);
-          mountAlarm(dadosAPI.alarme_nome, dadosAPI.hora)
+          // mountAlarm(dadosAPI.alarme_nome, dadosAPI.hora)
         } else {
           console.log("Nenhum dado de alarme ou horário recebido da API.");
           setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
@@ -77,7 +77,7 @@ export const Alarmes = () => {
     const currentDate = new Date().toLocaleString('pt-BR', options);
     setCurrentDate(currentDate);
 
-    configureNotifications();
+    // configureNotifications();
     
   }, []);
 
@@ -96,17 +96,17 @@ export const Alarmes = () => {
     return '';
   }
 
-  const mountAlarm = (nome, hora) => {
-    const horaAgendamento = new Date();
-      horaAgendamento.setHours(parseInt(hora.split(':')[0]));
-      horaAgendamento.setMinutes(parseInt(hora.split(':')[1]));
+  // const mountAlarm = (nome, hora) => {
+  //   const horaAgendamento = new Date();
+  //     horaAgendamento.setHours(parseInt(hora.split(':')[0]));
+  //     horaAgendamento.setMinutes(parseInt(hora.split(':')[1]));
 
-      // Agendar a notificação
-      PushNotification.localNotificationSchedule({
-        message: `É hora de administrar o alarme: ${nome}`,
-        date: horaAgendamento,
-      });
-  }
+  //     // Agendar a notificação
+  //     PushNotification.localNotificationSchedule({
+  //       message: `É hora de administrar o alarme: ${nome}`,
+  //       date: horaAgendamento,
+  //     });
+  // }
 
   return (
     <View style={styles.container}>
