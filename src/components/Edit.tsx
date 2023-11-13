@@ -8,6 +8,7 @@ import {
   Alert,
   Vibration,
   KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -92,74 +93,76 @@ export const Edit = () => {
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <Text style={{ marginHorizontal: 10, fontSize: 16 }}>
-          Estes são seus dados pessoais:
-        </Text>
+      <ScrollView>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <Text style={{ marginHorizontal: 10, fontSize: 16 }}>
+            Estes são seus dados pessoais:
+          </Text>
 
-        <View style={sharedStylesForms.form}>
-            <View style={sharedStylesForms.fieldset}>            
-                <Text>CEP: </Text>
-                <TextInput
-                style={sharedStylesForms.input}
-                value={cep}
-                onChangeText={(text) => setCep(text)}
-                placeholder="CEP"
-                placeholderTextColor="#000"
-                keyboardType="numeric"
-                />
-            </View>
-            <View style={sharedStylesForms.fieldset}>
-                <Text>Data de Nascimento: </Text>
-                {Platform.OS === 'ios' ? (
-                        <DateTimePicker
-                        value={birthDate}
-                        mode="date"
-                        display="spinner"
-                        textColor={'#000'}
-                        onChange={(event, selectedDate) => {
-                        if (selectedDate) {
-                            setBirthDate(selectedDate);
-                        }
-                        }}
-                        />
-                    ) : (
-                        <>
-                            <TouchableOpacity onPress={() => {showDatepicker()}}>
-                                <TextInput
-                                style={sharedStylesForms.input}
-                                value={birthDate.toLocaleDateString('pt-BR')}
-                                placeholder="00/00/0000"
-                                placeholderTextColor="#000"
-                                editable={false}
-                                />
-                            </TouchableOpacity>
-                            {showDatePicker && (
-                                <DateTimePicker
-                                    value={birthDate}
-                                    mode="date"
-                                    display="spinner"
-                                    onChange={(event, selectedDate) => {
-                                    if (selectedDate) {
-                                        setBirthDate(selectedDate);
-                                    }
-                                    setShowDatePicker(false);
-                                    }}
-                                />
-                            )}
-                        </>
-                    )
-                }
-            </View>
-        </View>
-        <View style={styles.areaButton}>
-          <TouchableOpacity style={styles.button} onPress={handleSaveData}>
-            <Text style={styles.buttonText}>Salvar Dados</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+          <View style={sharedStylesForms.form}>
+              <View style={sharedStylesForms.fieldset}>            
+                  <Text>CEP: </Text>
+                  <TextInput
+                  style={sharedStylesForms.input}
+                  value={cep}
+                  onChangeText={(text) => setCep(text)}
+                  placeholder="CEP"
+                  placeholderTextColor="#000"
+                  keyboardType="numeric"
+                  />
+              </View>
+              <View style={sharedStylesForms.fieldset}>
+                  <Text>Data de Nascimento: </Text>
+                  {Platform.OS === 'ios' ? (
+                          <DateTimePicker
+                          value={birthDate}
+                          mode="date"
+                          display="spinner"
+                          textColor={'#000'}
+                          onChange={(event, selectedDate) => {
+                          if (selectedDate) {
+                              setBirthDate(selectedDate);
+                          }
+                          }}
+                          />
+                      ) : (
+                          <>
+                              <TouchableOpacity onPress={() => {showDatepicker()}}>
+                                  <TextInput
+                                  style={sharedStylesForms.input}
+                                  value={birthDate.toLocaleDateString('pt-BR')}
+                                  placeholder="00/00/0000"
+                                  placeholderTextColor="#000"
+                                  editable={false}
+                                  />
+                              </TouchableOpacity>
+                              {showDatePicker && (
+                                  <DateTimePicker
+                                      value={birthDate}
+                                      mode="date"
+                                      display="spinner"
+                                      onChange={(event, selectedDate) => {
+                                      if (selectedDate) {
+                                          setBirthDate(selectedDate);
+                                      }
+                                      setShowDatePicker(false);
+                                      }}
+                                  />
+                              )}
+                          </>
+                      )
+                  }
+              </View>
+          </View>
+          <View style={styles.areaButton}>
+            <TouchableOpacity style={styles.button} onPress={handleSaveData}>
+              <Text style={styles.buttonText}>Salvar Dados</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </View>
   );
 };

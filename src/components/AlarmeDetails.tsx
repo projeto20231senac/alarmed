@@ -10,9 +10,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Vibration,
+  Linking
 } from 'react-native';
 import { Logo } from './Logo';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmesDetails } from './styles/stylesAlarmesDetails';
@@ -62,63 +63,6 @@ export const AlarmeDetails = () => {
     medicamentos_posologia: '',
   });
 
-  useFocusEffect(
-    React.useCallback(async () =>{
-      const loadDados = async () => {
-        try {
-          const alarmeId = await AsyncStorage.getItem('alarmeId');
-          const horariosId = await AsyncStorage.getItem('horariosId');
-          console.log("Alarme ID recebido: ", alarmeId);
-          console.log('Horarios ID recebido: ', horariosId)
-  
-          const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
-  
-          if (response.status === 200) {
-            const dadosAPI = response.data;
-            console.log(dadosAPI)
-  
-            if (dadosAPI) {
-              setDados(dadosAPI);
-              setValue(dadosAPI[0].medicamentos_tipo);
-              await AsyncStorage.setItem('alarmeNome', dadosAPI[0].alarme_nome);
-            } else {
-              console.log("Nenhum dado de alarme recebido da API.");
-              setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-            }
-          }else{
-            setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
-          }
-        } catch (error) {
-          console.error('Erro ao obter os dados:', error);
-          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-        }
-      };
-
-      await loadDados();
-
-      const loadPromocoes = async () => {
-        try {
-          const CEP = await AsyncStorage.getItem('CEP');
-          const alarmenome = await AsyncStorage.getItem('alarmeNome')
-          console.log('CEP da Promoção: ', CEP, 'Nome: ', alarmenome)
-          const response = await api.get(`/promocoes/${CEP}/${alarmenome}`);
-
-          if (response.status === 200){
-            setPromocoes(response.data)
-          } else {
-            console.log("Nenhum dado de alarme recebido da API.");
-            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-          }
-        } catch (err) {
-          console.error('Erro ao obter os dados:', err);
-          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
-        }
-      }
-      await loadPromocoes();
-      
-      
-    }, [])
-  )
 
   useEffect(() => {
     const options = {
@@ -128,11 +72,64 @@ export const AlarmeDetails = () => {
       day: 'numeric',
       timeZone: 'America/Sao_Paulo'
     };
-
+  
     const currentDate = new Date().toLocaleString('pt-BR', options);
     setCurrentDate(currentDate);
+  
+    const loadData = async () => {
+      try {
+        const alarmeId = await AsyncStorage.getItem('alarmeId');
+        const horariosId = await AsyncStorage.getItem('horariosId');
+        console.log("Alarme ID recebido: ", alarmeId);
+        console.log('Horarios ID recebido: ', horariosId);
+  
+        const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
+  
+        if (response.status === 200) {
+          const dadosAPI = response.data;
+          console.log(dadosAPI);
+  
+          if (dadosAPI) {
+            setDados(dadosAPI);
+            setValue(dadosAPI[0].medicamentos_tipo);
+            await AsyncStorage.setItem('alarmeNome', dadosAPI[0].alarme_nome);
+          } else {
+            console.log("Nenhum dado de alarme recebido da API.");
+            setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+          }
+        } else {
+          setErrorMessage("Ocorreu um erro ao carregar os dados do alarme. Por favor, tente novamente.");
+        }
+      } catch (error) {
+        console.error('Erro ao obter os dados:', error);
+        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+      }
+    };
+  
+    const loadPromocoes = async () => {
+      try {
+        await loadData();
 
-  }, []);
+        const CEP = await AsyncStorage.getItem('CEP');
+        const alarmenome = await AsyncStorage.getItem('alarmeNome');
+        console.log('CEP da Promoção: ', CEP, 'Nome: ', alarmenome);
+        const response = await api.get(`/promocoes/${CEP}/${alarmenome}`);
+  
+        if (response.status === 200) {
+          setPromocoes(response.data);
+        } else {
+          console.log("Nenhum dado de alarme recebido da API.");
+          setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+        }
+      } catch (err) {
+        console.error('Erro ao obter os dados:', err);
+        setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
+      }
+    };
+  
+    loadData();
+    loadPromocoes();
+  }, []); // Deixe as dependências vazias para garantir que o useEffect seja executado apenas na montagem  
 
 
   const handleEdit = () => {
@@ -218,6 +215,44 @@ export const AlarmeDetails = () => {
     return `${diaFormatado}/${mesFormatado}/${ano}`;
   };
 
+  const handleWhatsAppClick = (phoneNumber) => {
+    const whatsappURL = `whatsapp://send?phone=${phoneNumber}`;
+    
+    Linking.canOpenURL(whatsappURL).then((supported) => {
+      if (supported) {
+        return Linking.openURL(whatsappURL);
+      } else {
+        console.log("WhatsApp não está instalado no dispositivo.");
+        Vibration.vibrate(100)
+        Alert.alert('Whatsapp não instalado', 'O Whatsapp não foi encontrado no dispositivo.')
+      }
+    }).catch((error) => {
+      Vibration.vibrate(100)
+      Alert.alert('Erro ao abrir o Whatsapp', 'Ocorreu um erro. Por favor, tente novamente.')
+      console.error('Erro ao abrir o WhatsApp:', error);
+    });
+  };
+
+  const handleOpenMap = (fornecedor) => {
+    const cep = AsyncStorage.getItem('CEP');
+    const mapURL = `https://www.google.com/maps/search/?api=1&query=${fornecedor}`;
+  
+    Linking.canOpenURL(mapURL).then((supported) => {
+      if (supported) {
+        return Linking.openURL(mapURL);
+      } else {
+        Vibration.vibrate(100)
+        Alert.alert('Nenhum app de mapa instalado', 'Não foram encontrados apps compatíveis com mapas no dispositivo.')
+        console.log("Nenhum aplicativo de mapa suportado.");
+      }
+    }).catch((error) => {
+      Vibration.vibrate(100)
+      Alert.alert('Erro ao abrir o mapa', 'Ocorreu um erro. Por favor, tente novamente.')
+      console.error('Erro ao abrir o aplicativo de mapa:', error);
+    });
+  };
+  
+
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />      
@@ -257,15 +292,19 @@ export const AlarmeDetails = () => {
                     </View>
                     <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'baseline', flexWrap: 'wrap' }}>
                         <FontAwesome5 name="store-alt" size={18} color="#000" style={{margin: 10}}/>
-                        <Text style={{fontSize: 16, textAlign: 'justify'}}>
-                          Na <Text style={{fontWeight: 'bold'}}>{promocao.promocoes_fornecedor}</Text> mais próxima
-                        </Text>
+                        <TouchableOpacity onPress={() => handleOpenMap(promocao.promocoes_fornecedor)}>
+                          <Text style={{ fontSize: 16, textAlign: 'justify' }}>
+                            Na <Text style={{ fontWeight: 'bold' }}>{promocao.promocoes_fornecedor}</Text> mais próxima
+                          </Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                         <FontAwesome name="whatsapp" size={24} color="#090" style={{margin: 10}} />
-                        <Text style={{color: '#090', fontWeight: 'bold', fontSize: 16}}>
-                          {promocao.promocoes_fornecedor_telefone} - Peça Já
-                        </Text>
+                        <TouchableOpacity onPress={() => handleWhatsAppClick(promocao.promocoes_fornecedor_telefone)}>
+                          <Text style={{ color: '#090', fontWeight: 'bold', fontSize: 16 }}>
+                            {promocao.promocoes_fornecedor_telefone} - Peça Já
+                          </Text>
+                        </TouchableOpacity>
                     </View>
                     <View>
                         <Text style={{textAlign: 'center', fontSize: 12, color: '#aaa'}}>Promoção válida até {formatarData(promocao.promocoes_fim)} ou enquanto durarem os estoques</Text>

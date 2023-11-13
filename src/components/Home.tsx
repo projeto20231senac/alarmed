@@ -24,9 +24,9 @@ export const Home = () => {
           console.log('Data de Nascimento: ', dataNascimento);
           console.log('Termo Aceito: ', termoAceito);
   
-          if (CPF && dataNascimento && cepData && (termoAceito === 'sim' || termsAccepted)) {
+          if (CPF && cepData && (termoAceito === 'sim' || termsAccepted)) {
             navigate('Alarmes');
-          } else if (termoAceito === null || termoAceito === 'nao') {
+          } else if (CPF && dataNascimento && cepData && (termoAceito === null || termoAceito === 'nao')) {
             navigate('Terms');
           } else {
             navigate('Cpf');
