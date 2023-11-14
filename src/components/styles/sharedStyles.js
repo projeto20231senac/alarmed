@@ -88,5 +88,9 @@ export const styles = StyleSheet.create({
     },
     errorText:{
       color: '#f00',
+    },
+    link:{
+      color: '#0085FF',
+      fontWeight: 'bold',
     }
   });  

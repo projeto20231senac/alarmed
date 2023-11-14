@@ -4,6 +4,8 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Platform, 
+  KeyboardAvoidingView
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -38,7 +40,7 @@ export const AlarmesDose = () => {
        
         if (response.status === 204){
             console.log(`Dose (${dose}) e unidade (${unidade}) salvas com sucesso!`);
-            navigate('AlarmesFrequencia')
+            navigate('AlarmeRecorrencia')
         }else{
             console.error('Erro ao atualizar os dados:', response.status);
         }
@@ -52,29 +54,33 @@ export const AlarmesDose = () => {
   return (
     <View style={styles.container}>
         <Logo showBackButton={true} />
-        <View style={sharedStylesForms.form}>
-            <View style={sharedStylesForms.fieldset}>
-                <Text style={styles.title}>Qual é a dose?</Text>
-                <TextInput 
-                    style={sharedStylesForms.input} 
-                    value={dose}
-                    onChangeText={(text) => setDose(text)}>
-                </TextInput> 
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View style={sharedStylesForms.form}>
+                <View style={sharedStylesForms.fieldset}>
+                    <Text style={styles.title}>Qual é a dose?</Text>
+                    <TextInput 
+                        style={sharedStylesForms.input} 
+                        value={dose}
+                        onChangeText={(text) => setDose(text)} 
+                        keyboardType='numeric'
+                        /> 
+                </View>
+                <View style={sharedStylesForms.fieldset}>
+                    <Text style={styles.title}>Qual é a unidade?</Text>
+                    <TextInput 
+                        style={sharedStylesForms.input} 
+                        value={unidade}
+                        onChangeText={(text) => setUnidade(text)} />
+                </View> 
             </View>
-            <View style={sharedStylesForms.fieldset}>
-                <Text style={styles.title}>Qual é a unidade?</Text>
-                <TextInput 
-                    style={sharedStylesForms.input} 
-                    value={unidade}
-                    onChangeText={(text) => setUnidade(text)}>
-                </TextInput>
-            </View> 
-        </View>
-        <View style={styles.areaButton}>
-        <TouchableOpacity style={styles.button} onPress={handleNextPage}>
-            <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
-        </View>
+            <View style={styles.areaButton}>
+                <TouchableOpacity style={styles.button} onPress={handleNextPage}>
+                    <Text style={styles.buttonText}>Continuar</Text>
+                </TouchableOpacity>
+            </View>
+        </KeyboardAvoidingView>
     </View>
   );
 };

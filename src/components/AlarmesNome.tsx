@@ -4,6 +4,8 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -42,19 +44,23 @@ export const AlarmesNome = () => {
   return (
     <View style={styles.container}>
       <Logo showBackButton={true} />
-      <Text style={styles.title}>Qual é o nome do medicamento?</Text>
-      <View style={sharedStylesForms.form}>
-        <TextInput 
-            style={sharedStylesForms.input} 
-            value={medicamento}
-            onChangeText={(text) => setMedicamento(text)}>
-        </TextInput> 
-      </View>
-      <View style={styles.areaButton}>
-        <TouchableOpacity style={styles.button} onPress={handleNextPage}>
-          <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView
+          style={{ flex: 2 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <Text style={styles.title}>Qual é o nome do medicamento?</Text>
+        <View style={sharedStylesForms.form}>
+          <TextInput 
+              style={sharedStylesForms.input} 
+              value={medicamento}
+              onChangeText={(text) => setMedicamento(text)}>
+          </TextInput> 
+        </View>
+        <View style={styles.areaButton}>
+          <TouchableOpacity style={styles.button} onPress={handleNextPage}>
+            <Text style={styles.buttonText}>Continuar</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

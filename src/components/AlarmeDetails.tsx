@@ -28,6 +28,7 @@ import {
 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
+import { sharedStylesForms } from './styles/sharedStylesForms';
 
 export const AlarmeDetails = () => {
   const { navigate } = useNavigation();
@@ -363,22 +364,22 @@ export const AlarmeDetails = () => {
 
                   {editando ? ( 
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
-                    <View style={stylesAlarmesDetails.frequencia}>
-                      <AntDesign name="calendar" size={24} color="#000" style={{marginRight: 10}}/>
-                      <Text style={stylesAlarmesDetails.alarmesChildText}> Repete a cada </Text>
-                      <TextInput keyboardType='numeric' style={{ padding: 2, textAlign: 'center', color: '#f00', fontWeight: 'bold', marginRight:5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc'}}
-                          value={editando ? editedData.alarme_recorrencia : dados[0].alarme_recorrencia}
-                          onChangeText={(text) => {
-                            setEditedData({ ...editedData, alarme_recorrencia: text });
-                          }
-                          }
-                        />
-                        <Text style={stylesAlarmesDetails.alarmesChildText}> dia(s)</Text>
-                    </View>
+                      <View style={sharedStylesForms.frequencia}>
+                        <AntDesign name="calendar" size={24} color="#000" style={{marginRight: 10}}/>
+                        <Text style={stylesAlarmesDetails.alarmesChildText}> Repete a cada </Text>
+                        <TextInput keyboardType='numeric' style={{ padding: 2, textAlign: 'center', color: '#f00', fontWeight: 'bold', marginRight:5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc'}}
+                            value={editando ? editedData.alarme_recorrencia : dados[0].alarme_recorrencia}
+                            onChangeText={(text) => {
+                              setEditedData({ ...editedData, alarme_recorrencia: text });
+                            }
+                            }
+                          />
+                          <Text style={stylesAlarmesDetails.alarmesChildText}> dia(s)</Text>
+                      </View>
                   </View>
                   ) : (
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
-                    <View style={stylesAlarmesDetails.frequencia}>
+                    <View style={sharedStylesForms.frequencia}>
                       <AntDesign name="calendar" size={24} color="#000" style={{marginRight: 10}}/>
                       <Text style={stylesAlarmesDetails.alarmesChildText}>
                       {alarme.alarme_recorrencia === 1
