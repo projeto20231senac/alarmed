@@ -17,17 +17,23 @@ export async function inserirAlarme(alarme, cpf) {
     return { alarme_id: resposta.insertId }
 }
 
-export async function inserirMedicamento(nome) {
-    const comando = `INSERT INTO medicamentos (alarme_id ,cpf,medicamentos_dose,medicamentos_posologia,medicamentos_tipo) VALUES (?,?,?,?,?)`;
-    const [resposta] = await con.query(comando, [nome.idAlarme,nome.cpf,nome.dose,nome.posologia,nome.tipo]);
-  console.log(nome);
-    return nome
-}
-export async function inserirHorario(horario, cpf) {
-    const comando = `INSERT INTO horarios (hora) VALUES (?) WHERE cpf = ?`;
-    const [resposta] = await con.query(comando, [req.body.horario,req.body.cpf]);
-  
-    return horario
+export async function inserirHorarios(cpfNovoAlarme, novoAlarmeId, novoMedicamentosId, horarios) {
+    // Verifica se horarios é uma array antes de tentar iterar sobre ela
+    if (!Array.isArray(horarios) || horarios.length === 0) {
+        throw new Error("A array de horários é inválida ou vazia.");
+    }
+
+    const comando = `INSERT INTO horarios (cpf, medicamentos_id, alarme_id, hora) VALUES ?`;
+    const valoresInsercao = [];
+
+    console.log("No repository: ", horarios);
+    for (const horario of horarios) {
+        valoresInsercao.push([cpfNovoAlarme, novoMedicamentosId, novoAlarmeId, horario]);
+    }
+
+    const [resposta] = await con.query(comando, [valoresInsercao]);
+
+    return resposta;
 }
 
 export async function alterarImagem(foto, id) {
@@ -103,6 +109,12 @@ export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_
     const [resposta] = await con.query(comando, [alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id]);
     
     return resposta.affectedRows;
+}
+
+export async function alterarRecorrencia(cpfNovoAlarme, novoAlarmeId, recorrencia) {
+    const comando = `UPDATE alarmes SET alarme_recorrencia = ? WHERE cpf = ? AND alarme_id = ?`
+    const [resposta] = await con.query(comando, [recorrencia, cpfNovoAlarme, novoAlarmeId])
+    return resposta
 }
 
 export async function removerAlarme(id) {

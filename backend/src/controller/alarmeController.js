@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, alterarTipoNovoAlarme, alterarMedicamento, inserirAlarme, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, inserirMedicamento, promocoesPorCep } from '../repository/alarmeRepository.js'
+import { alterarAlarme, alterarTipoNovoAlarme, alterarMedicamento, alterarRecorrencia, inserirAlarme, inserirHorarios, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, promocoesPorCep } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
@@ -20,7 +20,6 @@ const upload = multer({ storage: storage
 //editar um novo alarme com a imagem
 endpoint.put('/alarmes',upload.single('foto'), async (req, resp) => {
     try {
-        
       if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
         resp.status(422).send({
             erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
@@ -39,24 +38,6 @@ endpoint.put('/alarmes',upload.single('foto'), async (req, resp) => {
         })
     }
 })
-endpoint.post('/medicamentos', async (req, resp) => {
-    try {
-        
-     
-
-          const novoMedicamento = req.body;
-          const medicamento = await inserirMedicamento(novoMedicamento);
-          resp.status(200).send(medicamento)
-         
-      
-    } catch (err) {
-        console.log("Oi",err);
-        resp.status(400).send({
-            erro: err.message
-        })
-    }
-})
-
 
 //criar um novo alarme
 endpoint.post('/alarmes', async (req, resp) => {
@@ -75,6 +56,21 @@ endpoint.post('/tipo/:alarme_id', async (req, resp) => {
         const { tipo, cpf } = req.body
         const resposta = await alterarTipoNovoAlarme(alarme_id, tipo, cpf)
         resp.status(200).send({medicamentos_id: resposta.medicamentos_id})
+
+    } catch (err) { resp.status(400).send({erro: err.message})}
+})
+
+endpoint.post('/horarios/:cpfNovoAlarme/:novoAlarmeId/:novoMedicamentosId', async (req, resp) => {
+    try {
+        const cpfNovoAlarme = req.params.cpfNovoAlarme
+        const novoAlarmeId = req.params.novoAlarmeId
+        const novoMedicamentosId = req.params.novoMedicamentosId
+        const horarios = req.body.horarios;
+
+        console.log("No controller: ", horarios)
+
+        const resposta = await inserirHorarios(cpfNovoAlarme, novoAlarmeId, novoMedicamentosId, horarios);
+        resp.status(200).send(resposta)
 
     } catch (err) { resp.status(400).send({erro: err.message})}
 })
@@ -156,15 +152,21 @@ endpoint.put('/alarmes/editar/:alarme_id/:horarios_id', async (req, resp) => {
         const resposta = await alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia);
         
         resp.sendStatus(204)
-    } catch (err) {
-        resp.status(400).send({
-            erro: err.message
-        })
-    }
+    }catch (err){ resp.status(400).send({erro: err.message})} 
 })
 
+endpoint.put('/alarmes/recorrencia/:cpfNovoAlarme/:novoAlarmeId', async (req, resp) => {
+    try{
+        
+        const cpfNovoAlarme = req.params.cpfNovoAlarme
+        const novoAlarmeId = req.params.novoAlarmeId
+        const { recorrencia } = req.body;
 
+        const reposta = await alterarRecorrencia(cpfNovoAlarme, novoAlarmeId, recorrencia)
 
+        resp.sendStatus(204)
+    }catch (err){ resp.status(400).send({erro: err.message})} 
+})
 
 endpoint.delete('/alarmes/:alarme_id', async (req, resp) => {
     try {

@@ -87,17 +87,6 @@ export const stylesAlarmesDetails = StyleSheet.create({
         fontWeight: 'bold',
         color: '#f00',
     },
-    frequencia:{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginTop: 10,        
-        marginVertical: 5,
-        borderTopWidth: 1,
-        borderTopColor: '#aaa',       
-        paddingTop: 10,
-    },
     alarmesChildText:{
         fontSize: 18,
         marginRight: 5,

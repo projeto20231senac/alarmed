@@ -8,8 +8,25 @@ export const sharedStylesForms = StyleSheet.create({
       borderRadius: 8,
       fontSize: 20,
       paddingHorizontal: 20,
+      borderColor: '#ccc',
+      textAlign: 'center',
+    },
+    readonly:{
+      maxWidth: '100%',
+      height: 60,
+      borderWidth: 1,
+      fontSize: 20,
+      paddingHorizontal: 20,
+      margin: 10,
+      backgroundColor: '#ccc',
       borderColor: '#77777722',
       textAlign: 'center',
+      color: '#000',
+      flexBasis: '100',
+      fontWeight: 'bold'
+    },
+    text:{
+      fontSize: 24
     },
     form: {
       width: '100%',
@@ -34,5 +51,27 @@ export const sharedStylesForms = StyleSheet.create({
     },
     datetime:{
       width: '100%',
+    },
+    frequencia:{
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    },
+    frequenciaContainer:{
+      flex: 1,
+      flexDirection: 'Column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    frequenciaFieldset:{
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+    },
+    horariosTitle:{
+      width: '100%',
+      fontSize: 22,
+      fontWeight: 'bold'
     }
   });
