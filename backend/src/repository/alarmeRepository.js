@@ -18,16 +18,19 @@ export async function inserirAlarme(alarme, cpf) {
 }
 
 export async function inserirHorarios(cpfNovoAlarme, novoAlarmeId, novoMedicamentosId, horarios) {
-    // Verifica se horarios é uma array antes de tentar iterar sobre ela
-    if (!Array.isArray(horarios) || horarios.length === 0) {
+    // Transforma horarios em uma array se não for uma
+    const horariosArray = Array.isArray(horarios) ? horarios : [horarios];
+
+    // Verifica se horariosArray é uma array antes de tentar iterar sobre ela
+    if (!Array.isArray(horariosArray) || horariosArray.length === 0) {
         throw new Error("A array de horários é inválida ou vazia.");
     }
 
     const comando = `INSERT INTO horarios (cpf, medicamentos_id, alarme_id, hora) VALUES ?`;
     const valoresInsercao = [];
 
-    console.log("No repository: ", horarios);
-    for (const horario of horarios) {
+    console.log("No repository: ", horariosArray);
+    for (const horario of horariosArray) {
         valoresInsercao.push([cpfNovoAlarme, novoMedicamentosId, novoAlarmeId, horario]);
     }
 
@@ -35,6 +38,7 @@ export async function inserirHorarios(cpfNovoAlarme, novoAlarmeId, novoMedicamen
 
     return resposta;
 }
+
 
 export async function alterarImagem(foto, id) {
     const comando = `UPDATE alarmes SET alarme_foto =? WHERE alarme_id = ? `;

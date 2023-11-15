@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   TextInput,
   Platform, 
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -54,33 +55,37 @@ export const AlarmesDose = () => {
   return (
     <View style={styles.container}>
         <Logo showBackButton={true} />
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <View style={sharedStylesForms.form}>
-                <View style={sharedStylesForms.fieldset}>
-                    <Text style={styles.title}>Qual é a dose?</Text>
-                    <TextInput 
-                        style={sharedStylesForms.input} 
-                        value={dose}
-                        onChangeText={(text) => setDose(text)} 
-                        keyboardType='numeric'
-                        /> 
-                </View>
-                <View style={sharedStylesForms.fieldset}>
-                    <Text style={styles.title}>Qual é a unidade?</Text>
-                    <TextInput 
-                        style={sharedStylesForms.input} 
-                        value={unidade}
-                        onChangeText={(text) => setUnidade(text)} />
-                </View> 
-            </View>
-            <View style={styles.areaButton}>
-                <TouchableOpacity style={styles.button} onPress={handleNextPage}>
-                    <Text style={styles.buttonText}>Continuar</Text>
-                </TouchableOpacity>
-            </View>
-        </KeyboardAvoidingView>
+        <ScrollView>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+              <View style={sharedStylesForms.form}>
+                  <View style={sharedStylesForms.fieldset}>
+                      <Text style={styles.title}>Qual é a dose?</Text>
+                      <TextInput 
+                          style={sharedStylesForms.input} 
+                          value={dose}
+                          onChangeText={(text) => setDose(text)} 
+                          keyboardType='numeric'
+                          /> 
+                  </View>
+                  <View style={sharedStylesForms.fieldset}>
+                      <Text style={styles.title}>Qual é a unidade?</Text>
+                      <TextInput 
+                          style={sharedStylesForms.input} 
+                          value={unidade}
+                          onChangeText={(text) => setUnidade(text)} 
+                          placeholder='mcg, mg, G, gotas, UL'
+                          placeholderTextColor={'#000'}/>
+                  </View> 
+              </View>
+              <View style={styles.areaButton}>
+                  <TouchableOpacity style={styles.button} onPress={handleNextPage}>
+                      <Text style={styles.buttonText}>Continuar</Text>
+                  </TouchableOpacity>
+              </View>
+          </KeyboardAvoidingView>
+        </ScrollView>
     </View>
   );
 };

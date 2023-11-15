@@ -6,6 +6,8 @@ import {
   TextInput,
   Platform,
   KeyboardAvoidingView,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Logo } from './Logo';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +26,7 @@ export const AlarmeRecorrencia = () => {
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
+    const [tempSelectedTime, setTempSelectedTime] = useState(null);
 
     const handleNextPage = async () => {
         await handleEditarRecorrencia();
@@ -50,7 +53,7 @@ export const AlarmeRecorrencia = () => {
         }
     };
 
-      const handleAdicionarHorarios = async () => {
+    const handleAdicionarHorarios = async () => {
         await handleEditarRecorrencia();
 
         try {
@@ -71,10 +74,8 @@ export const AlarmeRecorrencia = () => {
                 }),
             });
         
-        
-
             if (response.status === 200){
-                console.log(`Horarios (${horarios}) salvos com sucesso!`);
+                console.log(`Horarios (${horario}) salvos com sucesso!`);
                 navigate('Alarmes')
             }else{
                 console.error('Erro ao inserir os horarios:', response.status);
@@ -101,22 +102,33 @@ export const AlarmeRecorrencia = () => {
     }, []);
   
     const onChange = (event, selectedTime) => {
-      setShow(false);
-  
-      if (event.type !== 'dismissed' && selectedTime) {
-        // Adicionar o novo horário ao array apenas se o usuário clicou em "OK"
-        setHorariosSelecionados([...horariosSelecionados, selectedTime]);
-  
-        const formattedTime = selectedTime.toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-  
-        // Converta a data em uma string antes de salvar no AsyncStorage
-        const formattedTimeString = selectedTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        console.log('Salvando no BD', formattedTimeString);
-  
-        setInputValue(formattedTime);
+    setShow(Platform.OS === 'ios');
+
+    if (event && event.type === 'set' && selectedTime) {
+      // O usuário confirmou a seleção (clicou em "OK")
+      Platform.OS === 'ios' ? setTempSelectedTime(selectedTime) : setHorariosSelecionados([...horariosSelecionados, selectedTime]);
+
+      const formattedTime = selectedTime.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      const formattedTimeString = selectedTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit'});
+      console.log('Salvando no BD', formattedTimeString);
+
+      setInputValue(formattedTime);
+    } else if (event && event.type === 'dismissed') {
+      // O usuário fechou o seletor sem selecionar um horário
+      console.log('Usuário fechou o seletor sem selecionar um horário');
+      Platform.OS === 'ios' ? handlePress() : null
+    }
+  };
+
+    const handlePress = () => {
+      // Adiar a chamada da função onChange até que o usuário clique fora do seletor de horário
+      if (Platform.OS === 'ios') {
+        setHorariosSelecionados([...horariosSelecionados, tempSelectedTime]);
+        setTempSelectedTime(null);
       }
     };
   
@@ -143,70 +155,76 @@ export const AlarmeRecorrencia = () => {
     return (
       <View style={styles.container}>
         <Logo showBackButton={true} />
-        <KeyboardAvoidingView
-          style={{ flex: 2 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <Text style={styles.title}>Qual é a frequência?</Text>
-          <View style={sharedStylesForms.form}>
-                <View style={sharedStylesForms.frequenciaContainer}>
-                    <View style={sharedStylesForms.frequencia}>
-                        <Text style={sharedStylesForms.text}>Repete a cada </Text>
-                        <TextInput value={recorrencia} onChangeText={(text) => {setRecorrencia(text)}} keyboardType="numeric" autoFocus style={{ padding: 5, borderRadius: 10, textAlign: 'center', color: '#f00', fontWeight: 'bold', marginRight:5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc', fontSize: 24}} />
-                        <Text style={sharedStylesForms.text}> dia(s)</Text>
-                    </View>
-                    <Text style={{fontSize: 16}}>Iniciando em <Text style={{fontWeight: 'bold'}}>{new Date().toLocaleDateString('pt-BR')}</Text></Text>
-                </View>
-            <View style={sharedStylesForms.frequenciaFieldset}>
-                <Text style={sharedStylesForms.horariosTitle}>Horários</Text>
-                {horariosSelecionados.map((horario, index) => (
-                <View style={{flexDirection:'row', alignItems: 'center', marginHorizontal: 15}} key={index}>
-                    <TextInput
-                    value={horario.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                    onPressIn={showDatepicker}
-                    placeholder="00:00"
-                    style={sharedStylesForms.readonly}
-                    editable = {false}
-                    />
-                    <TouchableOpacity style={{}} onPress={() => handleDeleteTime(index)}>
-                        <FontAwesome name="trash" size={22} color="#f00"  />
+        <ScrollView>
+          <KeyboardAvoidingView
+            style={{ flex: 2 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <Text style={styles.title}>Qual é a frequência?</Text>
+            <View style={sharedStylesForms.form}>
+                  <View style={sharedStylesForms.frequenciaContainer}>
+                      <View style={sharedStylesForms.frequencia}>
+                          <Text style={sharedStylesForms.text}>Repete a cada </Text>
+                          <TextInput value={recorrencia} onChangeText={(text) => {setRecorrencia(text)}} keyboardType="numeric" autoFocus style={{ padding: 5, borderRadius: 10, textAlign: 'center', color: '#f00', fontWeight: 'bold', marginRight:5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc', fontSize: 24}} />
+                          <Text style={sharedStylesForms.text}> dia(s)</Text>
+                      </View>
+                      <Text style={{fontSize: 16}}>Iniciando em <Text style={{fontWeight: 'bold'}}>{new Date().toLocaleDateString('pt-BR')}</Text></Text>
+                  </View>
+              <View style={sharedStylesForms.frequenciaFieldset}>
+                  <Text style={sharedStylesForms.horariosTitle}>Horários</Text>
+                  {horariosSelecionados.map((horario, index) => (
+                  <View style={{flexDirection:'row', alignItems: 'center', marginHorizontal: 15}} key={index}>
+                      <TextInput
+                      value={horario.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      // onPressIn={showDatepicker}
+                      placeholder="00:00"
+                      style={sharedStylesForms.readonly}
+                      editable = {false}
+                      />
+                      <TouchableOpacity style={{}} onPress={() => handleDeleteTime(index)}>
+                          <FontAwesome name="trash" size={22} color="#f00"  />
+                      </TouchableOpacity>
+                  </View>
+                  ))}
+                  {Platform.OS === 'ios' ? (
+                    <TouchableWithoutFeedback onPress={handlePress}>
+                      <DateTimePicker
+                          testID="dateTimePicker"
+                          value={horario}
+                          mode={'time'}
+                          is24Hour={true}
+                          onChange={onChange}
+                          locale="pt-BR"
+                          display='default'
+                          style={{margin: 10}}
+                      />
+                    </TouchableWithoutFeedback>
+                  ) : (
+                  <>
+                      {show && (
+                      <DateTimePicker
+                          testID="dateTimePicker"
+                          value={horario}
+                          mode={'time'}
+                          is24Hour={true}
+                          onChange={onChange}
+                      />
+                      )}
+                  </>
+                  )}
+                  {Platform.OS !== 'ios' && (
+                    <TouchableOpacity onPress={handleAddAnotherTime}>
+                      <Text style={styles.link}>+ Adicionar horário</Text>
                     </TouchableOpacity>
-                </View>
-                ))}
-                {Platform.OS === 'ios' ? (
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    value={horario}
-                    mode={'time'}
-                    is24Hour={true}
-                    display="spinner"
-                    onChange={onChange}
-                    textColor="#000"
-                    locale="pt-BR"
-                />
-                ) : (
-                <>
-                    {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={horario}
-                        mode={'time'}
-                        is24Hour={true}
-                        onChange={onChange}
-                    />
-                    )}
-                </>
-                )}
-                <TouchableOpacity onPress={handleAddAnotherTime}>
-                <Text style={styles.link}>+ Adicionar horário</Text>
-                </TouchableOpacity>
+                  )}
+              </View>
             </View>
-          </View>
-          <View style={styles.areaButton}>
-            <TouchableOpacity style={styles.button} onPress={handleNextPage}>
-              <Text style={styles.buttonText}>Continuar</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+            <View style={styles.areaButton}>
+              <TouchableOpacity style={styles.button} onPress={handleNextPage}>
+                <Text style={styles.buttonText}>Continuar</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </ScrollView>
       </View>
     );
   };
