@@ -26,7 +26,7 @@ export const Alarmes = () => {
     if(value === 'edit'){
       navigate('Edit')
     }else if(value === 'next'){
-      navigate('AlarmesDose')
+      navigate('AlarmesNome')
     } else if ( value === 'details'){
       console.log("Alarme ID escolhido: ", alarme_id)
       console.log("Horarios ID escolhido: ", horarios_id)

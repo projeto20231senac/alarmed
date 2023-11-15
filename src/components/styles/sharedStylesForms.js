@@ -22,7 +22,6 @@ export const sharedStylesForms = StyleSheet.create({
       borderColor: '#77777722',
       textAlign: 'center',
       color: '#000',
-      flexBasis: '100',
       fontWeight: 'bold'
     },
     text:{
@@ -31,8 +30,7 @@ export const sharedStylesForms = StyleSheet.create({
     form: {
       width: '100%',
       padding: 20,
-      marginVertical: 30,
-      flex: 1,
+      flex: 2,
     },
     fieldset:{
       marginVertical: 10,
@@ -68,6 +66,7 @@ export const sharedStylesForms = StyleSheet.create({
       justifyContent: 'flex-start',
       alignItems: 'center',
       flexWrap: 'wrap',
+      marginVertical: 20,
     },
     horariosTitle:{
       width: '100%',
