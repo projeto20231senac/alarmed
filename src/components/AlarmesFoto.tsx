@@ -82,8 +82,8 @@ const { navigate } = useNavigation();
           'Content-Type': 'multipart/form-data',
         },
       });
-      navigate("AlarmesDose")
-      console.log(response);
+      navigate("AlarmesTipo")
+      console.log("humm",response);
     } catch (error) {
       console.log("deu algo errado", error);
     }

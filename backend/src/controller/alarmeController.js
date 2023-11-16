@@ -40,6 +40,7 @@ endpoint.put('/alarmes/:alarme_id/foto', upload.single('foto'), async (req, resp
     }
   })
 
+
 //criar um novo alarme
 endpoint.post('/alarmes', async (req, resp) => {
     try {

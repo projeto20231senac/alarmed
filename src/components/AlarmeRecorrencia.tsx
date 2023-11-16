@@ -78,7 +78,7 @@ console.log(response);
         
             if (response.status === 200){
                 console.log(`Horarios (${horario}) salvos com sucesso!`);
-                // navigate('Alarmes')
+                navigate('Alarmes')
             }else{
                 console.error('Erro ao inserir os horarios:', response.status);
             }

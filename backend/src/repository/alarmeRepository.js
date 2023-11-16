@@ -57,6 +57,7 @@ export async function listarTodosAlarmes() {
     const [linhas] = await con.query(comando)
     return linhas
 }
+
 export async function alarmePorCpf(cpf) {
     console.log(cpf)
     const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto,a.alarme_id, h.horarios_id, h.hora
