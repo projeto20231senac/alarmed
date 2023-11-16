@@ -442,8 +442,7 @@ export const AlarmeDetails = () => {
                     </View>
                   ) : (
                     <View style={stylesAlarmesDetails.alarmesChildLine}>
-                      <Text style={stylesAlarmesDetails.alarmesChildText}>
-                        {alarme.medicamentos_tipo === 'Liquido' ? (
+                      {alarme.medicamentos_tipo === 'Liquido' ? (
                           <FontAwesome5 name="prescription-bottle-alt" size={24} color="#000" style={{ marginRight: 10 }}  />
                         ) : alarme.medicamentos_tipo === 'Gotas' ? (
                           <Ionicons name="water" size={24} color="#000" style={{ marginRight: 10 }} />
@@ -455,6 +454,7 @@ export const AlarmeDetails = () => {
                           <>
                           </>
                         )}
+                      <Text style={stylesAlarmesDetails.alarmesChildText}>
                         {alarme.medicamentos_tipo}
                       </Text>
                     </View>
