@@ -185,7 +185,8 @@ export const AlarmeDetails = () => {
           onPress: async () => {
             console.log("Alarme para deletar: ", alarme_id);
             try {
-              const response = await api.delete(`/alarmes/${alarme_id}`);
+              const horarios_id = await AsyncStorage.getItem('horariosId')
+              const response = await api.delete(`/alarmes/deletar/${alarme_id}/${horarios_id}`);
 
               if (response.status === 204) {
                 console.log('Alarme deletado com sucesso!');
