@@ -10,6 +10,7 @@ export const sharedStylesForms = StyleSheet.create({
       paddingHorizontal: 20,
       borderColor: '#ccc',
       textAlign: 'center',
+      color: '#000'
     },
     readonly:{
       maxWidth: '100%',
