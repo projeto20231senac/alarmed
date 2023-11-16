@@ -319,7 +319,7 @@ export const AlarmeDetails = () => {
         <View style={stylesAlarmesDetails.alarmes}>
           {dados.length > 0 ? (
             dados.map((alarme) => (
-              <View style={stylesAlarmesDetails.alarmesChild}key={alarme.alarme_id}>
+              <View style={stylesAlarmesDetails.alarmesChild}key={`${alarme.alarme_id}_${alarme.horarios_id}`}>
 
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                     <View style={stylesAlarmesDetails.alarmesChildColumn}>
