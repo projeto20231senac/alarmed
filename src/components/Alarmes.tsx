@@ -110,7 +110,7 @@ export const Alarmes = () => {
 
   return (
     <View style={styles.container}>
-      <Logo showBackButton={false} />
+      <Logo showBackButton={true} />
       {errorMessage && (
           <View style={styles.error}>
             <MaterialIcons name="error" size={24} color="#f00" />
@@ -135,7 +135,11 @@ export const Alarmes = () => {
       <View style={stylesAlarmes.alarmes}>
         {dados.length > 0 ? (
           dados.map((alarme) => (
-            <View style={stylesAlarmes.alarmesChild}key={alarme.alarme_id}>
+            <TouchableOpacity
+                key={`${alarme.alarme_id}_${alarme.horarios_id}`}
+                style={stylesAlarmes.alarmesChild}
+                onPress={() => handleNextPage('details', alarme.alarme_id, alarme.horarios_id)}
+              >
               <View style={stylesAlarmes.alarmesChildColumn}>
                 {/* imagem aleatória para testes */}
                 <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
@@ -168,14 +172,9 @@ export const Alarmes = () => {
                 </View>
               </View>
               <View style={stylesAlarmes.alarmesChildColumn}>
-              <TouchableOpacity
-                style={stylesAlarmes.moreDetails}
-                onPress={() => {handleNextPage('details', alarme.alarme_id, alarme.horarios_id);}}
-              >
                 <AntDesign name="right" size={20} color="#555" />
-              </TouchableOpacity>
               </View>
-            </View>
+              </TouchableOpacity>
           ))
         ) : (
           <View style={stylesAlarmes.noAlarms}>

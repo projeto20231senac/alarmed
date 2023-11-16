@@ -175,7 +175,7 @@ export const AlarmeRecorrencia = () => {
                   <View style={{flexDirection:'row', alignItems: 'center', marginHorizontal: 15}} key={index}>
                       <TextInput
                       value={horario.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                      // onPressIn={showDatepicker}
+                      onPressIn={showDatepicker}
                       placeholder="00:00"
                       style={sharedStylesForms.readonly}
                       editable = {false}
