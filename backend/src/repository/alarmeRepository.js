@@ -108,7 +108,7 @@ export async function alterarAlarme(alarme_id, horarios_id, alarme_nome, alarme_
             m.medicamentos_dose = ?,
             m.medicamentos_posologia = ?
         WHERE
-            a.alarme_id = ?`
+            a.alarme_id = ? AND h.horarios_id = ?`
     
     const [resposta] = await con.query(comando, [alarme_nome, alarme_recorrencia, hora, medicamentos_tipo, medicamentos_dose, medicamentos_posologia, alarme_id, horarios_id]);
     
@@ -121,8 +121,8 @@ export async function alterarRecorrencia(cpfNovoAlarme, novoAlarmeId, recorrenci
     return resposta
 }
 
-export async function removerAlarme(id) {
-    const comando = `DELETE FROM alarmes WHERE alarme_id = ?`
-    const [resposta] = await con.query(comando, [id])
+export async function removerAlarme(alarme_id, horarios_id) {
+    const comando = `DELETE FROM horarios WHERE alarme_id = ? AND horarios_id = ?`
+    const [resposta] = await con.query(comando, [alarme_id, horarios_id])
     return resposta.affectedRows
 }
