@@ -500,13 +500,13 @@ export const AlarmeDetails = () => {
 
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                     <Text style={stylesAlarmesDetails.alarmesChildText}>
-                      {alarme.count_disparos === 0
-                          ? 'Este alarme ainda não foi disparado'
-                          : 
+                      {(alarme.count_disparos === 0 || alarme.count_disparos === null)
+                          ? ('Este alarme ainda não foi disparado')
+                          : (
                           <Text>
                             Esse alarme já disparou {alarme.count_disparos}x desde que foi definido.
                           </Text>
-                      }
+                      )}
                     </Text>
                   </View>       
 
