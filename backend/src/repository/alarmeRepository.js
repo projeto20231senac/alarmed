@@ -43,6 +43,7 @@ export async function inserirHorarios(cpfNovoAlarme, novoAlarmeId, novoMedicamen
 export async function alterarImagem(foto, id) {
     const comando = `UPDATE alarmes SET alarme_foto =? WHERE alarme_id = ? `;
     const [resposta] = await con.query(comando, [foto, id]);
+    console.log("OI",resposta);
     return resposta.affectedRows;
 }
 
@@ -58,7 +59,7 @@ export async function listarTodosAlarmes() {
 }
 export async function alarmePorCpf(cpf) {
     console.log(cpf)
-    const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
+    const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_foto,a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
     WHERE a.cpf = ?

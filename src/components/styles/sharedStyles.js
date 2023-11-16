@@ -73,6 +73,12 @@ export const styles = StyleSheet.create({
       backgroundColor: '#0085FF',
       borderRadius: 10,
     },
+    imageButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 50,
+      backgroundColor: '#0085FF',
+      borderRadius: 10,
+    },
     buttonText: {
       color: '#ffffff',
       fontSize: 16,

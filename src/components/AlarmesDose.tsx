@@ -35,9 +35,13 @@ export const AlarmesDose = () => {
         const cpf = await AsyncStorage.getItem('CPF');
         const novoAlarmeId = JSON.parse(await AsyncStorage.getItem('novoAlarmeId'))
         const novoMedicamentosId = JSON.parse(await AsyncStorage.getItem('novoMedicamentosId'))
-        console.log(cpf, novoAlarmeId, novoMedicamentosId)
+        console.log(cpf, novoAlarmeId, novoMedicamentosId) 
+        const d ={
+          novoAlarmeId,cpf,dose,unidade
+        }
 
         const response = await api.put(`/medicamentos/editar/${novoMedicamentosId}`, {novoAlarmeId, cpf, dose, unidade})
+       console.log("h",response.config.data);
        
         if (response.status === 204){
             console.log(`Dose (${dose}) e unidade (${unidade}) salvas com sucesso!`);

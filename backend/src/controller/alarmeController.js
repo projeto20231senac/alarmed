@@ -1,12 +1,12 @@
 import multer from "multer";
 import express from "express";
-import { alterarAlarme, alterarTipoNovoAlarme, alterarMedicamento, alterarRecorrencia, inserirAlarme, inserirHorarios, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, promocoesPorCep } from '../repository/alarmeRepository.js'
+import { alterarAlarme, alterarImagem,alterarTipoNovoAlarme, alterarMedicamento, alterarRecorrencia, inserirAlarme, inserirHorarios, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, promocoesPorCep } from '../repository/alarmeRepository.js'
 
 const endpoint = express.Router();
 
 const storage = multer.diskStorage({
     destination:function(req,file,cb){
-        cb(null,'storage/fotosMedicamentos/')
+        cb(null,'public/fotosMedicamentos')
     },
     filename: function(req,file,cb){
         cb(null,file.originalname)
@@ -18,26 +18,27 @@ const upload = multer({ storage: storage
   })
 
 //editar um novo alarme com a imagem
-endpoint.put('/alarmes',upload.single('foto'), async (req, resp) => {
+endpoint.put('/alarmes/:alarme_id/foto', upload.single('foto'), async (req, resp) => {
     try {
-      if(req.file.mimetype != 'image/jpeg' || req.file.mimetype  != 'image/png'){
-        resp.status(422).send({
-            erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
-        })
-      }else{
-
-          const novoAlarme = req.body;
-          novoAlarme.foto= req.file.filename
-          const novo = await inserirAlarme(novoAlarme);
-          resp.status(200).send(novoAlarme)
-         
-      }
+        if(req.file.mimetype != 'image/jpeg' && req.file.mimetype  != 'image/png'){
+                    resp.status(422).send({
+                        erro:'Tipo de imagem não suportado. Por favor insira imagem válida.'
+                    })
+                  }else{
+    const {alarme_id} = req.params;
+            const imagem = req.file.filename;
+            const resposta = await alterarImagem(imagem, alarme_id)
+   
+      resp.status(204).send();
+      console.log(alarme_id);
+                  }
     } catch (err) {
+        console.log("qual foi o erro?",err);
         resp.status(400).send({
             erro: err.message
         })
     }
-})
+  })
 
 //criar um novo alarme
 endpoint.post('/alarmes', async (req, resp) => {

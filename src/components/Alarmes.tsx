@@ -50,7 +50,7 @@ export const Alarmes = () => {
         const response = await api.get(`/alarmes/${cpf}`);
   
         const dadosAPI = response.data;
-        console.log(dadosAPI)
+        console.log(dadosAPI[0].alarme_foto)
   
         if (dadosAPI) {
           setDados(dadosAPI);
@@ -138,6 +138,7 @@ export const Alarmes = () => {
             <View style={stylesAlarmes.alarmesChild}key={alarme.alarme_id}>
               <View style={stylesAlarmes.alarmesChildColumn}>
                 {/* imagem aleatória para testes */}
+                <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
                 <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
               </View>
               <View style={stylesAlarmes.alarmesChildColumn}>

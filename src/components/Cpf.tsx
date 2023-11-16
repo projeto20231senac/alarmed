@@ -53,7 +53,7 @@ export const Cpf = () => {
         
           
           setCep(resultado[0].postalCode);
-          await AsyncStorage.setItem('CEP', resultado[0].postalCode)
+          await AsyncStorage.setItem('CEP', cep)
         } catch (error) {
           console.error('Erro ao fazer reverse geocode:', error);
           setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");

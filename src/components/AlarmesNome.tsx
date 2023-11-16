@@ -32,7 +32,7 @@ export const AlarmesNome = () => {
           console.log('Alarme ID do novo medicamento: ', alarme_id)
           await AsyncStorage.setItem('novoAlarmeId', JSON.stringify(alarme_id));
           console.log(`Medicamento (${medicamento}) salvo com sucesso!`);
-          navigate('AlarmesTipo');
+          navigate('AlarmesFoto');
         }else{
           console.log('Erro ao salvar o medicamento no BD.')
         }
