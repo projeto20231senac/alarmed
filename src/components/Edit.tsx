@@ -133,8 +133,6 @@ export const Edit = () => {
                                   <TextInput
                                   style={sharedStylesForms.input}
                                   value={birthDate.toLocaleDateString('pt-BR')}
-                                  placeholder="00/00/0000"
-                                  placeholderTextColor="#000"
                                   editable={false}
                                   />
                               </TouchableOpacity>

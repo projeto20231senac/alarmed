@@ -13,8 +13,6 @@ import { stylesAlarmes } from './styles/stylesAlarmes';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../service/AlarmesService';
-// import { configureNotifications } from './notificationService';
-// import PushNotification from 'react-native-push-notification';
 
 export const Alarmes = () => {
   const { navigate } = useNavigation();
@@ -75,10 +73,7 @@ export const Alarmes = () => {
     };
 
     const currentDate = new Date().toLocaleString('pt-BR', options);
-    setCurrentDate(currentDate);
-
-    // configureNotifications();
-    
+    setCurrentDate(currentDate);    
   }, []);
 
   const formattedHour = (horaString) => {
@@ -95,18 +90,6 @@ export const Alarmes = () => {
     }
     return '';
   }
-
-  // const mountAlarm = (nome, hora) => {
-  //   const horaAgendamento = new Date();
-  //     horaAgendamento.setHours(parseInt(hora.split(':')[0]));
-  //     horaAgendamento.setMinutes(parseInt(hora.split(':')[1]));
-
-  //     // Agendar a notificação
-  //     PushNotification.localNotificationSchedule({
-  //       message: `É hora de administrar o alarme: ${nome}`,
-  //       date: horaAgendamento,
-  //     });
-  // }
 
   return (
     <View style={styles.container}>

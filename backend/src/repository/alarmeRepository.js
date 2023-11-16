@@ -57,14 +57,19 @@ export async function listarTodosAlarmes() {
     return linhas
 }
 export async function alarmePorCpf(cpf) {
-    console.log(cpf)
+    const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     const comando = `SELECT a.alarme_id, a.alarme_nome, a.alarme_recorrencia, a.alarme_id, h.horarios_id, h.hora
     FROM alarmes AS a
     INNER JOIN horarios AS h ON a.alarme_id = h.alarme_id
     WHERE a.cpf = ?
-    ORDER BY h.hora`;
+    ORDER BY 
+        CASE 
+            WHEN h.hora > ? THEN 0  
+            ELSE 1                              
+        END,
+        h.hora`
     
-    const [result] = await con.query(comando, [cpf]);
+    const [result] = await con.query(comando, [cpf, horaAtual]);
 
     return result;
 }
