@@ -77,16 +77,18 @@ export const Cpf = () => {
              
               try {
                 const response = await api.get(`usuarios/${cpf}`);
-                 
+                 console.log(response.data );
+                
                 if (response.status === 200) {
                   if (response.data && response.data.length > 0) {
                     // Há este CPF
-                    const cpfData = response.data.cpf
-                    const cepData = response.data.user_cep
+                    const cpfData = response.data[0].cpf
+                    const cepData = response.data[0].user_cep
       
                     await AsyncStorage.setItem('CEP', cepData);
     
                     await AsyncStorage.setItem('CPF', cpfData);
+
 
                     console.log(`CPF (${format(cpf)}) já existe no BD!`);
                     navigate('Alarmes');
@@ -103,7 +105,7 @@ export const Cpf = () => {
                 }
               } catch (error) {
                 if (error.message && error.message.includes("[AsyncStorage] Passing null/undefined as value is not supported.")) {
-                  console.error('Erro ao obter o CEP:', error);
+                  console.error('Erro ao obter o CEP:', error.message );
                   setErrorMessage("Erro ao obter o CEP. Tente novamente.");
                 }else{
                   console.error('Erro ao verificar o CPF no BD:', error);
