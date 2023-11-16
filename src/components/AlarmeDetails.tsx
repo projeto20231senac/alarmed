@@ -185,9 +185,7 @@ export const AlarmeDetails = () => {
           onPress: async () => {
             console.log("Alarme para deletar: ", alarme_id);
             try {
-              const horarios_id = await AsyncStorage.getItem('horariosId')
-
-              const response = await api.delete(`/alarmes/deletar/${alarme_id}/${horarios_id}`);
+              const response = await api.delete(`/alarmes/${alarme_id}`);
 
               if (response.status === 204) {
                 console.log('Alarme deletado com sucesso!');
@@ -321,7 +319,7 @@ export const AlarmeDetails = () => {
         <View style={stylesAlarmesDetails.alarmes}>
           {dados.length > 0 ? (
             dados.map((alarme) => (
-              <View style={stylesAlarmesDetails.alarmesChild}key={alarme.alarme_id}>
+              <View style={stylesAlarmesDetails.alarmesChild}key={`${alarme.alarme_id}_${alarme.horarios_id}`}>
 
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                     <View style={stylesAlarmesDetails.alarmesChildColumn}>
@@ -502,13 +500,13 @@ export const AlarmeDetails = () => {
 
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                     <Text style={stylesAlarmesDetails.alarmesChildText}>
-                      {alarme.count_disparos === 0
-                          ? 'Este alarme ainda não foi disparado'
-                          : 
+                      {(alarme.count_disparos === 0 || alarme.count_disparos === null)
+                          ? ('Este alarme ainda não foi disparado')
+                          : (
                           <Text>
                             Esse alarme já disparou {alarme.count_disparos}x desde que foi definido.
                           </Text>
-                      }
+                      )}
                     </Text>
                   </View>       
 
