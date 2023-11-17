@@ -4,6 +4,7 @@ import { Logo } from './Logo';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { styles } from './styles/sharedStyles';
 import { stylesAlarmes } from './styles/stylesAlarmes';
+
 import {
   AntDesign,
   FontAwesome5,
@@ -48,15 +49,13 @@ export const Alarmes = () => {
         const cpf = await AsyncStorage.getItem('CPF');
         console.log('CPF: ', cpf);
         const response = await api.get(`/alarmes/${cpf}`);
-        
+
         const dadosAPI = response.data;
-        const imageUrl = dadosAPI[0].alarme_foto;
-// console.log(da);
+        const url = 'http://192.168.0.107:5000/files';
 
         if (dadosAPI) {
           setDados(dadosAPI);
-          setImagem(imageUrl);
-
+          setBaseUrl(url);
           // mountAlarm(dadosAPI.alarme_nome, dadosAPI.hora)
         } else {
           console.log('Nenhum dado de alarme ou horário recebido da API.');
@@ -67,6 +66,7 @@ export const Alarmes = () => {
       loadDados(); // Chame a função que carrega os dados.
     }, []),
   );
+
 
   useEffect(() => {
     const options = {
@@ -167,17 +167,14 @@ export const Alarmes = () => {
                   )
                 }
               >
-                {/* <Text>{alarme.alarme_nome}</Text> */}
                 <View style={stylesAlarmes.alarmesChildColumn}>
                   {/* imagem aleatória para testes */}
-                  <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image> 
+                  {/* <Image style={stylesAlarmes.imgAlarmes} source={require('../assets/favicon.png')}></Image>  */}
 
-                  {/* <Image
-                    style={{ width: 200, height: 200, backgroundColor: 'blue' }}
-                    source={{
-                      uri: `http://192.168.0.107:5000/public/fotosMedicamentos/${imagem}`,
-                    }}
-                  /> */}
+                  <Image
+                    style={{ height: 85, width: 85, resizeMode: 'contain' }}
+                    source={{ uri: `${baseUrl}/${alarme.alarme_foto}` }}
+                  />
                 </View>
                 <View style={stylesAlarmes.alarmesChildColumn}>
                   <View style={stylesAlarmes.alarmesChildLine}>

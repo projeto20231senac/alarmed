@@ -1,9 +1,8 @@
 import multer from "multer";
 import express from "express";
 import { alterarAlarme, alterarImagem,alterarTipoNovoAlarme, alterarMedicamento, alterarRecorrencia, inserirAlarme, inserirHorarios, listarTodosAlarmes, alarmePorCpf, removerAlarme, buscarDetalhesAlarmePorId, promocoesPorCep } from '../repository/alarmeRepository.js'
-
 const endpoint = express.Router();
-
+endpoint.use('/files', express.static('public/fotosMedicamentos'));
 const storage = multer.diskStorage({
     destination:function(req,file,cb){
         cb(null,'public/fotosMedicamentos')
@@ -17,6 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage
   })
 
+  
 //editar um novo alarme com a imagem
 endpoint.put('/alarmes/:alarme_id/foto', upload.single('foto'), async (req, resp) => {
     try {
@@ -30,7 +30,6 @@ endpoint.put('/alarmes/:alarme_id/foto', upload.single('foto'), async (req, resp
             const resposta = await alterarImagem(imagem, alarme_id)
    
       resp.status(204).send();
-      console.log(alarme_id);
                   }
     } catch (err) {
         console.log("qual foi o erro?",err);
