@@ -31,7 +31,8 @@ export const AlarmeRecorrencia = () => {
     const handleNextPage = async () => {
         await handleEditarRecorrencia();
         await handleAdicionarHorarios();
-        navigate('Alarmes');
+        // navigate('Alarmes');
+        
     };
 
     const handleEditarRecorrencia = async () => {
@@ -42,6 +43,7 @@ export const AlarmeRecorrencia = () => {
           console.log("Editar recorrencia: ", cpfNovoAlarme, novoAlarmeId)
           
           const response = await api.put(`/alarmes/recorrencia/${cpfNovoAlarme}/${novoAlarmeId}`, {recorrencia});
+console.log(response);
 
             if (response.status === 204){
                 console.log(`Recorrencia (${recorrencia}) salva com sucesso!`);

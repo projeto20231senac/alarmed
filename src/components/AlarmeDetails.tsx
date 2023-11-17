@@ -37,7 +37,7 @@ export const AlarmeDetails = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [editando, setEditando] = useState(false); 
   const [promocoes, setPromocoes] = useState([]);
-
+  const [baseUrl, setBaseUrl] = useState(null);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState()
   const [items, setItems] = useState([
@@ -81,11 +81,12 @@ export const AlarmeDetails = () => {
       try {
         const alarmeId = await AsyncStorage.getItem('alarmeId');
         const horariosId = await AsyncStorage.getItem('horariosId');
+        const url='http://192.168.0.107:5000/files'
         console.log("Alarme ID recebido: ", alarmeId);
         console.log('Horarios ID recebido: ', horariosId);
   
         const response = await api.get(`/detalhes/${alarmeId}/${horariosId}`);
-  
+       
         if (response.status === 200) {
           const dadosAPI = response.data;
           console.log(dadosAPI);
@@ -94,6 +95,8 @@ export const AlarmeDetails = () => {
             setDados(dadosAPI);
             setValue(dadosAPI[0].medicamentos_tipo);
             await AsyncStorage.setItem('alarmeNome', dadosAPI[0].alarme_nome);
+         
+            setBaseUrl(url)
           } else {
             console.log("Nenhum dado de alarme recebido da API.");
             setErrorMessage("Ocorreu um erro. Por favor, tente novamente.");
@@ -360,7 +363,12 @@ export const AlarmeDetails = () => {
 
                   <View style={stylesAlarmesDetails.alarmesChildLine}>
                       {/* imagem aleatória para testes */}
-                    <Image style={stylesAlarmesDetails.imgAlarmes} source={require('../assets/favicon.png')}></Image>
+                    {/* <Image style={stylesAlarmesDetails.imgAlarmes} source={require('../assets/favicon.png')}></Image> */}
+                    <Image
+                    // style={{height:200,width:200,resizeMode:'contain'}}
+                    style={stylesAlarmesDetails.imgAlarmes}
+                    source={{uri: `${baseUrl}/${alarme.alarme_foto}`}}
+                  />
                   </View>
 
                   {editando ? ( 
