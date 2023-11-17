@@ -69,9 +69,9 @@ export const stylesAlarmes = StyleSheet.create({
         marginRight: 10,
     },
     imgAlarmes:{
-        maxWidth: 85,
-        maxHeight: 85,
-        margin: 5,
+       Width: 85,
+       Height: 85,
+        
     },
     alarmes:{
         flex:3,

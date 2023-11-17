@@ -105,6 +105,7 @@ export const stylesAlarmesDetails = StyleSheet.create({
         width: 200,
         height: 200,
         marginVertical: 5,
+        resizeMode:'contain'
     },
     alarmes:{
         flex:3,
